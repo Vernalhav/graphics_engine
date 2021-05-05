@@ -24,16 +24,12 @@
 
 
 GLFWwindow* initGLFW() {
-    // inicicializando o sistema de\ janelas
     glfwInit();
 
-    // deixando a janela invisivel, por enquanto
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-    // criando uma janela
     GLFWwindow* window = glfwCreateWindow(800, 800, "OpenGL Window", nullptr, nullptr);
 
-    // tornando a janela como principal 
     glfwMakeContextCurrent(window);
     return window;
 }
@@ -46,11 +42,9 @@ GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vec
         return -1;
     }
 
-    // inicializando Glew (para lidar com funcoes OpenGL)
     GLint GlewInitResult = glewInit();
     printf("GlewStatus: %s", glewGetErrorString(GlewInitResult));
 
-    // Requisitando slot para a GPU para nossos programas Vertex e Fragment Shaders
     GLuint program = glCreateProgram();
     GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -58,22 +52,18 @@ GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vec
     const char* vertex_code_str = vertex_code.c_str();
     const char* frag_code_str = fragment_code.c_str();
 
-    // Associando nosso c�digo-fonte GLSL aos slots solicitados
     glShaderSource(vertex, 1, &vertex_code_str, NULL);
     glShaderSource(fragment, 1, &frag_code_str, NULL);
 
-    // Compilando o Vertex Shader e verificando erros
     glCompileShader(vertex);
 
     GLint isCompiled = 0;
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &isCompiled);
     if (isCompiled == GL_FALSE) {
 
-        //descobrindo o tamanho do log de erro
         int infoLength = 512;
         glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &infoLength);
 
-        //recuperando o log de erro e imprimindo na tela
         char* info = (char*)malloc(infoLength * sizeof(char));
         glGetShaderInfoLog(vertex, infoLength, NULL, info);
 
@@ -83,19 +73,16 @@ GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vec
         free(info);
     }
 
-    // Compilando o Fragment Shader e verificando erros
     glCompileShader(fragment);
 
     isCompiled = 0;
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &isCompiled);
     if (isCompiled == GL_FALSE) {
 
-        //descobrindo o tamanho do log de erro
         GLint infoLength = 512;
         glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &infoLength);
 
         char* info = (char*)malloc(infoLength * sizeof(char));
-        //recuperando o log de erro e imprimindo na tela
         glGetShaderInfoLog(fragment, infoLength, NULL, info);
 
         printf("Erro de compilacao no Fragment Shader.\n");
@@ -104,11 +91,9 @@ GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vec
         free(info);
     }
 
-    // Associando os programas compilado ao programa principal
     glAttachShader(program, vertex);
     glAttachShader(program, fragment);
 
-    // Linkagem do programa e definindo como default
     glLinkProgram(program);
     glUseProgram(program);
 
@@ -116,10 +101,8 @@ GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vec
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
-    // Abaixo, n�s enviamos todo o conte�do da vari�vel vertices.
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices[0]), vertices.data(), GL_DYNAMIC_DRAW);
 
-    // Associando vari�veis do programa GLSL (Vertex Shaders) com nossos dados
     GLint loc = glGetAttribLocation(program, "position");
     glEnableVertexAttribArray(loc);
     glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), nullptr); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml

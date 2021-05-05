@@ -8,22 +8,44 @@
 
 class SceneObject {
 private:
-
-	std::pair<float, float> translation;
-	float rotation;
-	float scale;
+	std::string name;
 
 	Primitive primitive;
 	std::map<std::string, SceneObject*> children;
-
-
-
+	
 public:
+	std::pair<float, float> translation = { 0, 0 };
+	float rotation = 0;
+	float scale = 1;
+
+	SceneObject(std::string name, Primitive p) : name(name), primitive(p) { }
+
+	SceneObject(std::string name) : name(name), primitive() { }
+
+	SceneObject() : name("unnamed object"), primitive() { }
+
+	void appendChild(SceneObject* child) {
+		children[child->name] = child;
+	}
+
+	void appendChildren(std::vector<SceneObject*> children) {
+		for (auto child : children)
+			this->appendChild(child);
+	}
+
 	SceneObject* operator[](std::string str) {
 		return this->children[str];
 	}
+
+	void draw() {
+
+	}
 };
 
-struct Transform {
-	
-};
+/// <summary>
+/// Uploads the scene objects' vertex data do the GPU
+/// </summary>
+/// <param name="objects"></param>
+void uploadObjects(std::vector<SceneObject> objects) {
+
+}
