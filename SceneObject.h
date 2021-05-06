@@ -14,7 +14,7 @@ private:
 	std::map<std::string, SceneObject*> children;
 	
 public:
-	std::pair<float, float> translation = { 0, 0 };
+	std::pair<float, float> translation = { 0.0f, 0.0f };
 	float rotation = 0;
 	float scale = 1;
 

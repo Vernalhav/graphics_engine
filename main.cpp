@@ -19,7 +19,7 @@
 #include "SceneObject.h"
 
 
-#define PI 3.14159265359
+#define PI 3.14159265359f
 #define DEG2RAD (PI / 180)
 
 
@@ -32,6 +32,7 @@ GLFWwindow* initGLFW() {
 
     glfwMakeContextCurrent(window);
     return window;
+
 }
 
 
@@ -127,8 +128,8 @@ std::vector<std::pair<float, float>> getPolygon(int n, float radius = 1.0, float
 std::vector<std::pair<float, float>> getRectangle(float width, float length, float rotation) {
     std::vector<std::pair<float, float>> rectangle(4);
 
-    rectangle[0] = { 0, width / 2 };
-    rectangle[1] = { 0, - width / 2 };
+    rectangle[0] = { 0.0f, width / 2 };
+    rectangle[1] = { 0.0f, - width / 2 };
     rectangle[2] = { length, - width / 2 };
     rectangle[3] = { length, width / 2 };
 
@@ -162,9 +163,9 @@ void key_press_callback(GLFWwindow* window, int key, int scancode, int action, i
 
 void processInput(float& rotation, float& scale, float* translation) {
 
-    float rotationPerFrame = 0.005;
-    float scalePerFrame = 0.005;
-    float TranslationPerFrame = 0.005;
+    float rotationPerFrame = 0.005f;
+    float scalePerFrame = 0.005f;
+    float TranslationPerFrame = 0.005f;
 
     switch (current_mouse) {
     case GLFW_MOUSE_BUTTON_1:
@@ -203,7 +204,7 @@ std::vector<Primitive> getPropeller(float width = 0.1, float length = 1, int nPr
     
     std::vector<Primitive> prop;
 
-    double stepAngle = 2 * PI / nPropellers;
+    float stepAngle = 2 * PI / nPropellers;
     
     for (int i = 0; i < nPropellers; i++) {
         prop.push_back(Primitive(
@@ -242,7 +243,7 @@ int main(void) {
         "    gl_FragColor = color;\n"
         "}\n";
 
-    std::vector<Primitive> primitives = getPropeller(0.05, 0.5, 3);
+    std::vector<Primitive> primitives = getPropeller(0.05f, 0.5f, 3);
 
     std::vector<std::pair<float, float>> vertices;
     for (Primitive p : primitives) {
@@ -268,7 +269,7 @@ int main(void) {
 
         int offset = 0;
         for (Primitive& p : primitives) {
-            p.rotation += 0.001;
+            p.rotation += 0.001f;
             //processInput(p.rotation, p.scale, p.translation);
 
             glUniform4f(colorLoc, p.color[0], p.color[1], p.color[2], p.color[3]);

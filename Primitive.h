@@ -20,16 +20,16 @@ struct Primitive {
     }
 
     Primitive(std::vector<std::pair<float, float>>&& verts, GLenum prim, int r, int g, int b) : vertices(verts), primitive(prim) {
-        color[0] = r / 255.0;
-        color[1] = g / 255.0;
-        color[2] = b / 255.0;
-        color[3] = 1.0;
+        color[0] = r / 255.0f;
+        color[1] = g / 255.0f;
+        color[2] = b / 255.0f;
+        color[3] = 1.0f;
     }
 
     Primitive(std::vector<std::pair<float, float>>& verts, GLenum prim, int r, int g, int b) : vertices(verts), primitive(prim) {
-        color[0] = r / 255.0;
-        color[1] = g / 255.0;
-        color[2] = b / 255.0;
-        color[3] = 1.0;
+        color[0] = r / 255.0f;
+        color[1] = g / 255.0f;
+        color[2] = b / 255.0f;
+        color[3] = 1.0f;
     }
 };
