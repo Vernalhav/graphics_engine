@@ -18,6 +18,11 @@
 #include "Primitive.h"
 #include "SceneObject.h"
 
+#define DEBUG 0
+
+#ifdef DEBUG
+#include "glDebugMessage.h"
+#endif
 
 #define PI 3.14159265359f
 #define DEG2RAD (PI / 180)
@@ -27,12 +32,19 @@ GLFWwindow* initGLFW() {
     glfwInit();
 
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-
+#ifdef DEBUG
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif
     GLFWwindow* window = glfwCreateWindow(800, 800, "OpenGL Window", nullptr, nullptr);
-
     glfwMakeContextCurrent(window);
-    return window;
 
+    GLint GlewInitResult = glewInit();
+    std::cout << "GlewStatus: " << glewGetErrorString(GlewInitResult) << std::endl;
+    std::cout << "OpenGL version " << glGetString(GL_VERSION) << std::endl;
+
+    return window;
 }
 
 
@@ -42,9 +54,6 @@ GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vec
         printf("Vertices array has size 0. Aborting shader compilation.");
         return -1;
     }
-
-    GLint GlewInitResult = glewInit();
-    printf("GlewStatus: %s", glewGetErrorString(GlewInitResult));
 
     GLuint program = glCreateProgram();
     GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -98,9 +107,12 @@ GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vec
     glLinkProgram(program);
     glUseProgram(program);
 
-    GLuint buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    GLuint vbo, vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices[0]), vertices.data(), GL_DYNAMIC_DRAW);
 
@@ -222,8 +234,14 @@ int main(void) {
     GLFWwindow* window = initGLFW();
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_press_callback);
+    
+#ifdef DEBUG
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(GLDebugMessageCallback, NULL);
+#endif
 
     std::string vertex_code =
+        "#version 150\n"
         "attribute vec2 position;\n"
         "uniform vec2 translation;\n"
         "uniform float rotation;\n"
@@ -237,6 +255,7 @@ int main(void) {
         "}\n";
 
     std::string fragment_code =
+        "#version 150\n"
         "uniform vec4 color;\n"
         "void main()\n"
         "{\n"

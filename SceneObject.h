@@ -19,10 +19,9 @@ public:
 	float scale = 1;
 
 	SceneObject(std::string name, Primitive p) : name(name), primitive(p) { }
-
 	SceneObject(std::string name) : name(name), primitive() { }
-
 	SceneObject() : name("unnamed object"), primitive() { }
+	~SceneObject() { for (auto& child : children) delete child.second; }
 
 	void appendChild(SceneObject* child) {
 		children[child->name] = child;
