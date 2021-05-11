@@ -2,9 +2,18 @@
 
 #include <GL/glew.h>
 
+struct Vector3 {
+    float x, y, z;
+
+    Vector3(float x, float y, float z) : x(x), y(y), z(z) { }
+    Vector3(float x, float y) : x(x), y(y), z(1) { }
+    Vector3(float x) : x(x), y(0), z(1) { }
+    Vector3() : x(0), y(0), z(1) { }
+};
+
 
 struct Primitive {
-    std::vector<std::pair<float, float>> vertices;
+    std::vector<Vector3> vertices;
     float color[4];
     GLenum primitive;
 
@@ -21,14 +30,14 @@ struct Primitive {
         color[3] = 1;
     }
 
-    Primitive(std::vector<std::pair<float, float>>&& verts, GLenum prim, int r, int g, int b) : vertices(verts), primitive(prim) {
+    Primitive(std::vector<Vector3>&& verts, GLenum prim, int r, int g, int b) : vertices(verts), primitive(prim) {
         color[0] = r / 255.0f;
         color[1] = g / 255.0f;
         color[2] = b / 255.0f;
         color[3] = 1.0f;
     }
 
-    Primitive(std::vector<std::pair<float, float>>& verts, GLenum prim, int r, int g, int b) : vertices(verts), primitive(prim) {
+    Primitive(std::vector<Vector3>& verts, GLenum prim, int r, int g, int b) : vertices(verts), primitive(prim) {
         color[0] = r / 255.0f;
         color[1] = g / 255.0f;
         color[2] = b / 255.0f;

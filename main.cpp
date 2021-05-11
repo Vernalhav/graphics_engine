@@ -48,7 +48,7 @@ GLFWwindow* initGLFW() {
 }
 
 
-GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vector<std::pair<float, float>> vertices) {
+GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vector<Vector3> vertices) {
 
     if (vertices.size() == 0) {
         printf("Vertices array has size 0. Aborting shader compilation.");
@@ -118,37 +118,39 @@ GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vec
 
     GLint loc = glGetAttribLocation(program, "position");
     glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), nullptr); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+    glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), nullptr); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 
     return program;
 }
 
 
-std::vector<std::pair<float, float>> getPolygon(int n, float radius = 1.0, float rotation = 0.0, std::pair<float, float> offset = { 0, 0 }) {
-    std::vector<std::pair<float, float>> polygon(n);
+std::vector<Vector3> getPolygon(int n, float radius = 1.0, float rotation = 0.0, Vector3 offset = { 0, 0, 0 }) {
+    std::vector<Vector3> polygon(n);
 
     float angleStep = 2 * PI / n;
     for (int i = 0; i < n; i++) {
-        polygon[i].first = radius * cos(angleStep * i + rotation);
-        polygon[i].second = radius * sin(angleStep * i + rotation);
+        polygon[i].x = radius * cos(angleStep * i + rotation) + offset.x;
+        polygon[i].y = radius * sin(angleStep * i + rotation) + offset.y;
+        polygon[i].z = offset.z;
     }
 
     return polygon;
 }
 
 
-std::vector<std::pair<float, float>> getRectangle(float width, float length, float rotation) {
-    std::vector<std::pair<float, float>> rectangle(4);
+std::vector<Vector3> getRectangle(float width, float length, float rotation, float height = 0) {
+    std::vector<Vector3> rectangle(4);
 
-    rectangle[0] = { 0.0f, width / 2 };
-    rectangle[1] = { 0.0f, - width / 2 };
-    rectangle[2] = { length, - width / 2 };
-    rectangle[3] = { length, width / 2 };
+    rectangle[0] = { 0.0f, width / 2, height };
+    rectangle[1] = { 0.0f, - width / 2, height };
+    rectangle[2] = { length, - width / 2, height };
+    rectangle[3] = { length, width / 2, height };
 
     for (auto& vertex : rectangle) {
-        float x = vertex.first, y = vertex.second;
-        vertex.first = cos(rotation) * x - sin(rotation) * y;
-        vertex.second = sin(rotation) * x + cos(rotation) * y;
+        float x = vertex.x, y = vertex.y;
+        vertex.x = cos(rotation) * x - sin(rotation) * y;
+        vertex.y = sin(rotation) * x + cos(rotation) * y;
+        vertex.z = height;
     }
 
     return rectangle;
@@ -264,7 +266,7 @@ int main(void) {
 
     std::vector<Primitive> primitives = getPropeller(0.05f, 0.5f, 3);
 
-    std::vector<std::pair<float, float>> vertices;
+    std::vector<Vector3> vertices;
     for (Primitive p : primitives) {
         vertices.insert(vertices.end(), p.vertices.begin(), p.vertices.end());
     }
