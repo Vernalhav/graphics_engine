@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <stack>
 #include <string>
 
 #include "Primitive.h"
@@ -10,7 +11,12 @@ class SceneObject {
 private:
 	std::string name;
 
-	Primitive primitive;
+	/// <summary>
+	/// Vector of primitives that should represent a semantic object, for instance
+	/// 4 rectangles forming a windmill. The collection of these primitives will
+	/// share a single Transform.
+	/// </summary>
+	std::vector<Primitive> primitive;
 	std::map<std::string, SceneObject*> children;
 	
 public:
@@ -18,7 +24,8 @@ public:
 	float rotation = 0;
 	float scale = 1;
 
-	SceneObject(std::string name, Primitive p) : name(name), primitive(p) { }
+	SceneObject(std::string name, std::vector<Primitive>& p) : name(name), primitive(p) { }
+	SceneObject(std::string name, std::vector<Primitive>&& p) : name(name), primitive(p) { }
 	SceneObject(std::string name) : name(name), primitive() { }
 	SceneObject() : name("unnamed object"), primitive() { }
 	~SceneObject() { for (auto& child : children) delete child.second; }
@@ -39,12 +46,30 @@ public:
 	void draw() {
 
 	}
+
+	/// <summary>
+	/// Returns the object's and all its children's
+	/// Primitives as a single array.
+	/// </summary>
+	/// <returns></returns>
+	std::vector<Primitive> getObjectPrimitives() {
+		std::vector<Primitive> primitives;
+		std::stack<SceneObject*> childrenStack;
+
+		childrenStack.push(this);
+
+		SceneObject* cur;
+		while (!childrenStack.empty()) {
+			cur = childrenStack.top();
+			childrenStack.pop();
+
+			for (const auto& child : children) {
+				childrenStack.push(child.second);
+			}
+
+			primitives.insert(primitives.end(), cur->primitive.begin(), cur->primitive.end());
+		}
+
+		return primitives;
+	}
 };
-
-/// <summary>
-/// Uploads the scene objects' vertex data do the GPU
-/// </summary>
-/// <param name="objects"></param>
-void uploadObjects(std::vector<SceneObject> objects) {
-
-}

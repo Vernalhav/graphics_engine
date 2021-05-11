@@ -12,6 +12,8 @@ struct Primitive {
     float scale = 1;
     float translation[2] = { 0, 0 };
 
+    int offset = -1; // Offset of the vertices of this Primitive inside the VBO
+
     Primitive() : vertices(), primitive(GL_TRIANGLE_FAN) {
         color[0] = 1;
         color[1] = 1;
@@ -31,5 +33,14 @@ struct Primitive {
         color[1] = g / 255.0f;
         color[2] = b / 255.0f;
         color[3] = 1.0f;
+    }
+
+    /// <summary>
+    /// Returns amount of bytes occupied by the
+    /// vertices of this Primitive.
+    /// </summary>
+    /// <returns></returns>
+    int getSizeOfVertices() {
+        return vertices.size() * sizeof(vertices[0]);
     }
 };
