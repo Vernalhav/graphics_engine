@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\SceneObject.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
