@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <vector>
 
 struct Vector3 {
     float x, y, z;

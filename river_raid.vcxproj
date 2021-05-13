@@ -19,17 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Renderer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="glDebugMessage.h" />
-    <ClInclude Include="Primitive.h" />
-    <ClInclude Include="SceneObject.h" />
-    <ClInclude Include="utils.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\glDebugMessage.h" />
+    <ClInclude Include="src\Primitive.h" />
+    <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\SceneObject.h" />
+    <ClInclude Include="src\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\SceneObject.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

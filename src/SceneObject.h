@@ -30,46 +30,16 @@ public:
 	SceneObject() : name("unnamed object"), primitive() { }
 	~SceneObject() { for (auto& child : children) delete child.second; }
 
-	void appendChild(SceneObject* child) {
-		children[child->name] = child;
-	}
+	void appendChild(SceneObject* child);
 
-	void appendChildren(std::vector<SceneObject*> children) {
-		for (auto child : children)
-			this->appendChild(child);
-	}
+	void appendChildren(std::vector<SceneObject*> children);
 
-	SceneObject* operator[](std::string str) {
-		return this->children[str];
-	}
-
-	void draw() {
-
-	}
+	SceneObject* operator[](std::string str);
 
 	/// <summary>
-	/// Returns the object's and all its children's
+	/// Returns the object's and all of its children's
 	/// Primitives as a single array.
 	/// </summary>
-	/// <returns></returns>
-	std::vector<Primitive> getObjectPrimitives() {
-		std::vector<Primitive> primitives;
-		std::stack<SceneObject*> childrenStack;
-
-		childrenStack.push(this);
-
-		SceneObject* cur;
-		while (!childrenStack.empty()) {
-			cur = childrenStack.top();
-			childrenStack.pop();
-
-			for (const auto& child : children) {
-				childrenStack.push(child.second);
-			}
-
-			primitives.insert(primitives.end(), cur->primitive.begin(), cur->primitive.end());
-		}
-
-		return primitives;
-	}
+	/// <returns>Array with all Primitives</returns>
+	std::vector<Primitive> getObjectPrimitives();
 };

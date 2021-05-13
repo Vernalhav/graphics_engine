@@ -1,11 +1,4 @@
-﻿/* para linux, instalar os pacotes libglfw3-dev mesa-common-dev libglew-dev */
-/* para compilar no linux: gcc main.c -lglfw -lGL -lGLEW -lm */
-
-/* para windows, instalar bibliotecas compiladas do glfw3 e glew no ambiente mingw */
-/* para compilar no windows: gcc main.c -lglfw3dll -lglew32 -lopengl32 */
-
-
-#include <GL/glew.h>
+﻿#include <GL/glew.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h> /* verifique no seu SO onde fica o glfw3.h */
