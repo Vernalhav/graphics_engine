@@ -22,6 +22,7 @@
     <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\glDebugMessage.h" />
     <ClInclude Include="src\Primitive.h" />
     <ClInclude Include="src\Renderer.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\SceneObject.cpp" />
