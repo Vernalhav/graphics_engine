@@ -2,15 +2,7 @@
 
 #include <GL/glew.h>
 #include <vector>
-
-struct Vector3 {
-    float x, y, z;
-
-    Vector3(float x, float y, float z) : x(x), y(y), z(z) { }
-    Vector3(float x, float y) : x(x), y(y), z(1) { }
-    Vector3(float x) : x(x), y(0), z(1) { }
-    Vector3() : x(0), y(0), z(1) { }
-};
+#include "vectors.h"
 
 
 struct Primitive {
@@ -52,5 +44,9 @@ struct Primitive {
     /// <returns></returns>
     int getSizeOfVertices() {
         return vertices.size() * sizeof(vertices[0]);
+    }
+
+    int getVertexCount() {
+        return vertices.size();
     }
 };

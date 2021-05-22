@@ -19,13 +19,13 @@ SceneObject* SceneObject::operator[](std::string str) {
 /// Primitives as a single array.
 /// </summary>
 /// <returns></returns>
-std::vector<Primitive> SceneObject::getObjectPrimitives() {
+std::vector<Primitive> SceneObject::getObjectPrimitives() const {
 	std::vector<Primitive> primitives;
-	std::stack<SceneObject*> childrenStack;
+	std::stack<const SceneObject*> childrenStack;
 
 	childrenStack.push(this);
 
-	SceneObject* cur;
+	const SceneObject* cur;
 	while (!childrenStack.empty()) {
 		cur = childrenStack.top();
 		childrenStack.pop();
@@ -38,4 +38,18 @@ std::vector<Primitive> SceneObject::getObjectPrimitives() {
 	}
 
 	return primitives;
+}
+
+const std::vector<Primitive>& SceneObject::getObjectPrimitive() const {
+	return this->primitive;
+}
+
+const std::vector<const SceneObject*> SceneObject::getChildren() const {
+	std::vector<const SceneObject*> childrenArray;
+
+	for (auto& childPair : children) {
+		childrenArray.push_back((const SceneObject*)childPair.second);
+	}
+
+	return childrenArray;
 }

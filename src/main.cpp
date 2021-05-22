@@ -10,6 +10,9 @@
 
 #include "Primitive.h"
 #include "SceneObject.h"
+#include "Shader.h"
+#include "Renderer.h"
+#include "vectors.h"
 #include "utils.h"
 
 #define DEBUG 1
@@ -38,81 +41,6 @@ GLFWwindow* initGLFW() {
     return window;
 }
 
-
-GLuint setupShaders(std::string vertex_code, std::string fragment_code, std::vector<Vector3> vertices) {
-
-    if (vertices.size() == 0) {
-        printf("Vertices array has size 0. Aborting shader compilation.");
-        return -1;
-    }
-
-    GLuint program = glCreateProgram();
-    GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
-    GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
-
-    const char* vertex_code_str = vertex_code.c_str();
-    const char* frag_code_str = fragment_code.c_str();
-
-    glShaderSource(vertex, 1, &vertex_code_str, NULL);
-    glShaderSource(fragment, 1, &frag_code_str, NULL);
-
-    glCompileShader(vertex);
-
-    GLint isCompiled = 0;
-    glGetShaderiv(vertex, GL_COMPILE_STATUS, &isCompiled);
-    if (isCompiled == GL_FALSE) {
-
-        int infoLength = 512;
-        glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &infoLength);
-
-        char* info = (char*)malloc(infoLength * sizeof(char));
-        glGetShaderInfoLog(vertex, infoLength, NULL, info);
-
-        printf("Erro de compilacao no Vertex Shader.\n");
-        printf("--> %s\n", info);
-
-        free(info);
-    }
-
-    glCompileShader(fragment);
-
-    isCompiled = 0;
-    glGetShaderiv(fragment, GL_COMPILE_STATUS, &isCompiled);
-    if (isCompiled == GL_FALSE) {
-
-        GLint infoLength = 512;
-        glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &infoLength);
-
-        char* info = (char*)malloc(infoLength * sizeof(char));
-        glGetShaderInfoLog(fragment, infoLength, NULL, info);
-
-        printf("Erro de compilacao no Fragment Shader.\n");
-        printf("--> %s\n", info);
-
-        free(info);
-    }
-
-    glAttachShader(program, vertex);
-    glAttachShader(program, fragment);
-
-    glLinkProgram(program);
-    glUseProgram(program);
-
-    GLuint vbo, vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices[0]), vertices.data(), GL_DYNAMIC_DRAW);
-
-    GLint loc = glGetAttribLocation(program, "position");
-    glEnableVertexAttribArray(loc);
-    glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), nullptr); // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
-
-    return program;
-}
 
 int current_mouse = -1;
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
@@ -193,6 +121,7 @@ int main(void) {
     GLFWwindow* window = initGLFW();
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_press_callback);
+    glEnable(GL_DEPTH_TEST);
     
 #ifdef DEBUG
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -221,19 +150,11 @@ int main(void) {
         "    gl_FragColor = color;\n"
         "}\n";
 
-    std::vector<Primitive> primitives = getPropeller(0.05f, 0.5f, 3);
+    Shader shader(vertex_code, fragment_code, "Standard shader");
+    SceneObject* propeller = new SceneObject("propeller", getPropeller());
+    Renderer renderer(shader);
 
-    std::vector<Vector3> vertices;
-    for (Primitive p : primitives) {
-        vertices.insert(vertices.end(), p.vertices.begin(), p.vertices.end());
-    }
-
-    GLint program = setupShaders(vertex_code, fragment_code, vertices);
-    GLint rotationLoc = glGetUniformLocation(program, "rotation");
-    GLint positionLoc = glGetUniformLocation(program, "position");
-    GLint translationLoc = glGetUniformLocation(program, "translation");
-    GLint scaleLoc = glGetUniformLocation(program, "scale");
-    GLint colorLoc = glGetUniformLocation(program, "color");
+    renderer.uploadObjects({ propeller });
 
     glfwShowWindow(window);
 
@@ -245,20 +166,7 @@ int main(void) {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
-        int offset = 0;
-        for (Primitive& p : primitives) {
-            p.rotation += 0.001f;
-            //processInput(p.rotation, p.scale, p.translation);
-
-            glUniform4f(colorLoc, p.color[0], p.color[1], p.color[2], p.color[3]);
-            glUniform1f(rotationLoc, p.rotation);
-            glUniform1f(scaleLoc, p.scale);
-            glUniform2f(translationLoc, p.translation[0], p.translation[1]);
-
-            glDrawArrays(p.primitive, offset, p.vertices.size());
-            offset += p.vertices.size();
-        }
-
+ 
         glfwSwapBuffers(window);
     }
 

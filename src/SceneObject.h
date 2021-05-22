@@ -5,6 +5,9 @@
 #include <string>
 
 #include "Primitive.h"
+#include "vectors.h"
+#include "Transform.h"
+
 
 
 class SceneObject {
@@ -18,11 +21,9 @@ private:
 	/// </summary>
 	std::vector<Primitive> primitive;
 	std::map<std::string, SceneObject*> children;
+	Transform transform;
 	
 public:
-	std::pair<float, float> translation = { 0.0f, 0.0f };
-	float rotation = 0;
-	float scale = 1;
 
 	SceneObject(std::string name, std::vector<Primitive>& p) : name(name), primitive(p) { }
 	SceneObject(std::string name, std::vector<Primitive>&& p) : name(name), primitive(p) { }
@@ -34,6 +35,10 @@ public:
 
 	void appendChildren(std::vector<SceneObject*> children);
 
+	Transform& getTransform() { return transform; }
+	
+	const Transform& getTransform() const { return transform; }
+
 	SceneObject* operator[](std::string str);
 
 	/// <summary>
@@ -41,5 +46,14 @@ public:
 	/// Primitives as a single array.
 	/// </summary>
 	/// <returns>Array with all Primitives</returns>
-	std::vector<Primitive> getObjectPrimitives();
+	std::vector<Primitive> getObjectPrimitives() const;
+
+	/// <summary>
+	/// Returns the object's primitives that share the
+	/// same transform.
+	/// </summary>
+	/// <returns>Array with object primitives</returns>
+	const std::vector<Primitive>& getObjectPrimitive() const;
+
+	const std::vector<const SceneObject*> getChildren() const;
 };

@@ -27,7 +27,9 @@
     <ClInclude Include="src\Primitive.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\SceneObject.h" />
+    <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\utils.h" />
+    <ClInclude Include="src\vectors.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader.cpp" />
