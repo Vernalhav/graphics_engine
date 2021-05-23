@@ -158,17 +158,18 @@ int main(void) {
 
     glfwShowWindow(window);
 
-    while (!glfwWindowShouldClose(window))
-    {
-
+    while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
+        renderer.drawObject(propeller);
  
         glfwSwapBuffers(window);
     }
+
+    delete propeller;
 
     glfwDestroyWindow(window);
 

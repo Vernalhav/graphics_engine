@@ -6,13 +6,13 @@ void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
 
 	int offset = 0;
 	for (auto object : objects) {
-		std::vector<Primitive>&& curPrimitives = object->getObjectPrimitives();
+		std::vector<Primitive*> curPrimitives = object->getObjectPrimitives();
 
-		for (Primitive& primitive : curPrimitives) {
-			primitive.offset = offset;
-			int size = primitive.getSizeOfVertices();
+		for (Primitive* primitive : curPrimitives) {
+			primitive->offset = offset;
+			int size = primitive->getSizeOfVertices();
 
-			vertices.insert(vertices.end(), primitive.vertices.begin(), primitive.vertices.end());
+			vertices.insert(vertices.end(), primitive->vertices.begin(), primitive->vertices.end());
 			offset += size;
 		}
 	}

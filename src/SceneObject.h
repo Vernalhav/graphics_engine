@@ -46,7 +46,7 @@ public:
 	/// Primitives as a single array.
 	/// </summary>
 	/// <returns>Array with all Primitives</returns>
-	std::vector<Primitive> getObjectPrimitives() const;
+	std::vector<Primitive*> getObjectPrimitives();
 
 	/// <summary>
 	/// Returns the object's primitives that share the
