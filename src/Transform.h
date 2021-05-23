@@ -13,13 +13,13 @@ struct Transform {
 		: translation(translation), rotation(rotation), scale(scale) { }
 
 	Transform operator+(const Transform& other) {
-		return { translation + other.translation, rotation + other.rotation, scale + other.scale };
+		return { translation + other.translation, rotation + other.rotation, scale * other.scale };
 	}
 
 	Transform& operator+=(const Transform& other) {
 		translation += other.translation;
 		rotation += other.rotation;
-		scale += other.scale;
+		scale *= other.scale;
 		return *this;
 	}
 };

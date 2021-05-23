@@ -30,7 +30,7 @@ std::vector<Vector3> getPolygon(int n, float radius = 1.0, float rotation = 0.0,
     return polygon;
 }
 
-std::vector<Vector3> getRectangle(float width, float length, float rotation, float height = 0) {
+std::vector<Vector3> getRectangle(float width, float length, float rotation, float height = 1) {
     std::vector<Vector3> rectangle(4);
 
     rectangle[0] = { 0.0f, width / 2, height };

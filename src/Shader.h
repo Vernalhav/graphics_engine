@@ -9,7 +9,7 @@ class Shader
 {
 private:
 	std::string name;
-	int id;
+	GLuint id;
 
 	static GLuint compileShader(const std::string& code, GLuint type, const std::string& name);
 	GLint getUniformLocation(const std::string& name);

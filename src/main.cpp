@@ -130,7 +130,7 @@ int main(void) {
 
     std::string vertex_code =
         "#version 150\n"
-        "attribute vec2 position;\n"
+        "attribute vec3 position;\n"
         "uniform vec2 translation;\n"
         "uniform float rotation;\n"
         "uniform float scale;\n"
@@ -139,7 +139,7 @@ int main(void) {
         "   mat3 translation_mat = mat3( vec3(1, 0, 0), vec3(0, 1, 0), vec3(translation, 0) );\n"
         "   mat3 rotation_mat = mat3( vec3(cos(rotation), sin(rotation), 0), vec3(-sin(rotation), cos(rotation), 0), vec3(0, 0, 1) );\n"
         "   mat3 scale_mat = mat3( vec3(scale, 0, 0), vec3(0, scale, 0), vec3(0, 0, 1) );\n"
-        "   gl_Position = vec4(translation_mat * scale_mat * rotation_mat * vec3(position, 1.0), 1.0);\n"
+        "   gl_Position = vec4(translation_mat * rotation_mat * scale * position, 1.0);\n"
         "}\n";
 
     std::string fragment_code =

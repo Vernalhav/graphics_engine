@@ -37,6 +37,7 @@ void Renderer::_drawObject(const SceneObject* object, Transform globalTransform)
 	auto objectPrimitive = object->getObjectPrimitive();
 	for (auto& subprimitive : objectPrimitive) {
 		shader.setTransform(globalTransform);
+		shader.setFloat4("color", subprimitive.color);
 		glDrawArrays(subprimitive.primitive, subprimitive.offset, subprimitive.getVertexCount());
 	}
 
