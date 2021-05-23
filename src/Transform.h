@@ -23,3 +23,10 @@ struct Transform {
 		return *this;
 	}
 };
+
+static std::ostream& operator<<(std::ostream& out, Transform const& data) {
+	out << "Translation: " << data.translation << std::endl\
+		<< "Rotation: " << data.rotation << std::endl\
+		<< "Scale:" << data.scale << std::endl;
+	return out;
+}

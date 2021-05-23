@@ -151,7 +151,7 @@ int main(void) {
         "}\n";
 
     Shader shader(vertex_code, fragment_code, "Standard shader");
-    SceneObject* propeller = new SceneObject("propeller", getPropeller());
+    SceneObject* propeller = new SceneObject("propeller", { Primitive({{0, 0, 1}, {0, 1, 1}, {1, 0, 1}}, GL_TRIANGLES, 255, 255, 255) });
     Renderer renderer(shader);
 
     renderer.uploadObjects({ propeller });

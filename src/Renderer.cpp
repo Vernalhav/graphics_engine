@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include <iostream>
 
 void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
 
@@ -17,9 +18,15 @@ void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
 		}
 	}
 
+	glBindVertexArray(VAO);
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices[0]), vertices.data(), GL_STATIC_DRAW);
+
+	GLsizeiptr bufferSize = vertices.size() * sizeof(vertices[0]);
+	glBufferData(GL_ARRAY_BUFFER, bufferSize, vertices.data(), GL_STATIC_DRAW);
+
+	shader.setPositionAttributeLayout();
+	shader.enableAttrib("position");
 }
 
 void Renderer::drawObject(SceneObject* object) {
@@ -33,10 +40,12 @@ void Renderer::drawObject(SceneObject* object) {
 void Renderer::_drawObject(const SceneObject* object, Transform globalTransform) {
 	
 	globalTransform += object->getTransform();
+	shader.setTransform(globalTransform);
+	//std::cout << globalTransform << std::endl;
 
 	auto objectPrimitive = object->getObjectPrimitive();
+
 	for (auto& subprimitive : objectPrimitive) {
-		shader.setTransform(globalTransform);
 		shader.setFloat4("color", subprimitive.color);
 		glDrawArrays(subprimitive.primitive, subprimitive.offset, subprimitive.getVertexCount());
 	}

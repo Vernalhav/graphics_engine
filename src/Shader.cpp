@@ -28,8 +28,28 @@ void Shader::setTransform(const Transform& t) {
     setFloat("rotation", t.rotation);
 }
 
+void Shader::setPositionAttributeLayout() {
+    auto location = getAttribLocation("position");
+    glVertexAttribPointer((GLuint)location, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (const void*)0);
+}
+
+void Shader::enableAttrib(const std::string& name) {
+    auto location = getAttribLocation(name);
+    glEnableVertexAttribArray(location);
+}
+
 GLint Shader::getUniformLocation(const std::string& name) {
-    return glGetUniformLocation(id, name.c_str());
+    GLint status =  glGetUniformLocation(id, name.c_str());
+    if (status == -1)
+        std::cout << "ERROR FINDING UNIFORM " << name << std::endl;
+    return status;
+}
+
+GLint Shader::getAttribLocation(const std::string& name) {
+    GLint status = glGetAttribLocation(id, name.c_str());
+    if (status == -1)
+        std::cout << "ERROR FINDING ATTRIBUTE " << name << std::endl;
+    return status;
 }
 
 void Shader::setFloat(const std::string& name, float value) {
@@ -62,6 +82,8 @@ GLuint Shader::compileShader(const std::string& code, GLuint type, const std::st
 	glShaderSource(shader, 1, &codeStr, NULL);
 	glCompileShader(shader);
 
+    std::cout << "Compiling shader " << name << "... ";
+
     GLint isCompiled = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
     if (isCompiled == GL_FALSE) {
@@ -75,7 +97,9 @@ GLuint Shader::compileShader(const std::string& code, GLuint type, const std::st
         std::cout << "Error compiling shader [" << name << "]. Info: " << info << std::endl;
 
         free(info);
+        return shader;
     }
 
+    std::cout << "success!" << std::endl;
     return shader;
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ostream>
 
 struct Vector3 {
     float x, y, z;
@@ -49,3 +50,18 @@ struct Vector2 {
         return *this;
     }
 };
+
+static std::ostream& operator<<(std::ostream& out, Vector2 const& data) {
+    out << "(" << data.x << ", " << data.y << ")";
+    return out;
+}
+
+static std::ostream& operator<<(std::ostream& out, Vector3 const& data) {
+    out << "(" << data.x << ", " << data.y << ", " << data.z << ")";
+    return out;
+}
+
+static std::ostream& operator<<(std::ostream& out, Vector4 const& data) {
+    out << "(" << data.x << ", " << data.y << ", " << data.z << ", " << data.w << ")";
+    return out;
+}
