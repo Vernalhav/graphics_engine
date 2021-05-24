@@ -4,23 +4,30 @@
 
 SceneObject* object::getHelicopter(float scale) {
 
-    SceneObject* propeller = new SceneObject("propeller", getPropeller(0.1f, 1, 3));
+    SceneObject* propeller = new SceneObject("propeller", getPropeller(0.08f, 1, 3));
     SceneObject* body = new SceneObject("body", getHelicopterBody());
 
-    propeller->transform.translation.z = -0.3f;
+    propeller->transform.translation.z = -0.1f;
     body->transform.translation.z = 0.2f;
 
     body->appendChild(propeller);
     body->transform.scale = scale;
-    
+   
+    propeller->physicsBody.angularVelocity = 0.005f;
+
+    body->physicsBody.forwardVelocity= 0.0001f;
+    body->physicsBody.angularVelocity= 0.0001f;
+
 	return body;
 }
 
 std::vector<Primitive> object::getHelicopterBody() {
 
-    Primitive cockpit(getPolygon(4, PI / 4, { 0, 0 }, { 1, 0.8f }), GL_TRIANGLE_FAN, {0, 0, 255});
-    Primitive topGlass(getPolygon(3, PI / 2, { 0, 1 }, { 1, 1 }), GL_TRIANGLE_FAN, { 255, 0, 0 });
-    Primitive tail(getPolygon(4, PI / 4, { 0, -3 }, { 0.15f, 3 }), GL_TRIANGLE_FAN, { 0, 255, 0 });
+    float scale = 1;
+
+    Primitive cockpit(getPolygon(4, PI / 4, { 0, 0 }, { 0.5f, 0.3f }), GL_TRIANGLE_FAN, {0, 0, 255});
+    Primitive topGlass(getPolygon(3, 0, { 0.44f, 0 }, { 0.175f, 0.25f }), GL_TRIANGLE_FAN, { 255, 0, 0 });
+    Primitive tail(getPolygon(4, PI / 4, { -1, 0 }, { 1, 0.05f }), GL_TRIANGLE_FAN, { 0, 255, 0 });
 
     return { cockpit, topGlass, tail };
 }
