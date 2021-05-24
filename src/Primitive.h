@@ -10,10 +10,6 @@ struct Primitive {
     Vector4 color;
     GLenum primitive;
 
-    float rotation = 0;
-    float scale = 1;
-    float translation[2] = { 0, 0 };
-
     int offset = -1; // Offset of the vertices of this Primitive inside the VBO
 
     Primitive() : vertices(), primitive(GL_TRIANGLE_FAN), color() { }

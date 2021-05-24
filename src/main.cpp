@@ -13,6 +13,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "vectors.h"
+#include "object.h"
 #include "utils.h"
 
 #define DEBUG 1
@@ -37,6 +38,8 @@ GLFWwindow* initGLFW() {
     GLint GlewInitResult = glewInit();
     std::cout << "GlewStatus: " << glewGetErrorString(GlewInitResult) << std::endl;
     std::cout << "OpenGL version " << glGetString(GL_VERSION) << std::endl;
+    
+    glEnable(GL_DEPTH_TEST);
 
     return window;
 }
@@ -99,24 +102,6 @@ void processInput(float& rotation, float& scale, float* translation) {
 }
 
 
-std::vector<Primitive> getPropeller(float width = 0.1, float length = 1, int nPropellers = 3) {
-    
-    std::vector<Primitive> prop;
-
-    float stepAngle = 2 * PI / nPropellers;
-    
-    for (int i = 0; i < nPropellers; i++) {
-        prop.push_back(Primitive(
-            getRectangle(width, length, i * stepAngle),
-            GL_TRIANGLE_FAN,
-            { 255, 255, 255 }
-        ));
-    }
-
-    return prop;
-}
-
-
 int main(void) {
     GLFWwindow* window = initGLFW();
     glfwSetMouseButtonCallback(window, mouse_button_callback);
@@ -130,15 +115,15 @@ int main(void) {
     std::string vertex_code =
         "#version 150\n"
         "attribute vec3 position;\n"
-        "uniform vec2 translation;\n"
+        "uniform vec3 translation;\n"
         "uniform float rotation;\n"
         "uniform float scale;\n"
         "void main()\n"
         "{\n"
-        "   mat3 translation_mat = mat3( vec3(1, 0, 0), vec3(0, 1, 0), vec3(translation, 0) );\n"
+        "   mat3 translation_mat = mat3( vec3(1, 0, 0), vec3(0, 1, 0), translation );\n"
         "   mat3 rotation_mat = mat3( vec3(cos(rotation), sin(rotation), 0), vec3(-sin(rotation), cos(rotation), 0), vec3(0, 0, 1) );\n"
         "   mat3 scale_mat = mat3( vec3(scale, 0, 0), vec3(0, scale, 0), vec3(0, 0, 1) );\n"
-        "   gl_Position = vec4(translation_mat * rotation_mat * scale * position, 1.0);\n"
+        "   gl_Position = vec4(translation_mat * rotation_mat * scale * vec3(position.x, position.y, 1.0), 1.0);\n"
         "}\n";
 
     std::string fragment_code =
@@ -149,11 +134,9 @@ int main(void) {
         "    gl_FragColor = color;\n"
         "}\n";
 
-    SceneObject* scene = new SceneObject("scene", std::vector<Primitive>());
-    SceneObject* propeller = new SceneObject("propeller", getPropeller(0.1f, 0.6f, 3));
-    scene->appendChild(propeller);
-
-    propeller->physicsBody.angularVelocity = 0.001f;
+    SceneObject* scene = new SceneObject("scene");
+    SceneObject* helicopter = object::getHelicopter(0.5f);
+    scene->appendChild(helicopter);
 
     Shader shader(vertex_code, fragment_code, "Standard shader");
     Renderer renderer(shader);
@@ -163,18 +146,17 @@ int main(void) {
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        
-        scene->update();
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
-        renderer.drawObject(propeller);
+        scene->update();
+        renderer.drawObject(scene);
  
         glfwSwapBuffers(window);
     }
 
-    delete propeller;
+    delete scene;
 
     glfwDestroyWindow(window);
 

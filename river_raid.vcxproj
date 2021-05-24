@@ -22,6 +22,7 @@
     <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\object.h" />
     <ClInclude Include="src\PhysicsBody.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\glDebugMessage.h" />
@@ -33,10 +34,12 @@
     <ClInclude Include="src\vectors.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\object.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\SceneObject.cpp" />
+    <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

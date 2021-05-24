@@ -5,9 +5,10 @@
 #include <string>
 
 #include "Primitive.h"
-#include "vectors.h"
 #include "Transform.h"
 #include "PhysicsBody.h"
+#include "vectors.h"
+
 
 class SceneObject {
 private:
@@ -39,7 +40,8 @@ public:
 	
 	const Transform& getTransform() const { return transform; }
 
-	SceneObject* operator[](std::string str);
+	SceneObject* operator[](const std::string& name);
+	SceneObject* child(const std::string& name);
 
 	/// <summary>
 	/// Returns the object's and all of its children's

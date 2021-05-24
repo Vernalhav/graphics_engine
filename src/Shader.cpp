@@ -23,7 +23,7 @@ void Shader::use() {
 }
 
 void Shader::setTransform(const Transform& t) {
-    setFloat2("translation", t.translation);
+    setFloat3("translation", t.translation);
     setFloat("scale", t.scale);
     setFloat("rotation", t.rotation);
 }
@@ -60,6 +60,11 @@ void Shader::setFloat(const std::string& name, float value) {
 void Shader::setFloat2(const std::string& name, Vector2 values) {
     auto location = getUniformLocation(name);
     return glUniform2f(location, values.x, values.y);
+}
+
+void Shader::setFloat3(const std::string& name, Vector3 values) {
+    auto location = getUniformLocation(name);
+    return glUniform3f(location, values.x, values.y, values.z);
 }
 
 void Shader::setFloat4(const std::string& name, Vector4 values) {

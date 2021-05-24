@@ -7,11 +7,15 @@ void SceneObject::appendChild(SceneObject* child) {
 
 void SceneObject::appendChildren(std::vector<SceneObject*> children) {
 	for (auto child : children)
-		this->appendChild(child);
+		appendChild(child);
 }
 
-SceneObject* SceneObject::operator[](std::string str) {
-	return this->children[str];
+SceneObject* SceneObject::operator[](const std::string& name) {
+	return children[name];
+}
+
+SceneObject* SceneObject::child(const std::string& name) {
+	return children[name];
 }
 
 /// <summary>
@@ -43,7 +47,7 @@ std::vector<Primitive*> SceneObject::getObjectPrimitives() {
 }
 
 const std::vector<Primitive>& SceneObject::getObjectPrimitive() const {
-	return this->primitive;
+	return primitive;
 }
 
 const std::vector<const SceneObject*> SceneObject::getChildren() const {

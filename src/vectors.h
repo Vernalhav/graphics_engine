@@ -2,11 +2,39 @@
 
 #include <ostream>
 
+struct Vector2 {
+    float x, y;
+
+    Vector2(float x, float y) : x(x), y(y) { }
+    Vector2() : x(0), y(0) { }
+
+    Vector2 operator+(const Vector2& other) {
+        return { x + other.x, y + other.y };
+    }
+
+    Vector2& operator+=(const Vector2& other) {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+
+    Vector2 operator*(const float scale) {
+        return { x * scale, y * scale };
+    }
+
+    Vector2& operator*=(const float scale) {
+        x *= scale;
+        y *= scale;
+        return *this;
+    }
+};
+
 struct Vector3 {
     float x, y, z;
 
     Vector3(float x, float y, float z) : x(x), y(y), z(z) { }
-    Vector3(float x, float y) : x(x), y(y), z(1) { }
+    Vector3(float x, float y) : x(x), y(y), z(0) { }
+    Vector3(Vector2 other) : Vector3(other.x, other.y) { }
     Vector3(float x) : x(x), y(0), z(1) { }
     Vector3() : x(0), y(0), z(1) { }
     
@@ -53,33 +81,6 @@ struct Vector4 {
         y *= scale;
         z *= scale;
         w *= scale;
-        return *this;
-    }
-};
-
-struct Vector2 {
-    float x, y;
-
-    Vector2(float x, float y) : x(x), y(y) { }
-    Vector2() : x(0), y(0) { }
-
-    Vector2 operator+(const Vector2& other) {
-        return { x + other.x, y + other.y };
-    }
-
-    Vector2& operator+=(const Vector2& other) {
-        x += other.x;
-        y += other.y;
-        return *this;
-    }
-
-    Vector2 operator*(const float scale) {
-        return { x * scale, y * scale };
-    }
-
-    Vector2& operator*=(const float scale) {
-        x *= scale;
-        y *= scale;
         return *this;
     }
 };

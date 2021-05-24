@@ -28,6 +28,7 @@ public:
 
 	void setFloat(const std::string& name, float value);
 	void setFloat2(const std::string& name, Vector2 values);
+	void setFloat3(const std::string& name, Vector3 values);
 	void setFloat4(const std::string& name, Vector4 values);
 };
 
