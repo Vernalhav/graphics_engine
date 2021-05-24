@@ -30,7 +30,7 @@ std::vector<Primitive*> SceneObject::getObjectPrimitives() {
 		cur = childrenStack.top();
 		childrenStack.pop();
 
-		for (const auto& child : children) {
+		for (const auto& child : cur->children) {
 			childrenStack.push(child.second);
 		}
 
@@ -58,4 +58,7 @@ const std::vector<const SceneObject*> SceneObject::getChildren() const {
 
 void SceneObject::update() {
 	physicsBody.updateTransform(transform);
+	for (auto& child : children) {
+		child.second->update();
+	}
 }

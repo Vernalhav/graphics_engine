@@ -57,5 +57,8 @@ public:
 
 	const std::vector<const SceneObject*> getChildren() const;
 
+	/// <summary>
+	/// This funcion is called every frame.
+	/// </summary>
 	void update();
 };

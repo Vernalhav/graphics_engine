@@ -149,20 +149,22 @@ int main(void) {
         "    gl_FragColor = color;\n"
         "}\n";
 
-    Shader shader(vertex_code, fragment_code, "Standard shader");
+    SceneObject* scene = new SceneObject("scene", std::vector<Primitive>());
     SceneObject* propeller = new SceneObject("propeller", getPropeller(0.1f, 0.6f, 3));
+    scene->appendChild(propeller);
+
     propeller->physicsBody.angularVelocity = 0.001f;
 
+    Shader shader(vertex_code, fragment_code, "Standard shader");
     Renderer renderer(shader);
-
-    renderer.uploadObjects({ propeller });
+    renderer.uploadObjects({ scene });
 
     glfwShowWindow(window);
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-
-        propeller->update();
+        
+        scene->update();
 
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
