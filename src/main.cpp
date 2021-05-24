@@ -109,7 +109,7 @@ std::vector<Primitive> getPropeller(float width = 0.1, float length = 1, int nPr
         prop.push_back(Primitive(
             getRectangle(width, length, i * stepAngle),
             GL_TRIANGLE_FAN,
-            255, 255, 255
+            { 255, 255, 255 }
         ));
     }
 
@@ -150,7 +150,7 @@ int main(void) {
         "}\n";
 
     Shader shader(vertex_code, fragment_code, "Standard shader");
-    SceneObject* propeller = new SceneObject("propeller", { Primitive({{0, 0, 1}, {0, 1, 1}, {1, 0, 1}}, GL_TRIANGLES, 255, 255, 255) });
+    SceneObject* propeller = new SceneObject("propeller", getPropeller());
     Renderer renderer(shader);
 
     renderer.uploadObjects({ propeller });

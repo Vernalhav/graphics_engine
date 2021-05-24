@@ -18,11 +18,11 @@ struct Primitive {
 
     Primitive() : vertices(), primitive(GL_TRIANGLE_FAN), color() { }
 
-    Primitive(std::vector<Vector3>&& verts, GLenum prim, int r, int g, int b)
-        : vertices(verts), primitive(prim), color({ r / 255.0f, g / 255.0f, b / 255.0f, 1.0f }) { }
+    Primitive(std::vector<Vector3>&& verts, GLenum prim, Vector3 color)
+        : vertices(verts), primitive(prim), color({ color.x / 255.0f, color.y / 255.0f, color.z / 255.0f, 1.0f }) { }
 
-    Primitive(std::vector<Vector3>& verts, GLenum prim, int r, int g, int b)
-        : vertices(verts), primitive(prim), color({ r / 255.0f, g / 255.0f, b / 255.0f, 1.0f }) { }
+    Primitive(std::vector<Vector3>& verts, GLenum prim, Vector3 color)
+        : vertices(verts), primitive(prim), color({ color.x / 255.0f, color.y / 255.0f, color.z / 255.0f, 1.0f }) { }
 
     /// <summary>
     /// Returns amount of bytes occupied by the
@@ -35,5 +35,9 @@ struct Primitive {
 
     int getVertexCount() {
         return vertices.size();
+    }
+
+    int getSingleVertexSize() {
+        return sizeof(vertices[0]);
     }
 };
