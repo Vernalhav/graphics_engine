@@ -121,7 +121,6 @@ int main(void) {
     GLFWwindow* window = initGLFW();
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_press_callback);
-    glEnable(GL_DEPTH_TEST);
     
 #ifdef DEBUG
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);

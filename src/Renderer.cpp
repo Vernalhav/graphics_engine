@@ -41,7 +41,6 @@ void Renderer::_drawObject(const SceneObject* object, Transform globalTransform)
 	
 	globalTransform += object->getTransform();
 	shader.setTransform(globalTransform);
-	//std::cout << globalTransform << std::endl;
 
 	auto objectPrimitive = object->getObjectPrimitive();
 
