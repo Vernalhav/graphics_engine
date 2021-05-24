@@ -55,3 +55,7 @@ const std::vector<const SceneObject*> SceneObject::getChildren() const {
 
 	return childrenArray;
 }
+
+void SceneObject::update() {
+	physicsBody.updateTransform(transform);
+}

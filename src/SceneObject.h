@@ -7,8 +7,7 @@
 #include "Primitive.h"
 #include "vectors.h"
 #include "Transform.h"
-
-
+#include "PhysicsBody.h"
 
 class SceneObject {
 private:
@@ -21,9 +20,10 @@ private:
 	/// </summary>
 	std::vector<Primitive> primitive;
 	std::map<std::string, SceneObject*> children;
-	Transform transform;
 	
 public:
+	Transform transform;
+	PhysicsBody physicsBody;
 
 	SceneObject(std::string name, std::vector<Primitive>& p) : name(name), primitive(p) { }
 	SceneObject(std::string name, std::vector<Primitive>&& p) : name(name), primitive(p) { }
@@ -56,4 +56,6 @@ public:
 	const std::vector<Primitive>& getObjectPrimitive() const;
 
 	const std::vector<const SceneObject*> getChildren() const;
+
+	void update();
 };

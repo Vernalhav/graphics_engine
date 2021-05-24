@@ -20,6 +20,17 @@ struct Vector3 {
         z += other.z;
         return *this;
     }
+
+    Vector3 operator*(const float scale) {
+        return { x * scale, y * scale, z * scale };
+    }
+
+    Vector3& operator*=(const float scale) {
+        x *= scale;
+        y *= scale;
+        z *= scale;
+        return *this;
+    }
 };
 
 struct Vector4 {
@@ -31,6 +42,18 @@ struct Vector4 {
 
     Vector4 operator+(const Vector4& other) {
         return { x + other.x, y + other.y, z + other.z, w + other.w };
+    }
+
+    Vector4 operator*(const float scale) {
+        return { x * scale, y * scale, z * scale, w * scale };
+    }
+
+    Vector4& operator*=(const float scale) {
+        x *= scale;
+        y *= scale;
+        z *= scale;
+        w *= scale;
+        return *this;
     }
 };
 
@@ -47,6 +70,16 @@ struct Vector2 {
     Vector2& operator+=(const Vector2& other) {
         x += other.x;
         y += other.y;
+        return *this;
+    }
+
+    Vector2 operator*(const float scale) {
+        return { x * scale, y * scale };
+    }
+
+    Vector2& operator*=(const float scale) {
+        x *= scale;
+        y *= scale;
         return *this;
     }
 };

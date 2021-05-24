@@ -150,7 +150,9 @@ int main(void) {
         "}\n";
 
     Shader shader(vertex_code, fragment_code, "Standard shader");
-    SceneObject* propeller = new SceneObject("propeller", getPropeller());
+    SceneObject* propeller = new SceneObject("propeller", getPropeller(0.1f, 0.6f, 3));
+    propeller->physicsBody.angularVelocity = 0.001f;
+
     Renderer renderer(shader);
 
     renderer.uploadObjects({ propeller });
@@ -159,6 +161,8 @@ int main(void) {
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+
+        propeller->update();
 
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
