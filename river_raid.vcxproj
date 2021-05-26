@@ -22,6 +22,7 @@
     <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\matrix.h" />
     <ClInclude Include="src\object.h" />
     <ClInclude Include="src\PhysicsBody.h" />
     <ClInclude Include="src\Shader.h" />
