@@ -6,21 +6,19 @@
 
 SceneObject* object::getHelicopter(float scale) {
 
-    SceneObject* propeller = new SceneObject("propeller", getPropeller(0.08f, 1, 3));
-    SceneObject* smallPropeller = new SceneObject("propeller", getPropeller(0.08f, 1, 3));
+    SceneObject* propeller = new SceneObject("propeller", getPropeller());
+    SceneObject* smallPropeller = new SceneObject("small_propeller", getPropeller());
     SceneObject* body = new SceneObject("body", getHelicopterBody());
 
-    propeller->transform.translation.z = -0.1f;
-    smallPropeller->transform.translation.x = -0.5f;
+    smallPropeller->transform.translation.x = -1.72f;
     smallPropeller->transform.scale = 0.3f;
-    body->transform.translation.z = 0.2f;
 
     body->appendChild(propeller);
     body->appendChild(smallPropeller);
     body->transform.scale = scale;
    
     propeller->physicsBody.angularVelocity = 0.005f;
-    smallPropeller->physicsBody.angularVelocity = 0.005f;
+    smallPropeller->physicsBody.angularVelocity = -0.005f;
 
     body->physicsBody.forwardVelocity= 0.0001f;
     body->physicsBody.angularVelocity= 0.0001f;
@@ -30,7 +28,7 @@ SceneObject* object::getHelicopter(float scale) {
 
 SceneObject* object::getSpinner() {
     SceneObject* prop1 = new SceneObject("p1", getPropeller());
-    SceneObject* prop2 = new SceneObject("p2", getPropeller(0.1f, 1, 3, {0, 255, 0}));
+    SceneObject* prop2 = new SceneObject("p2", getPropeller({ 0, 255, 0 }, 0.1f, 3));
     SceneObject* prop3 = new SceneObject("p2", getPropeller());
     SceneObject* shaft = new SceneObject("shaft", { { getPolygon(4, PI / 4, {0,0,0}, {0.7f, 0.05f}), GL_TRIANGLE_FAN, {255, 255, 255} } });
 
@@ -64,14 +62,14 @@ std::vector<Primitive> object::getHelicopterBody() {
     return { cockpit, topGlass, tail };
 }
 
-std::vector<Primitive> object::getPropeller(float width, float length, int nPropellers, Vector3 color) {
+std::vector<Primitive> object::getPropeller(Vector3 color, float width, int nPropellers) {
     std::vector<Primitive> prop;
 
     float stepAngle = 2 * PI / nPropellers;
 
     for (int i = 0; i < nPropellers; i++) {
         prop.push_back(Primitive(
-            getRectangle(width, length, i * stepAngle),
+            getRectangle(width, 1, i * stepAngle),
             GL_TRIANGLE_FAN,
             color
         ));

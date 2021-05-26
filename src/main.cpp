@@ -133,8 +133,8 @@ int main(void) {
     glDepthFunc(GL_LEQUAL);
 
     SceneObject* scene = new SceneObject("scene");
-    //SceneObject* helicopter = object::getHelicopter(0.5f);
-    SceneObject* helicopter = object::getSpinner();
+    SceneObject* helicopter = object::getHelicopter(0.5f);
+    //SceneObject* helicopter = object::getSpinner();
     scene->appendChild(helicopter);
 
     Shader shader(vertex_code, fragment_code, "Standard shader");
