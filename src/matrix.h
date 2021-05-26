@@ -52,7 +52,7 @@ struct Matrix3 {
         Matrix3 ans;
         for (int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
-                int dot_product = 0;
+                float dot_product = 0;
                 for (int k = 0; k < DIM; k++) {
                     dot_product += matrix[i][k] * other(k, j);
                 }
@@ -86,7 +86,7 @@ struct Matrix3 {
         Matrix3 translation = { {
             { 1, 0, offsets.x },
             { 0, 1, offsets.y },
-            { 0, 0, offsets.z }
+            { 0, 0, 1 }
         } };
 
         *this *= translation;

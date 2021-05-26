@@ -3,6 +3,7 @@
 #include <gl/glew.h>
 
 #include "vectors.h"
+#include "matrix.h"
 #include "Transform.h"
 
 class Shader
@@ -23,6 +24,8 @@ public:
 
 	void use();
 	void setTransform(const Transform& t);
+	void setTransform(const Matrix3& t);
+
 	void setPositionAttributeLayout();
 	void enableAttrib(const std::string& name);
 
@@ -30,5 +33,6 @@ public:
 	void setFloat2(const std::string& name, Vector2 values);
 	void setFloat3(const std::string& name, Vector3 values);
 	void setFloat4(const std::string& name, Vector4 values);
+	void setMatrix3(const std::string& name, Matrix3 values);
 };
 

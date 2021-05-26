@@ -114,16 +114,12 @@ int main(void) {
 
     std::string vertex_code =
         "#version 150\n"
-        "attribute vec3 position;\n"
-        "uniform vec3 translation;\n"
-        "uniform float rotation;\n"
-        "uniform float scale;\n"
+        "in vec3 position;\n"
+        "uniform mat3 model;\n"
         "void main()\n"
         "{\n"
-        "   mat3 translation_mat = mat3( vec3(1, 0, 0), vec3(0, 1, 0), translation );\n"
-        "   mat3 rotation_mat = mat3( vec3(cos(rotation), sin(rotation), 0), vec3(-sin(rotation), cos(rotation), 0), vec3(0, 0, 1) );\n"
-        "   mat3 scale_mat = mat3( vec3(scale, 0, 0), vec3(0, scale, 0), vec3(0, 0, 1) );\n"
-        "   gl_Position = vec4(translation_mat * rotation_mat * scale * vec3(position.x, position.y, 1.0), 1.0);\n"
+        "   vec3 computedPosition = model * position;"
+        "   gl_Position = vec4(computedPosition.xy, 0, 1);\n"
         "}\n";
 
     std::string fragment_code =
@@ -134,8 +130,11 @@ int main(void) {
         "    gl_FragColor = color;\n"
         "}\n";
 
+    glDepthFunc(GL_LEQUAL);
+
     SceneObject* scene = new SceneObject("scene");
-    SceneObject* helicopter = object::getHelicopter(0.5f);
+    //SceneObject* helicopter = object::getHelicopter(0.5f);
+    SceneObject* helicopter = object::getSpinner();
     scene->appendChild(helicopter);
 
     Shader shader(vertex_code, fragment_code, "Standard shader");

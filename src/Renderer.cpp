@@ -1,5 +1,6 @@
-#include "Renderer.h"
 #include <iostream>
+
+#include "Renderer.h"
 
 void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
 
@@ -34,12 +35,12 @@ void Renderer::drawObject(SceneObject* object) {
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	_drawObject(object, Transform());
+	_drawObject(object, Matrix3());
 }
 
-void Renderer::_drawObject(const SceneObject* object, Transform globalTransform) {
+void Renderer::_drawObject(const SceneObject* object, Matrix3 globalTransform) {
 	
-	globalTransform += object->getTransform();
+	globalTransform = globalTransform * Matrix3(object->transform);
 	shader.setTransform(globalTransform);
 
 	auto objectPrimitive = object->getObjectPrimitive();

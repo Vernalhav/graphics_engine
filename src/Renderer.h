@@ -6,6 +6,7 @@
 #include "Primitive.h"
 #include "Shader.h"
 #include "SceneObject.h"
+#include "matrix.h"
 
 
 class Renderer {
@@ -13,10 +14,9 @@ private:
 	GLuint VAO, VBO;
 	Shader shader;
 
-	void _drawObject(const SceneObject* object, Transform globalTransform);
+	void _drawObject(const SceneObject* object, Matrix3 globalTransform);
 
 public:
-
 	Renderer(Shader s);
 
 	/// <summary>

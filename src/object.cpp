@@ -1,24 +1,56 @@
 #include "object.h"
 #include "utils.h"
 
+#define DEFAULT_PRIMITIVE_Z 1
+
 
 SceneObject* object::getHelicopter(float scale) {
 
     SceneObject* propeller = new SceneObject("propeller", getPropeller(0.08f, 1, 3));
+    SceneObject* smallPropeller = new SceneObject("propeller", getPropeller(0.08f, 1, 3));
     SceneObject* body = new SceneObject("body", getHelicopterBody());
 
     propeller->transform.translation.z = -0.1f;
+    smallPropeller->transform.translation.x = -0.5f;
+    smallPropeller->transform.scale = 0.3f;
     body->transform.translation.z = 0.2f;
 
     body->appendChild(propeller);
+    body->appendChild(smallPropeller);
     body->transform.scale = scale;
    
     propeller->physicsBody.angularVelocity = 0.005f;
+    smallPropeller->physicsBody.angularVelocity = 0.005f;
 
     body->physicsBody.forwardVelocity= 0.0001f;
     body->physicsBody.angularVelocity= 0.0001f;
 
 	return body;
+}
+
+SceneObject* object::getSpinner() {
+    SceneObject* prop1 = new SceneObject("p1", getPropeller());
+    SceneObject* prop2 = new SceneObject("p2", getPropeller(0.1f, 1, 3, {0, 255, 0}));
+    SceneObject* prop3 = new SceneObject("p2", getPropeller());
+    SceneObject* shaft = new SceneObject("shaft", { { getPolygon(4, PI / 4, {0,0,0}, {0.7f, 0.05f}), GL_TRIANGLE_FAN, {255, 255, 255} } });
+
+    prop1->transform.translation.x = 0.5f;
+    prop2->transform.translation.x = -0.5f;
+    prop3->transform.translation.x = 1;
+    prop1->transform.scale = 0.5;
+    prop2->transform.scale = 0.5;
+    prop3->transform.scale = 0.5;
+
+    shaft->physicsBody.angularVelocity = 0.0001f;
+    prop1->physicsBody.angularVelocity = -0.001f;
+    prop2->physicsBody.angularVelocity = 0.001f;
+    prop3->physicsBody.angularVelocity = 0.001f;
+
+    shaft->appendChild(prop1);
+    shaft->appendChild(prop2);
+    prop2->appendChild(prop3);
+
+    return shaft;
 }
 
 std::vector<Primitive> object::getHelicopterBody() {
@@ -32,7 +64,7 @@ std::vector<Primitive> object::getHelicopterBody() {
     return { cockpit, topGlass, tail };
 }
 
-std::vector<Primitive> object::getPropeller(float width, float length, int nPropellers) {
+std::vector<Primitive> object::getPropeller(float width, float length, int nPropellers, Vector3 color) {
     std::vector<Primitive> prop;
 
     float stepAngle = 2 * PI / nPropellers;
@@ -41,7 +73,7 @@ std::vector<Primitive> object::getPropeller(float width, float length, int nProp
         prop.push_back(Primitive(
             getRectangle(width, length, i * stepAngle),
             GL_TRIANGLE_FAN,
-            { 255, 255, 255 }
+            color
         ));
     }
 
@@ -55,7 +87,7 @@ std::vector<Vector3> object::getPolygon(int n, float rotation, Vector3 offset, V
     for (int i = 0; i < n; i++) {
         polygon[i].x = scale.x * cos(angleStep * i + rotation) + offset.x;
         polygon[i].y = scale.y * sin(angleStep * i + rotation) + offset.y;
-        polygon[i].z = 0;
+        polygon[i].z = DEFAULT_PRIMITIVE_Z;
     }
 
     return polygon;
@@ -64,16 +96,16 @@ std::vector<Vector3> object::getPolygon(int n, float rotation, Vector3 offset, V
 std::vector<Vector3> object::getRectangle(float width, float length, float rotation) {
     std::vector<Vector3> rectangle(4);
 
-    rectangle[0] = { 0.0f, width / 2, 0};
-    rectangle[1] = { 0.0f, -width / 2, 0};
-    rectangle[2] = { length, -width / 2, 0};
-    rectangle[3] = { length, width / 2, 0};
+    rectangle[0] = { 0.0f, width / 2, DEFAULT_PRIMITIVE_Z};
+    rectangle[1] = { 0.0f, -width / 2, DEFAULT_PRIMITIVE_Z};
+    rectangle[2] = { length, -width / 2, DEFAULT_PRIMITIVE_Z};
+    rectangle[3] = { length, width / 2, DEFAULT_PRIMITIVE_Z};
 
     for (auto& vertex : rectangle) {
         float x = vertex.x, y = vertex.y;
         vertex.x = cos(rotation) * x - sin(rotation) * y;
         vertex.y = sin(rotation) * x + cos(rotation) * y;
-        vertex.z = 0;
+        vertex.z = DEFAULT_PRIMITIVE_Z;
     }
 
     return rectangle;
