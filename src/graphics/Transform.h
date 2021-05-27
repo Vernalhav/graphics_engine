@@ -1,5 +1,5 @@
 #pragma once
-#include "vectors.h"
+#include "../math/vectors.h"
 
 struct Transform {
 	Vector3 translation = { 0, 0, 0 };

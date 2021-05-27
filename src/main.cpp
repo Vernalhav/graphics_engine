@@ -8,18 +8,17 @@
 #include <vector>
 #include <algorithm>
 
-#include "Primitive.h"
-#include "SceneObject.h"
-#include "Shader.h"
-#include "Renderer.h"
-#include "vectors.h"
+#include "math/vectors.h"
+#include "graphics/SceneObject.h"
+#include "graphics/Shader.h"
+#include "graphics/Renderer.h"
+#include "misc/utils.h"
 #include "object.h"
-#include "utils.h"
 
 #define DEBUG 1
 
 #ifdef DEBUG
-#include "glDebugMessage.h"
+#include "graphics/glDebugMessage.h"
 #endif
 
 

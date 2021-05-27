@@ -3,10 +3,10 @@
 #include <vector>
 #include <gl/glew.h>
 
+#include "../math/matrix.h"
 #include "Primitive.h"
 #include "Shader.h"
 #include "SceneObject.h"
-#include "matrix.h"
 
 
 class Renderer {

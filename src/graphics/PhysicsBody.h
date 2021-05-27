@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vectors.h"
+#include "../math/vectors.h"
 #include "Transform.h"
 
 struct PhysicsBody {

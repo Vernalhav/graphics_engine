@@ -1,5 +1,5 @@
 #include "object.h"
-#include "utils.h"
+#include "misc/utils.h"
 
 #define DEFAULT_PRIMITIVE_Z 1
 

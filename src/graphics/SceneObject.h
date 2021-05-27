@@ -4,10 +4,10 @@
 #include <stack>
 #include <string>
 
+#include "../math/vectors.h"
 #include "Primitive.h"
 #include "Transform.h"
 #include "PhysicsBody.h"
-#include "vectors.h"
 
 
 class SceneObject {

@@ -2,8 +2,8 @@
 #include <string>
 #include <gl/glew.h>
 
-#include "vectors.h"
-#include "matrix.h"
+#include "../math/vectors.h"
+#include "../math/matrix.h"
 #include "Transform.h"
 
 class Shader

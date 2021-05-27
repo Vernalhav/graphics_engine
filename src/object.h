@@ -1,5 +1,5 @@
 #pragma once
-#include "SceneObject.h"
+#include "graphics/SceneObject.h"
 
 namespace Color {
 	static Vector3 WHITE = {255, 255, 255};

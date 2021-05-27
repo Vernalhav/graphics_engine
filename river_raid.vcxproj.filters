@@ -18,39 +18,40 @@
     <None Include=".gitignore">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\glDebugMessage.h">
+    <ClInclude Include="src\graphics\glDebugMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Primitive.h">
+    <ClInclude Include="src\graphics\Primitive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer.h">
+    <ClInclude Include="src\graphics\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SceneObject.h">
+    <ClInclude Include="src\graphics\SceneObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils.h">
+    <ClInclude Include="src\misc\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shader.h">
+    <ClInclude Include="src\graphics\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\vectors.h">
+    <ClInclude Include="src\math\vectors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Transform.h">
+    <ClInclude Include="src\graphics\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\PhysicsBody.h">
+    <ClInclude Include="src\graphics\PhysicsBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\matrix.h">
+    <ClInclude Include="src\math\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -58,19 +59,19 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SceneObject.cpp">
+    <ClCompile Include="src\graphics\SceneObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer.cpp">
+    <ClCompile Include="src\graphics\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
+    <ClCompile Include="src\graphics\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils.cpp">
+    <ClCompile Include="src\misc\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

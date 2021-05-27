@@ -2,7 +2,8 @@
 
 #include <GL/glew.h>
 #include <vector>
-#include "vectors.h"
+
+#include "../math/vectors.h"
 
 
 struct Primitive {
