@@ -1,7 +1,12 @@
+#include <iostream>
+
 #include "SceneObject.h"
 
-
 void SceneObject::appendChild(SceneObject* child) {
+	if (children.count(child->name) != 0) {
+		std::cout << "appendChild: WARNING: SceneObject " << name << " already has child " << child->name << std::endl;
+		return;
+	}
 	children[child->name] = child;
 }
 

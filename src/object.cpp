@@ -4,24 +4,20 @@
 #define DEFAULT_PRIMITIVE_Z 1
 
 
-SceneObject* object::getHelicopter(float scale) {
+SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyColor, const Vector3& propellerColor) {
 
-    SceneObject* propeller = new SceneObject("propeller", getPropeller());
-    SceneObject* smallPropeller = new SceneObject("small_propeller", getPropeller());
-    SceneObject* body = new SceneObject("body", getHelicopterBody());
+    SceneObject* propeller = new SceneObject("propeller", getPropeller(propellerColor));
+    SceneObject* smallPropeller = new SceneObject("small_propeller", getPropeller(propellerColor));
+    SceneObject* body = new SceneObject(name + "_body", getHelicopterBody(bodyColor));
 
     smallPropeller->transform.translation.x = -1.72f;
     smallPropeller->transform.scale = 0.3f;
 
     body->appendChild(propeller);
     body->appendChild(smallPropeller);
-    body->transform.scale = scale;
    
     propeller->physicsBody.angularVelocity = 0.005f;
     smallPropeller->physicsBody.angularVelocity = -0.005f;
-
-    body->physicsBody.forwardVelocity= 0.0001f;
-    body->physicsBody.angularVelocity= 0.0001f;
 
 	return body;
 }
@@ -51,13 +47,13 @@ SceneObject* object::getSpinner() {
     return shaft;
 }
 
-std::vector<Primitive> object::getHelicopterBody() {
+std::vector<Primitive> object::getHelicopterBody(Vector3 color) {
 
     float scale = 1;
 
-    Primitive cockpit(getPolygon(4, PI / 4, { 0, 0 }, { 0.5f, 0.3f }), GL_TRIANGLE_FAN, {0, 0, 255});
-    Primitive topGlass(getPolygon(3, 0, { 0.44f, 0 }, { 0.175f, 0.25f }), GL_TRIANGLE_FAN, { 255, 0, 0 });
-    Primitive tail(getPolygon(4, PI / 4, { -1, 0 }, { 1, 0.05f }), GL_TRIANGLE_FAN, { 0, 255, 0 });
+    Primitive cockpit(getPolygon(4, PI / 4, { 0, 0 }, { 0.5f, 0.3f }), GL_TRIANGLE_FAN, color);
+    Primitive topGlass(getPolygon(3, 0, { 0.44f, 0 }, { 0.175f, 0.25f }), GL_TRIANGLE_FAN, color);
+    Primitive tail(getPolygon(4, PI / 4, { -1, 0 }, { 1, 0.05f }), GL_TRIANGLE_FAN, color);
 
     return { cockpit, topGlass, tail };
 }

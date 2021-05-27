@@ -1,16 +1,24 @@
 #pragma once
 #include "SceneObject.h"
 
+namespace Color {
+	static Vector3 WHITE = {255, 255, 255};
+	static Vector3 BLACK = {0, 0, 0};
+	static Vector3 DARK_GRAY = {50, 50, 50};
+	static Vector3 LIGHT_GRAY = {200, 200, 200};
+	static Vector3 CYAN = {18, 135, 181};
+}
+
 class object {
 public:
-	static SceneObject* getHelicopter(float scale = 0.5f);
+	static SceneObject* getHelicopter(const std::string& name, const Vector3& bodyColor = Color::WHITE, const Vector3& propellerColor = Color::LIGHT_GRAY);
 
 	static SceneObject* getSpinner();
 
 private:
-	static std::vector<Primitive> getHelicopterBody();
+	static std::vector<Primitive> getHelicopterBody(Vector3 color = Color::WHITE);
 
-	static std::vector<Primitive> getPropeller(Vector3 color = { 255, 255, 255 }, float width = 0.1f, int nPropellers = 3);
+	static std::vector<Primitive> getPropeller(Vector3 color = Color::WHITE, float width = 0.1f, int nPropellers = 3);
 
 	static std::vector<Vector3> getPolygon(int n, float rotation = 0, Vector3 offset = { 0, 0, 0 }, Vector2 scale = { 1, 1 });
 

@@ -41,6 +41,10 @@ GLFWwindow* initGLFW() {
     
     glEnable(GL_DEPTH_TEST);
 
+#ifdef DEBUG
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(GLDebugMessageCallback, NULL);
+#endif
     return window;
 }
 
@@ -102,16 +106,7 @@ void processInput(float& rotation, float& scale, float* translation) {
 }
 
 
-int main(void) {
-    GLFWwindow* window = initGLFW();
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
-    glfwSetKeyCallback(window, key_press_callback);
-    
-#ifdef DEBUG
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(GLDebugMessageCallback, NULL);
-#endif
-
+Renderer* setupRenderer() {
     std::string vertex_code =
         "#version 150\n"
         "in vec3 position;\n"
@@ -130,32 +125,50 @@ int main(void) {
         "    gl_FragColor = color;\n"
         "}\n";
 
-    glDepthFunc(GL_LEQUAL);
-
-    SceneObject* scene = new SceneObject("scene");
-    SceneObject* helicopter = object::getHelicopter(0.5f);
-    //SceneObject* helicopter = object::getSpinner();
-    scene->appendChild(helicopter);
-
     Shader shader(vertex_code, fragment_code, "Standard shader");
-    Renderer renderer(shader);
-    renderer.uploadObjects({ scene });
+    return new Renderer(shader);
+}
+
+
+int main(void) {
+    GLFWwindow* window = initGLFW();
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetKeyCallback(window, key_press_callback);
+
+    // Setting up scene
+    SceneObject* scene = new SceneObject("scene");
+    SceneObject* helicopter = object::getHelicopter("helicopter");
+    SceneObject* helicopter2 = object::getHelicopter("helicopter_2", Color::DARK_GRAY);
+    scene->appendChild(helicopter);
+    scene->appendChild(helicopter2);
+
+    helicopter->transform.scale = 0.2f;
+    helicopter->transform.translation = { -0.5, 0 };
+    helicopter->transform.rotation = PI / 4;
+    helicopter2->transform.scale = 0.2f;
+    helicopter2->transform.translation = { 0.5, 0 };
+    helicopter2->transform.rotation = 3 * PI / 4;
+
+    // Getting renderer and uploading objects to GPU
+    Renderer *renderer = setupRenderer();
+    renderer->uploadObjects({ scene });
 
     glfwShowWindow(window);
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-
+        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
         scene->update();
-        renderer.drawObject(scene);
+        renderer->drawObject(scene);
  
         glfwSwapBuffers(window);
     }
 
     delete scene;
+    delete renderer;
 
     glfwDestroyWindow(window);
 
