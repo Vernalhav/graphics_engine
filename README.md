@@ -11,7 +11,6 @@ All relevant `.cpp` and `.h` files are in the `src/` directory.
     ├─── graphics/  # OpenGL and transformation-related code
     ├─── math/      # Small implementation of vectors and matrices of fixed size
     ├─── misc/      # Miscellaneous functions and definitions
-    ├─── misc/      # Miscellaneous functions and definitions
     ├─── main.cpp   # Main application
     └─── object.cpp # Creates the application's SceneObjects
 
