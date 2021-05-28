@@ -42,8 +42,7 @@ add a constructor that receives at least the parent SceneObject pointer (which s
 `update()` function which will be called every frame and add whatever behavior is needed. A pointer to the component's SceneObject is available
 through the `sceneObject` member.  
 You can add a component to an object by using
-```cpp
-object->addComponent<ComponentType>(<args>)```
+```object->addComponent<ComponentType>(<args>)```
 where ComponentType is the name of the Component's subclass and <args> are the parameters to its constructor **excluding the SceneObject reference**.
 The SceneObject's reference will be passed automatically by the àddComponent` function.
 
