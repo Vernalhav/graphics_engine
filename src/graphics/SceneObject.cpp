@@ -66,7 +66,10 @@ const std::vector<const SceneObject*> SceneObject::getChildren() const {
 }
 
 void SceneObject::update() {
-	physicsBody.updateTransform(transform);
+	for (Component* component : components) {
+		component->update();
+	}
+
 	for (auto& child : children) {
 		child.second->update();
 	}

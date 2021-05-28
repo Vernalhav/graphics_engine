@@ -7,8 +7,9 @@
 #include "../math/vectors.h"
 #include "Primitive.h"
 #include "Transform.h"
-#include "PhysicsBody.h"
+#include "Component.h"
 
+class Component;	// Declaring class here to avoid circular dependency
 
 class SceneObject {
 private:
@@ -21,16 +22,19 @@ private:
 	/// </summary>
 	std::vector<Primitive> primitive;
 	std::map<std::string, SceneObject*> children;
+	std::vector<Component*> components;
 	
 public:
 	Transform transform;
-	PhysicsBody physicsBody;
 
 	SceneObject(std::string name, std::vector<Primitive>& p) : name(name), primitive(p) { }
 	SceneObject(std::string name, std::vector<Primitive>&& p) : name(name), primitive(p) { }
 	SceneObject(std::string name) : name(name), primitive() { }
 	SceneObject() : name("unnamed object"), primitive() { }
-	~SceneObject() { for (auto& child : children) delete child.second; }
+	~SceneObject() {
+		for (auto& child : children) delete child.second;
+		components.clear();
+	}
 
 	void appendChild(SceneObject* child);
 
@@ -42,6 +46,32 @@ public:
 
 	SceneObject* operator[](const std::string& name);
 	SceneObject* child(const std::string& name);
+
+	/// Adds a component to this SceneObject.
+	/// ComponentType is the name of the Component subclass
+	/// that will be added to this object. ...Args is a list
+	/// of arguments that will be passed to ComponentType's
+	/// constructor.
+	/// 
+	/// Usage examples:
+	///		helicopter->addComponent<PhysicsBody>(1, 0.2);
+	///		cloud->addComponent<Cloud>("my_cloud");
+	/// in which 1 and 0.2 are the constructor parameters for
+	/// the PhysicsBody component and "my_cloud" is the constructor
+	/// parameter for the Cloud component.
+	template<typename ComponentType, class ...Args>
+	inline void addComponent(Args ...args) {
+		components.push_back(new ComponentType(this, args...));
+	}
+
+	template<typename ComponentType>
+	inline ComponentType* getComponent() {
+		for (Component* component : components)
+			if (component->instanceof(ComponentType))
+				return component;
+
+		return nullptr;
+	}
 
 	/// <summary>
 	/// Returns the object's and all of its children's

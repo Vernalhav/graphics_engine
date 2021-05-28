@@ -1,4 +1,5 @@
 #include "object.h"
+#include "graphics/PhysicsBody.h"
 #include "misc/utils.h"
 
 #define DEFAULT_PRIMITIVE_Z 1
@@ -16,8 +17,8 @@ SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyC
     body->appendChild(propeller);
     body->appendChild(smallPropeller);
    
-    propeller->physicsBody.angularVelocity = 0.005f;
-    smallPropeller->physicsBody.angularVelocity = -0.005f;
+    smallPropeller->addComponent<PhysicsBody>(0.0f, 0.001f);
+    propeller->addComponent<PhysicsBody>(0.0f, -0.001f);
 
 	return body;
 }
@@ -35,10 +36,10 @@ SceneObject* object::getSpinner() {
     prop2->transform.scale = 0.5;
     prop3->transform.scale = 0.5;
 
-    shaft->physicsBody.angularVelocity = 0.0001f;
-    prop1->physicsBody.angularVelocity = -0.001f;
-    prop2->physicsBody.angularVelocity = 0.001f;
-    prop3->physicsBody.angularVelocity = 0.001f;
+    shaft->addComponent<PhysicsBody>(0.0f, 0.0001f);
+    prop1->addComponent<PhysicsBody>(0.0f, -0.0001f);
+    prop2->addComponent<PhysicsBody>(0.0f, 0.0001f);
+    prop3->addComponent<PhysicsBody>(0.0f, 0.0001f);
 
     shaft->appendChild(prop1);
     shaft->appendChild(prop2);

@@ -23,6 +23,8 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\application\Cloud.h" />
+    <ClInclude Include="src\graphics\Component.h" />
     <ClInclude Include="src\math\matrix.h" />
     <ClInclude Include="src\object.h" />
     <ClInclude Include="src\graphics\PhysicsBody.h" />
@@ -36,6 +38,7 @@
     <ClInclude Include="src\math\vectors.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\application\Cloud.cpp" />
     <ClCompile Include="src\object.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\main.cpp" />
