@@ -1,24 +1,25 @@
 #pragma once
 
 #include "../math/vectors.h"
-#include "Transform.h"
+#include "Component.h"
 
-struct PhysicsBody {
+class PhysicsBody: public Component {
+public:
 	float forwardVelocity;
 	float angularVelocity;
 
-	PhysicsBody() : PhysicsBody(0, 0) { }
+	PhysicsBody(SceneObject* obj) : PhysicsBody(obj, 0, 0) { }
 
-	PhysicsBody(float forwardVelocity, float angularVelocity)
-		: forwardVelocity(forwardVelocity), angularVelocity(angularVelocity) { }
+	PhysicsBody(SceneObject* obj, float forwardVelocity, float angularVelocity)
+		: Component(obj), forwardVelocity(forwardVelocity), angularVelocity(angularVelocity) { }
 
-	void updateTransform(Transform& t) {
-		t.rotation += angularVelocity;
-		float curRotation = t.rotation;
+	void update() {
+		sceneObject->transform.rotation += angularVelocity;
+		float curRotation = sceneObject->transform.rotation;
 
 		Vector2 velocity(cos(curRotation), sin(curRotation));
 		velocity *= forwardVelocity;
 
-		t.translation += velocity;
+		sceneObject->transform.translation += velocity;
 	}
 };
