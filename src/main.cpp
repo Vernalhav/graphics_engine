@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <bitset>
 
 #include "math/vectors.h"
 #include "graphics/SceneObject.h"
@@ -21,6 +22,9 @@
 #ifdef DEBUG
 #include "graphics/glDebugMessage.h"
 #endif
+
+
+GLFWwindow* window;
 
 
 GLFWwindow* initGLFW() {
@@ -49,63 +53,6 @@ GLFWwindow* initGLFW() {
 }
 
 
-int current_mouse = -1;
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-    if (action == GLFW_RELEASE)
-        current_mouse = -1;
-    if (action == GLFW_PRESS)
-        current_mouse = button;
-}
-
-
-int current_key = -1;
-void key_press_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (action == GLFW_RELEASE)
-        current_key = -1;
-    if (action == GLFW_PRESS)
-        current_key = key;
-}
-
-
-void processInput(float& rotation, float& scale, float* translation) {
-
-    float rotationPerFrame = 0.005f;
-    float scalePerFrame = 0.005f;
-    float TranslationPerFrame = 0.005f;
-
-    switch (current_mouse) {
-    case GLFW_MOUSE_BUTTON_1:
-        scale += scalePerFrame;
-        break;
-    case GLFW_MOUSE_BUTTON_2:
-        scale -= scalePerFrame;
-        break;
-    }
-
-    switch (current_key) {
-    case GLFW_KEY_W:
-        translation[1] = std::min(translation[1] + TranslationPerFrame, 1.0f);
-        break;
-    case GLFW_KEY_A:
-        translation[0] = std::max(translation[0] - TranslationPerFrame, -1.0f);
-        break;
-    case GLFW_KEY_S:
-        translation[1] = std::max(translation[1] - TranslationPerFrame, -1.0f);
-        break;
-    case GLFW_KEY_D:
-        translation[0] = std::min(translation[0] + TranslationPerFrame, 1.0f);
-        break;
-
-    case GLFW_KEY_LEFT:
-        rotation += rotationPerFrame;
-        break;
-    case GLFW_KEY_RIGHT:
-        rotation -= rotationPerFrame;
-        break;
-    }
-}
-
-
 Renderer* setupRenderer() {
     std::string vertex_code =
         "#version 150\n"
@@ -130,26 +77,47 @@ Renderer* setupRenderer() {
 }
 
 
+inline bool isKeyPressed(int key) {
+    return glfwGetKey(window, key) == GLFW_PRESS;
+}
+
+
+void processInput(PhysicsBody* helicopterPB) {
+
+    float linearVelocity = 0.001f;
+    float angularVelocity = 0.003f;
+
+    helicopterPB->angularVelocity = 0;
+    helicopterPB->forwardVelocity = 0;
+
+    if (isKeyPressed(GLFW_KEY_W)) {
+        helicopterPB->forwardVelocity = linearVelocity;
+    }
+
+    if (isKeyPressed(GLFW_KEY_A)) {
+        helicopterPB->angularVelocity = angularVelocity;
+    }
+
+    if (isKeyPressed(GLFW_KEY_D)) {
+        helicopterPB->angularVelocity = -angularVelocity;
+    }
+}
+
+
 int main(void) {
-    GLFWwindow* window = initGLFW();
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
-    glfwSetKeyCallback(window, key_press_callback);
+    window = initGLFW();
 
     // Setting up scene
     SceneObject* scene = new SceneObject("scene");
-    SceneObject* helicopter = object::getHelicopter("helicopter");
-    SceneObject* helicopter2 = object::getHelicopter("helicopter_2", Color::DARK_GRAY);
+    SceneObject* helicopter = object::getHelicopter("player");
     scene->appendChild(helicopter);
-    scene->appendChild(helicopter2);
 
     helicopter->transform.scale = 0.2f;
-    helicopter->addComponent<PhysicsBody>();
-    helicopter->getComponent<PhysicsBody>()->forwardVelocity = 0.0001f;
-    helicopter->transform.translation = { -0.5, 0 };
+    helicopter->transform.translation = { -0.5f, 0 };
     helicopter->transform.rotation = PI / 4;
-    helicopter2->transform.scale = 0.2f;
-    helicopter2->transform.translation = { 0.5, 0 };
-    helicopter2->transform.rotation = 3 * PI / 4;
+
+    helicopter->addComponent<PhysicsBody>();
+    PhysicsBody* helicopterPB = helicopter->getComponent<PhysicsBody>();
 
     // Getting renderer and uploading objects to GPU
     Renderer *renderer = setupRenderer();
@@ -163,6 +131,7 @@ int main(void) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
+        processInput(helicopterPB);
         scene->update();
         renderer->drawObject(scene);
  
