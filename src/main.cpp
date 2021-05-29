@@ -84,23 +84,29 @@ inline bool isKeyPressed(int key) {
 
 void processInput(PhysicsBody* helicopterPB) {
 
-    float linearVelocity = 0.001f;
-    float angularVelocity = 0.003f;
+    float linearAcceleration = 0.0005f;
+    float angularAcceleration = 0.0005f;
 
-    helicopterPB->angularVelocity = 0;
-    helicopterPB->forwardVelocity = 0;
+    helicopterPB->kinematics.linearAcceleration = 0;
+    helicopterPB->kinematics.angularAcceleration = 0;
 
     if (isKeyPressed(GLFW_KEY_W)) {
-        helicopterPB->forwardVelocity = linearVelocity;
+        helicopterPB->kinematics.linearAcceleration = linearAcceleration;
     }
 
     if (isKeyPressed(GLFW_KEY_A)) {
-        helicopterPB->angularVelocity = angularVelocity;
+        helicopterPB->kinematics.angularAcceleration = angularAcceleration;
     }
 
     if (isKeyPressed(GLFW_KEY_D)) {
-        helicopterPB->angularVelocity = -angularVelocity;
+        helicopterPB->kinematics.angularAcceleration = -angularAcceleration;
     }
+}
+
+double getDeltaTime() {
+    double delta = glfwGetTime();
+    glfwSetTime(0);
+    return delta;
 }
 
 
@@ -116,14 +122,14 @@ int main(void) {
     helicopter->transform.translation = { -0.5f, 0 };
     helicopter->transform.rotation = PI / 4;
 
-    helicopter->addComponent<PhysicsBody>();
     PhysicsBody* helicopterPB = helicopter->getComponent<PhysicsBody>();
 
     // Getting renderer and uploading objects to GPU
-    Renderer *renderer = setupRenderer();
+    Renderer* renderer = setupRenderer();
     renderer->uploadObjects({ scene });
-
+    
     glfwShowWindow(window);
+    glfwSetTime(0);
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -131,6 +137,7 @@ int main(void) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
+        Component::setDeltaTime(getDeltaTime());
         processInput(helicopterPB);
         scene->update();
         renderer->drawObject(scene);

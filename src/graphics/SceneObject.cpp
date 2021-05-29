@@ -2,6 +2,8 @@
 
 #include "SceneObject.h"
 
+double Component::deltaTime;
+
 void SceneObject::appendChild(SceneObject* child) {
 	if (children.count(child->name) != 0) {
 		std::cout << "appendChild: WARNING: SceneObject " << name << " already has child " << child->name << std::endl;
@@ -73,4 +75,8 @@ void SceneObject::update() {
 	for (auto& child : children) {
 		child.second->update();
 	}
+}
+
+void Component::setDeltaTime(double time) {
+	deltaTime = time;
 }

@@ -12,6 +12,8 @@ class SceneObject;
 
 class Component {
 public:
+	static double deltaTime;	// Populated by the main loop to indicate time between frames
+
 	SceneObject* sceneObject;
 
 	Component(SceneObject* obj) : sceneObject(obj) { }
@@ -22,6 +24,10 @@ public:
 	/// and implement their own update methods.
 	/// </summary>
 	virtual void update() = 0;
+
+	virtual ~Component() { delete this; };
+
+	static void setDeltaTime(double delta);
 
 	template<typename Target>
 	bool instanceof();
@@ -63,6 +69,8 @@ public:
 	void appendChildren(std::vector<SceneObject*> children);
 
 	Transform& getTransform() { return transform; }
+	
+	const std::string& getName() const { return name; }
 	
 	const Transform& getTransform() const { return transform; }
 
