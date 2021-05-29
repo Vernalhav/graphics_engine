@@ -12,6 +12,7 @@
 #include "graphics/SceneObject.h"
 #include "graphics/Shader.h"
 #include "graphics/Renderer.h"
+#include "graphics/PhysicsBody.h"
 #include "misc/utils.h"
 #include "object.h"
 
@@ -142,6 +143,8 @@ int main(void) {
     scene->appendChild(helicopter2);
 
     helicopter->transform.scale = 0.2f;
+    helicopter->addComponent<PhysicsBody>();
+    helicopter->getComponent<PhysicsBody>()->forwardVelocity = 0.0001f;
     helicopter->transform.translation = { -0.5, 0 };
     helicopter->transform.rotation = PI / 4;
     helicopter2->transform.scale = 0.2f;

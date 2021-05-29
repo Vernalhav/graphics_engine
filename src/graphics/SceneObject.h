@@ -7,9 +7,31 @@
 #include "../math/vectors.h"
 #include "Primitive.h"
 #include "Transform.h"
-#include "Component.h"
 
-class Component;	// Declaring class here to avoid circular dependency
+class SceneObject;
+
+class Component {
+public:
+	SceneObject* sceneObject;
+
+	Component(SceneObject* obj) : sceneObject(obj) { }
+
+	/// <summary>
+	/// This function will be called every frame.
+	/// Components should inherint from this class
+	/// and implement their own update methods.
+	/// </summary>
+	virtual void update() = 0;
+
+	template<typename Target>
+	bool instanceof();
+};
+
+template<typename Target>
+bool Component::instanceof() {
+	return dynamic_cast<Target*>(this) != nullptr;
+}
+
 
 class SceneObject {
 private:
@@ -59,19 +81,13 @@ public:
 	/// in which 1 and 0.2 are the constructor parameters for
 	/// the PhysicsBody component and "my_cloud" is the constructor
 	/// parameter for the Cloud component.
-	template<typename ComponentType, class ...Args>
+	template<typename ComponentType, typename ...Args>
 	inline void addComponent(Args ...args) {
 		components.push_back(new ComponentType(this, args...));
 	}
 
 	template<typename ComponentType>
-	inline ComponentType* getComponent() {
-		for (Component* component : components)
-			if (component->instanceof(ComponentType))
-				return component;
-
-		return nullptr;
-	}
+	ComponentType* getComponent();
 
 	/// <summary>
 	/// Returns the object's and all of its children's
@@ -94,3 +110,14 @@ public:
 	/// </summary>
 	void update();
 };
+
+template<typename ComponentType>
+ComponentType* SceneObject::getComponent() {
+	for (Component* component : components) {
+		if (component->instanceof<ComponentType>()) {
+			return (ComponentType*)component;
+		}
+	}
+
+	return nullptr;
+}

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../math/vectors.h"
-#include "Component.h"
+#include "SceneObject.h"
 
 class PhysicsBody: public Component {
 public:

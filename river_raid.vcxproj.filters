@@ -54,9 +54,6 @@
     <ClInclude Include="src\math\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\application\Cloud.h">
       <Filter>Header Files</Filter>
     </ClInclude>

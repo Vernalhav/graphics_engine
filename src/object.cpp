@@ -17,8 +17,8 @@ SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyC
     body->appendChild(propeller);
     body->appendChild(smallPropeller);
    
-    smallPropeller->addComponent<PhysicsBody>(0.0f, 0.001f);
-    propeller->addComponent<PhysicsBody>(0.0f, -0.001f);
+    smallPropeller->addComponent<PhysicsBody>(0.0f, 0.005f);
+    propeller->addComponent<PhysicsBody>(0.0f, -0.005f);
 
 	return body;
 }
@@ -36,10 +36,10 @@ SceneObject* object::getSpinner() {
     prop2->transform.scale = 0.5;
     prop3->transform.scale = 0.5;
 
-    shaft->addComponent<PhysicsBody>(0.0f, 0.0001f);
-    prop1->addComponent<PhysicsBody>(0.0f, -0.0001f);
-    prop2->addComponent<PhysicsBody>(0.0f, 0.0001f);
-    prop3->addComponent<PhysicsBody>(0.0f, 0.0001f);
+    shaft->addComponent<PhysicsBody>(0.0f, 0.001f);
+    prop1->addComponent<PhysicsBody>(0.0f, -0.001f);
+    prop2->addComponent<PhysicsBody>(0.0f, 0.001f);
+    prop3->addComponent<PhysicsBody>(0.0f, 0.001f);
 
     shaft->appendChild(prop1);
     shaft->appendChild(prop2);

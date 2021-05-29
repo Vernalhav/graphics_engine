@@ -24,7 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application\Cloud.h" />
-    <ClInclude Include="src\graphics\Component.h" />
     <ClInclude Include="src\math\matrix.h" />
     <ClInclude Include="src\object.h" />
     <ClInclude Include="src\graphics\PhysicsBody.h" />

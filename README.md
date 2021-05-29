@@ -14,7 +14,6 @@ All relevant `.cpp` and `.h` files are in the `src/` directory.
     ├─── misc/        # Miscellaneous functions and definitions
     ├─── main.cpp     # Main application
     └─── object.cpp   # Creates the application's SceneObjects
-
 ```
 ## graphics/
 - **Primitive:** Struct containing basic information about an OpenGL primitive. Includes vertices, type of primitive and color.
@@ -22,7 +21,7 @@ All relevant `.cpp` and `.h` files are in the `src/` directory.
 - **Renderer:** Class abstraction of OpenGL's VAOs, VBOs and `draw` calls. It is responsible for drawing the scene objects relative to their hierarchical parents.
 - **SceneObject:**  Class that unifies a collection of primitives with a single transformation matrix. Can have children which are transformed in relation to the parent.
 - **Transform:** Struct containing geometric transformation info like translation, scale and rotation. Can be converted into a Transform matrix using a Matrix3 constructor.
-- **Component:** Base class of all Components. Extend this class to add custom behaviour to SceneObjects.
+- **Component (in SceneObject.h):** Base class of all Components. Extend this class to add custom behaviour to SceneObjects.
 - **PhysicsBody:** Component containing simple kinematic properties like linear and angular velocity.
 
 ## math/
