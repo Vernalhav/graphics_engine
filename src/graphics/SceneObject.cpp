@@ -76,7 +76,3 @@ void SceneObject::update() {
 		child.second->update();
 	}
 }
-
-void Component::setDeltaTime(double time) {
-	deltaTime = time;
-}

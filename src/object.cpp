@@ -14,17 +14,19 @@ SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyC
     smallPropeller->transform.translation.x = -1.72f;
     smallPropeller->transform.scale = 0.3f;
 
-    float LIN_DRAG = 0.00001f;
-    float ANG_DRAG = 0.00001f;
-    float LIN_TERM = 0.001f;
-    float ANG_TERM = 0.001f;
+    float LIN_DRAG = 0.25f;
+    float ANG_DRAG = PI / 4;
+    float LIN_TERM = 0.9f;
+    float ANG_TERM = 2 * PI;
+
+    float PROPELLER_ANG_VELOCITY = 4 * PI;
 
     body->appendChild(propeller);
     body->appendChild(smallPropeller);
     body->addComponent<PhysicsBody>(KinematicProperties(0, 0, 0, 0, LIN_DRAG, ANG_DRAG, LIN_TERM, ANG_TERM));
    
-    smallPropeller->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.005f));
-    propeller->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.005f));
+    smallPropeller->addComponent<PhysicsBody>(KinematicProperties(0.0f, PROPELLER_ANG_VELOCITY));
+    propeller->addComponent<PhysicsBody>(KinematicProperties(0.0f, PROPELLER_ANG_VELOCITY));
 
 	return body;
 }

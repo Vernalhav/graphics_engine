@@ -27,8 +27,6 @@ public:
 
 	virtual ~Component() { delete this; };
 
-	static void setDeltaTime(double delta);
-
 	template<typename Target>
 	bool instanceof();
 };

@@ -84,8 +84,8 @@ inline bool isKeyPressed(int key) {
 
 void processInput(PhysicsBody* helicopterPB) {
 
-    float linearAcceleration = 0.0005f;
-    float angularAcceleration = 0.0005f;
+    float linearAcceleration = 0.5f;
+    float angularAcceleration = PI / 2;
 
     helicopterPB->kinematics.linearAcceleration = 0;
     helicopterPB->kinematics.angularAcceleration = 0;
@@ -137,7 +137,7 @@ int main(void) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0, 0.0, 0.0, 1.0);
 
-        Component::setDeltaTime(getDeltaTime());
+        Component::deltaTime = getDeltaTime();
         processInput(helicopterPB);
         scene->update();
         renderer->drawObject(scene);
