@@ -17,8 +17,8 @@ SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyC
     smallPropeller->transform.translation.x = -1.72f;
     smallPropeller->transform.scale = 0.3f;
 
-    float LIN_DRAG = 0.25f;
-    float ANG_DRAG = PI / 4;
+    float LIN_DRAG = 1e-3f;
+    float ANG_DRAG = 1e-2f;
     float LIN_TERM = 0.9f;
     float ANG_TERM = 2 * PI;
 
@@ -61,7 +61,7 @@ SceneObject* object::getSpinner() {
 
 SceneObject* object::getCloud(std::string name, Vector2 origin) {
     
-    size_t seed = std::hash<std::string>{} (name);
+    size_t seed = std::hash<std::string>{}(name);
 
     std::default_random_engine generator(seed);
     std::normal_distribution<float> distribXCoord(0.8f, 0.6f);
@@ -91,7 +91,7 @@ SceneObject* object::getCloud(std::string name, Vector2 origin) {
 
     float terminalVelocity = 3.0f;
 
-    cloud->addComponent<PhysicsBody>(KinematicProperties(utils::randRange(0.1f, 1.0f), 
+    cloud->addComponent<PhysicsBody>(KinematicProperties(utils::randRange(0.3f, 0.9f), 
         0, 0, 0, 0, 0, terminalVelocity));
 
     cloud->addComponent<Cloud>();

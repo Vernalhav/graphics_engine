@@ -13,7 +13,6 @@ void PhysicsBody::update() {
 }
 
 void KinematicProperties::kinematicsUpdate() {
-	// FIXME: Implement proper drag equations
 	linearVelocity = utils::clamp(linearVelocity - utils::sign(linearVelocity) * linearDrag + linearAcceleration,
 		-terminalLinearVelocity, terminalLinearVelocity);
 	
