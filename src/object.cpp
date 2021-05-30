@@ -1,3 +1,5 @@
+#include <random>
+
 #include "object.h"
 #include "graphics/PhysicsBody.h"
 #include "misc/utils.h"
@@ -59,19 +61,38 @@ SceneObject* object::getSpinner() {
 
 SceneObject* object::getCloud(std::string name, Vector2 origin) {
     
-    std::vector<Vector3> c1 = getPolygon(32, 0, { 0, 0, 0 }, { 1.1f, 1 });
-    std::vector<Vector3> c2 = getPolygon(32, 0, { 0.4f, 0.4f, 0 }, { 0.8f, 1 });
-    std::vector<Vector3> c3 = getPolygon(32, 0, { -0.4f, 0, 0 }, { 0.8f, 1 });
+    size_t seed = std::hash<std::string>{} (name);
 
-    std::vector<Primitive> cloudPrims = { Primitive(c1, GL_TRIANGLE_FAN, Color::WHITE),
-                                          Primitive(c2, GL_TRIANGLE_FAN, Color::WHITE),
-                                          Primitive(c3, GL_TRIANGLE_FAN, Color::WHITE)};
+    std::default_random_engine generator(seed);
+    std::normal_distribution<float> distribXCoord(0.8f, 0.6f);
+    std::normal_distribution<float> distribYCoord(0.4f, 0.2f);
+
+    const int numSubClouds = 8;
+
+    std::vector<Primitive> cloudPrims;
+    std::vector<Vector3> originCloud = getPolygon(32, 0, { 0, 0, 0 }, { utils::randRange(0.6f, 0.8f), 1 });
+
+    cloudPrims.push_back(Primitive(originCloud, GL_TRIANGLE_FAN, Color::WHITE));
+
+    for (int i = 0; i < numSubClouds-1; i++) {
+        float curX = distribXCoord(generator);
+        float curY = distribYCoord(generator);
+
+        std::vector<Vector3> curSubCloud = getPolygon(32, 0, { curX, curY, 0 },
+            { utils::randRange(0.8f, 1.2f), 1 });
+        
+        cloudPrims.push_back(Primitive(curSubCloud, GL_TRIANGLE_FAN, Color::WHITE));
+    }
 
     SceneObject* cloud = new SceneObject(name, cloudPrims);
 
     cloud->transform.scale = 0.1f;
     cloud->transform.translation = origin;
-    cloud->addComponent<PhysicsBody>(KinematicProperties(utils::randRange(0.1f, 2)));
+
+    float terminalVelocity = 3.0f;
+
+    cloud->addComponent<PhysicsBody>(KinematicProperties(utils::randRange(0.1f, 1.0f), 
+        0, 0, 0, 0, 0, terminalVelocity));
 
     cloud->addComponent<Cloud>();
 
