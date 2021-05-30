@@ -86,6 +86,9 @@ void processInput(PhysicsBody* helicopterPB) {
 
     float linearAcceleration = 0.5f;
     float angularAcceleration = PI / 2;
+    float scaleVelocty = 0.5f;
+    static float maxScale = helicopterPB->sceneObject->transform.scale * 3/ 2;
+    static float minScale = helicopterPB->sceneObject->transform.scale / 2;
 
     helicopterPB->kinematics.linearAcceleration = 0;
     helicopterPB->kinematics.angularAcceleration = 0;
@@ -100,6 +103,16 @@ void processInput(PhysicsBody* helicopterPB) {
 
     if (isKeyPressed(GLFW_KEY_D)) {
         helicopterPB->kinematics.angularAcceleration = -angularAcceleration;
+    }
+
+    if (isKeyPressed(GLFW_KEY_UP)) {
+        helicopterPB->sceneObject->transform.scale = std::min(helicopterPB->sceneObject->transform.scale + 
+            scaleVelocty * (float)Component::deltaTime, maxScale);
+    }
+
+    if (isKeyPressed(GLFW_KEY_DOWN)) {
+        helicopterPB->sceneObject->transform.scale = std::max(helicopterPB->sceneObject->transform.scale - 
+            scaleVelocty * (float)Component::deltaTime, minScale);
     }
 }
 
