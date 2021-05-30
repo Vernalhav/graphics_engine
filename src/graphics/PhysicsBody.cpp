@@ -13,6 +13,14 @@ void PhysicsBody::update() {
 }
 
 void KinematicProperties::kinematicsUpdate() {
-	linearVelocity = utils::clamp(linearVelocity - utils::sign(linearVelocity) * linearDrag + linearAcceleration, -terminalLinearVelocity, terminalLinearVelocity);
-	angularVelocity = utils::clamp(angularVelocity - utils::sign(angularVelocity) * angularDrag + angularAcceleration, -terminalAngularVelocity, terminalAngularVelocity);
+	// FIXME: Implement proper drag equations
+	linearVelocity = utils::clamp(linearVelocity - utils::sign(linearVelocity) * linearDrag + linearAcceleration,
+		-terminalLinearVelocity, terminalLinearVelocity);
+	
+	angularVelocity = utils::clamp(angularVelocity - utils::sign(angularVelocity) * angularDrag + angularAcceleration,
+		-terminalAngularVelocity, terminalAngularVelocity);
+
+	// FIXME: Gambiarra
+	if (abs(linearVelocity) <= linearDrag) linearVelocity = 0;
+	if (abs(angularVelocity) <= angularDrag) angularVelocity = 0;
 }
