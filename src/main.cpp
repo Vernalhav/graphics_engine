@@ -150,6 +150,8 @@ int main(void) {
     Renderer* renderer = setupRenderer();
     renderer->uploadObjects({ scene });
     
+    Vector3 backgroundColor = Color::CYAN * (1 / 255.0f);
+
     glfwShowWindow(window);
     glfwSetTime(0);
 
@@ -157,7 +159,7 @@ int main(void) {
         glfwPollEvents();
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0);
 
         Component::deltaTime = getDeltaTime();
         processInput(helicopterPB);
