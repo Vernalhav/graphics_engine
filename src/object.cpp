@@ -1,6 +1,7 @@
 #include "object.h"
 #include "graphics/PhysicsBody.h"
 #include "misc/utils.h"
+#include "application/Cloud.h"
 
 #define DEFAULT_PRIMITIVE_Z 1
 
@@ -54,6 +55,27 @@ SceneObject* object::getSpinner() {
     prop2->appendChild(prop3);
 
     return shaft;
+}
+
+SceneObject* object::getCloud(std::string name, Vector2 origin) {
+    
+    std::vector<Vector3> c1 = getPolygon(32, 0, { 0, 0, 0 }, { 1.1, 1 });
+    std::vector<Vector3> c2 = getPolygon(32, 0, { 0.4, 0.4, 0 }, { 0.8, 1 });
+    std::vector<Vector3> c3 = getPolygon(32, 0, { -0.4, 0, 0 }, { 0.8, 1 });
+
+    std::vector<Primitive> cloudPrims = { Primitive(c1, GL_TRIANGLE_FAN, Color::WHITE),
+                                          Primitive(c2, GL_TRIANGLE_FAN, Color::WHITE),
+                                          Primitive(c3, GL_TRIANGLE_FAN, Color::WHITE)};
+
+    SceneObject* cloud = new SceneObject(name, cloudPrims);
+
+    cloud->transform.scale = 0.1;
+    cloud->transform.translation = origin;
+    cloud->addComponent<PhysicsBody>(KinematicProperties(utils::randRange(0.1, 2.0)));
+
+    cloud->addComponent<Cloud>();
+
+    return cloud;
 }
 
 std::vector<Primitive> object::getHelicopterBody(Vector3 color) {
