@@ -59,9 +59,9 @@ SceneObject* object::getSpinner() {
 
 SceneObject* object::getCloud(std::string name, Vector2 origin) {
     
-    std::vector<Vector3> c1 = getPolygon(32, 0, { 0, 0, 0 }, { 1.1, 1 });
-    std::vector<Vector3> c2 = getPolygon(32, 0, { 0.4, 0.4, 0 }, { 0.8, 1 });
-    std::vector<Vector3> c3 = getPolygon(32, 0, { -0.4, 0, 0 }, { 0.8, 1 });
+    std::vector<Vector3> c1 = getPolygon(32, 0, { 0, 0, 0 }, { 1.1f, 1 });
+    std::vector<Vector3> c2 = getPolygon(32, 0, { 0.4f, 0.4f, 0 }, { 0.8f, 1 });
+    std::vector<Vector3> c3 = getPolygon(32, 0, { -0.4f, 0, 0 }, { 0.8f, 1 });
 
     std::vector<Primitive> cloudPrims = { Primitive(c1, GL_TRIANGLE_FAN, Color::WHITE),
                                           Primitive(c2, GL_TRIANGLE_FAN, Color::WHITE),
@@ -69,9 +69,9 @@ SceneObject* object::getCloud(std::string name, Vector2 origin) {
 
     SceneObject* cloud = new SceneObject(name, cloudPrims);
 
-    cloud->transform.scale = 0.1;
+    cloud->transform.scale = 0.1f;
     cloud->transform.translation = origin;
-    cloud->addComponent<PhysicsBody>(KinematicProperties(utils::randRange(0.1, 2.0)));
+    cloud->addComponent<PhysicsBody>(KinematicProperties(utils::randRange(0.1f, 2)));
 
     cloud->addComponent<Cloud>();
 
