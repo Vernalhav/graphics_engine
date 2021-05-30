@@ -14,11 +14,19 @@ SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyC
     smallPropeller->transform.translation.x = -1.72f;
     smallPropeller->transform.scale = 0.3f;
 
+    float LIN_DRAG = 0.25f;
+    float ANG_DRAG = PI / 4;
+    float LIN_TERM = 0.9f;
+    float ANG_TERM = 2 * PI;
+
+    float PROPELLER_ANG_VELOCITY = 4 * PI;
+
     body->appendChild(propeller);
     body->appendChild(smallPropeller);
+    body->addComponent<PhysicsBody>(KinematicProperties(0, 0, 0, 0, LIN_DRAG, ANG_DRAG, LIN_TERM, ANG_TERM));
    
-    smallPropeller->addComponent<PhysicsBody>(0.0f, 0.001f);
-    propeller->addComponent<PhysicsBody>(0.0f, -0.001f);
+    smallPropeller->addComponent<PhysicsBody>(KinematicProperties(0.0f, PROPELLER_ANG_VELOCITY));
+    propeller->addComponent<PhysicsBody>(KinematicProperties(0.0f, PROPELLER_ANG_VELOCITY));
 
 	return body;
 }
@@ -36,10 +44,10 @@ SceneObject* object::getSpinner() {
     prop2->transform.scale = 0.5;
     prop3->transform.scale = 0.5;
 
-    shaft->addComponent<PhysicsBody>(0.0f, 0.0001f);
-    prop1->addComponent<PhysicsBody>(0.0f, -0.0001f);
-    prop2->addComponent<PhysicsBody>(0.0f, 0.0001f);
-    prop3->addComponent<PhysicsBody>(0.0f, 0.0001f);
+    shaft->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.001f));
+    prop1->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.001f));
+    prop2->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.001f));
+    prop3->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.001f));
 
     shaft->appendChild(prop1);
     shaft->appendChild(prop2);
