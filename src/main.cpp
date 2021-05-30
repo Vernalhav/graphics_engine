@@ -116,6 +116,15 @@ int main(void) {
     // Setting up scene
     SceneObject* scene = new SceneObject("scene");
     SceneObject* helicopter = object::getHelicopter("player");
+
+    int numClouds = 10;
+    for (int i = 0; i < numClouds; i++) {
+        SceneObject* cloud = object::getCloud("cloud" + std::to_string(i),
+            {utils::randRange(-1.0, 1.0), utils::randRange(-1.0, 1.0) });
+
+        scene->appendChild(cloud);
+    }
+    
     scene->appendChild(helicopter);
 
     helicopter->transform.scale = 0.2f;
