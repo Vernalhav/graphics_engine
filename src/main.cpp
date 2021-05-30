@@ -84,8 +84,8 @@ inline bool isKeyPressed(int key) {
 
 void processInput(PhysicsBody* helicopterPB) {
 
-    float linearAcceleration = 0.5f;
-    float angularAcceleration = PI / 2;
+    float linearAcceleration = 0.005f;
+    float angularAcceleration = 0.05f;
     float scaleVelocty = 0.5f;
     static float maxScale = helicopterPB->sceneObject->transform.scale * 3/ 2;
     static float minScale = helicopterPB->sceneObject->transform.scale / 2;
@@ -130,7 +130,7 @@ int main(void) {
     SceneObject* scene = new SceneObject("scene");
     SceneObject* helicopter = object::getHelicopter("player");
 
-    int numClouds = 8;
+    int numClouds = 5;
     for (int i = 0; i < numClouds; i++) {
         SceneObject* cloud = object::getCloud("cloud" + std::to_string(i),
             {utils::randRange(-1.0, 1.0), utils::randRange(-1.0, 1.0) });
@@ -150,6 +150,8 @@ int main(void) {
     Renderer* renderer = setupRenderer();
     renderer->uploadObjects({ scene });
     
+    Vector3 backgroundColor = Color::CYAN * (1 / 255.0f);
+
     glfwShowWindow(window);
     glfwSetTime(0);
 
@@ -157,7 +159,7 @@ int main(void) {
         glfwPollEvents();
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0);
 
         Component::deltaTime = getDeltaTime();
         processInput(helicopterPB);
