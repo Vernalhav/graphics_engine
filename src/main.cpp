@@ -10,10 +10,10 @@
 #include <bitset>
 
 #include "math/vectors.h"
-#include "graphics/SceneObject.h"
+#include "engine/SceneObject.h"
+#include "engine/PhysicsBody.h"
 #include "graphics/Shader.h"
 #include "graphics/Renderer.h"
-#include "graphics/PhysicsBody.h"
 #include "misc/utils.h"
 #include "object.h"
 
@@ -142,8 +142,6 @@ int main(void) {
     scene->appendChild(helicopter);
 
     helicopter->transform.scale = 0.2f;
-    helicopter->transform.translation = { -0.5f, 0 };
-    helicopter->transform.rotation = PI / 4;
 
     SceneObject* drone = object::getDrone("drone");
     scene->appendChild(drone);

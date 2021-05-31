@@ -5,7 +5,7 @@
 #include <string>
 
 #include "../math/vectors.h"
-#include "Primitive.h"
+#include "../graphics/Primitive.h"
 #include "Transform.h"
 
 class SceneObject;

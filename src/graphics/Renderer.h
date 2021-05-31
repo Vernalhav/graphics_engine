@@ -6,7 +6,7 @@
 #include "../math/matrix.h"
 #include "Primitive.h"
 #include "Shader.h"
-#include "SceneObject.h"
+#include "../engine/SceneObject.h"
 
 
 class Renderer {

@@ -1,5 +1,5 @@
 #pragma once
-#include "../graphics/SceneObject.h"
+#include "../engine/SceneObject.h"
 
 class Cloud : public Component {
 public:
