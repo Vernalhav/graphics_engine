@@ -30,7 +30,7 @@
     <ClInclude Include="src\graphics\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\SceneObject.h">
+    <ClInclude Include="src\engine\SceneObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\misc\utils.h">
@@ -42,13 +42,13 @@
     <ClInclude Include="src\math\vectors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\Transform.h">
+    <ClInclude Include="src\engine\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\PhysicsBody.h">
+    <ClInclude Include="src\engine\PhysicsBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\object.h">
+    <ClInclude Include="src\application\object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\math\matrix.h">
@@ -62,7 +62,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\SceneObject.cpp">
+    <ClCompile Include="src\engine\SceneObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\Renderer.cpp">
@@ -71,7 +71,7 @@
     <ClCompile Include="src\graphics\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\object.cpp">
+    <ClCompile Include="src\application\object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\misc\utils.cpp">
@@ -80,7 +80,7 @@
     <ClCompile Include="src\application\Cloud.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\PhysicsBody.cpp">
+    <ClCompile Include="src\engine\PhysicsBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

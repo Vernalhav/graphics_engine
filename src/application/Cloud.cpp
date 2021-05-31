@@ -2,7 +2,7 @@
 #include "../misc/utils.h"
 
 
-constexpr float CLOUD_THRESHOLD = 1.2f;
+constexpr float CLOUD_THRESHOLD = 1.5f;
 
 Cloud::Cloud(SceneObject* obj) : Component(obj) { }
 

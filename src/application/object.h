@@ -1,5 +1,5 @@
 #pragma once
-#include "graphics/SceneObject.h"
+#include "../engine/SceneObject.h"
 
 namespace Color {
 	static Vector3 WHITE = {255, 255, 255};
@@ -12,6 +12,8 @@ namespace Color {
 class object {
 public:
 	static SceneObject* getHelicopter(const std::string& name, const Vector3& bodyColor = Color::WHITE, const Vector3& propellerColor = Color::LIGHT_GRAY);
+
+	static SceneObject* getDrone(const std::string& name, const Vector3& bodyColor = Color::WHITE);
 
 	static SceneObject* getSpinner();
 

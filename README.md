@@ -8,21 +8,23 @@ compiled without VS by linking the appropriate libraries.
 All relevant `.cpp` and `.h` files are in the `src/` directory.
 ```
 └─── src
+    ├─── engine/      # Scene objects, input reading and kinematic-related code
     ├─── graphics/    # OpenGL and transformation-related code
-    ├─── application/ # Application-specific Components
+    ├─── application/ # Application-specific code and Components
     ├─── math/        # Small implementation of vectors and matrices of fixed size
     ├─── misc/        # Miscellaneous functions and definitions
-    ├─── main.cpp     # Main application
-    └─── object.cpp   # Creates the application's SceneObjects
+    └─── main.cpp     # Main application
 ```
+## engine/
+- **SceneObject:**  Class that unifies a collection of primitives with a single transformation matrix. Can have children which are transformed in relation to the parent.
+- **Component (in SceneObject.h):** Base class of all Components. Extend this class to add custom behaviour to SceneObjects. Has static member deltaTime.
+- **Transform:** Struct containing geometric transformation info like translation, scale and rotation. Can be converted into a Transform matrix using a Matrix3 constructor.
+- **PhysicsBody:** Component containing simple kinematic properties like linear and angular velocity.
+
 ## graphics/
 - **Primitive:** Struct containing basic information about an OpenGL primitive. Includes vertices, type of primitive and color.
 - **Shader:** Class abstraction of a GLSL shader. Construct it with vertex and fragment shader code string, and optionally name it.
 - **Renderer:** Class abstraction of OpenGL's VAOs, VBOs and `draw` calls. It is responsible for drawing the scene objects relative to their hierarchical parents.
-- **SceneObject:**  Class that unifies a collection of primitives with a single transformation matrix. Can have children which are transformed in relation to the parent.
-- **Transform:** Struct containing geometric transformation info like translation, scale and rotation. Can be converted into a Transform matrix using a Matrix3 constructor.
-- **Component (in SceneObject.h):** Base class of all Components. Extend this class to add custom behaviour to SceneObjects. Has static member deltaTime.
-- **PhysicsBody:** Component containing simple kinematic properties like linear and angular velocity.
 
 ## math/
 - **vectors:** Defines Vector2, Vector3 and Vector4 structs along with some common operations.
