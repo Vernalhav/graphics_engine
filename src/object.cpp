@@ -34,6 +34,40 @@ SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyC
 	return body;
 }
 
+SceneObject* object::getDrone(const std::string& name, const Vector3& bodyColor) {
+    
+    Primitive body = { getPolygon(4, PI / 4, {0, 0, 0}, {0.5f, 0.5f}), GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
+    Primitive arm1 = { getPolygon(4, 0, {0, 0, 0}, {1.3f, 0.2f}), GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
+    Primitive arm2 = { getPolygon(4, 0, {0, 0, 0}, {0.2f, 1.3f}), GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
+
+    SceneObject* drone = new SceneObject(name, { body, arm1, arm2 });
+
+    float propellerRadius = 1;
+    float stepAngle = (float)PI / 2;
+
+    for (int i = 1; i <= 4; i++) {
+        SceneObject* prop = new SceneObject(name + "_prop_" + std::to_string(i), getPropeller(Color::LIGHT_GRAY));
+        prop->transform.scale = 0.5f;
+        prop->addComponent<PhysicsBody>(KinematicProperties(0, PI));
+        prop->transform.translation = { propellerRadius * cos(i * stepAngle), propellerRadius * sin(i * stepAngle) };
+
+        drone->appendChild(prop);
+    }
+
+    drone->transform.rotation = PI / 4;
+    drone->transform.scale = 0.1f;
+
+    SceneObject* dronePivot = new SceneObject("drone_pivot");
+    drone->addComponent<PhysicsBody>();
+    drone->transform.translation.y = 0.8f;
+    dronePivot->appendChild(drone);
+
+    float angularVelocity = PI / 2;
+    dronePivot->addComponent<PhysicsBody>(KinematicProperties(0, angularVelocity));
+
+    return dronePivot;
+}
+
 SceneObject* object::getSpinner() {
     SceneObject* prop1 = new SceneObject("p1", getPropeller());
     SceneObject* prop2 = new SceneObject("p2", getPropeller({ 0, 255, 0 }, 0.1f, 3));

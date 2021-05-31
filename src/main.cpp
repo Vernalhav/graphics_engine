@@ -133,8 +133,9 @@ int main(void) {
     int numClouds = 5;
     for (int i = 0; i < numClouds; i++) {
         SceneObject* cloud = object::getCloud("cloud" + std::to_string(i),
-            {utils::randRange(-1.0, 1.0), utils::randRange(-1.0, 1.0) });
-
+            { utils::randRange(-1.0, 1.0), utils::randRange(-1.0, 1.0) });
+        
+        cloud->transform.scale = 0.1f;
         scene->appendChild(cloud);
     }
     
@@ -143,6 +144,9 @@ int main(void) {
     helicopter->transform.scale = 0.2f;
     helicopter->transform.translation = { -0.5f, 0 };
     helicopter->transform.rotation = PI / 4;
+
+    SceneObject* drone = object::getDrone("drone");
+    scene->appendChild(drone);
 
     PhysicsBody* helicopterPB = helicopter->getComponent<PhysicsBody>();
 

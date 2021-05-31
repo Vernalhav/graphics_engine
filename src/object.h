@@ -13,6 +13,8 @@ class object {
 public:
 	static SceneObject* getHelicopter(const std::string& name, const Vector3& bodyColor = Color::WHITE, const Vector3& propellerColor = Color::LIGHT_GRAY);
 
+	static SceneObject* getDrone(const std::string& name, const Vector3& bodyColor = Color::WHITE);
+
 	static SceneObject* getSpinner();
 
 	static SceneObject* getCloud(std::string name, Vector2 origin);
