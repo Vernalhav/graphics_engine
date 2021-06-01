@@ -20,21 +20,24 @@ public:
 
 	/// <summary>
 	/// This function will be called every frame.
-	/// Components should inherint from this class
+	/// Components can inherint from this class
 	/// and implement their own update methods.
 	/// </summary>
-	virtual void update() = 0;
+	virtual void update();
+
+	/// <summary>
+	/// This function will be called before the
+	/// main loop starts. Components can inherit
+	/// from this class and implement their own
+	/// start methods.
+	/// </summary>
+	virtual void start();
 
 	virtual ~Component() { delete this; };
 
 	template<typename Target>
 	bool instanceof();
 };
-
-template<typename Target>
-bool Component::instanceof() {
-	return dynamic_cast<Target*>(this) != nullptr;
-}
 
 
 class SceneObject {
@@ -112,10 +115,24 @@ public:
 	const std::vector<const SceneObject*> getChildren() const;
 
 	/// <summary>
-	/// This funcion is called every frame.
+	/// Updates every component attached to this object
+	/// by calling their update methods.
 	/// </summary>
 	void update();
+
+	/// <summary>
+	/// Initializes every component attached to this object
+	/// by calling their start methods.
+	/// </summary>
+	void start();
 };
+
+
+template<typename Target>
+bool Component::instanceof() {
+	return dynamic_cast<Target*>(this) != nullptr;
+}
+
 
 template<typename ComponentType>
 ComponentType* SceneObject::getComponent() {

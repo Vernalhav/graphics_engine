@@ -7,24 +7,21 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <bitset>
 
 #include "math/vectors.h"
 #include "engine/SceneObject.h"
 #include "engine/PhysicsBody.h"
+#include "engine/Input.h"
 #include "graphics/Shader.h"
 #include "graphics/Renderer.h"
+#include "application/object.h"
 #include "misc/utils.h"
-#include "object.h"
 
 #define DEBUG 1
 
 #ifdef DEBUG
 #include "graphics/glDebugMessage.h"
 #endif
-
-
-GLFWwindow* window;
 
 
 GLFWwindow* initGLFW() {
@@ -77,45 +74,6 @@ Renderer* setupRenderer() {
 }
 
 
-inline bool isKeyPressed(int key) {
-    return glfwGetKey(window, key) == GLFW_PRESS;
-}
-
-
-void processInput(PhysicsBody* helicopterPB) {
-
-    float linearAcceleration = 0.005f;
-    float angularAcceleration = 0.05f;
-    float scaleVelocty = 0.5f;
-    static float maxScale = helicopterPB->sceneObject->transform.scale * 3/ 2;
-    static float minScale = helicopterPB->sceneObject->transform.scale / 2;
-
-    helicopterPB->kinematics.linearAcceleration = 0;
-    helicopterPB->kinematics.angularAcceleration = 0;
-
-    if (isKeyPressed(GLFW_KEY_W)) {
-        helicopterPB->kinematics.linearAcceleration = linearAcceleration;
-    }
-
-    if (isKeyPressed(GLFW_KEY_A)) {
-        helicopterPB->kinematics.angularAcceleration = angularAcceleration;
-    }
-
-    if (isKeyPressed(GLFW_KEY_D)) {
-        helicopterPB->kinematics.angularAcceleration = -angularAcceleration;
-    }
-
-    if (isKeyPressed(GLFW_KEY_UP)) {
-        helicopterPB->sceneObject->transform.scale = std::min(helicopterPB->sceneObject->transform.scale + 
-            scaleVelocty * (float)Component::deltaTime, maxScale);
-    }
-
-    if (isKeyPressed(GLFW_KEY_DOWN)) {
-        helicopterPB->sceneObject->transform.scale = std::max(helicopterPB->sceneObject->transform.scale - 
-            scaleVelocty * (float)Component::deltaTime, minScale);
-    }
-}
-
 double getDeltaTime() {
     double delta = glfwGetTime();
     glfwSetTime(0);
@@ -124,7 +82,8 @@ double getDeltaTime() {
 
 
 int main(void) {
-    window = initGLFW();
+    GLFWwindow* window = initGLFW();
+    Input::setWindow(window);
 
     // Setting up scene
     SceneObject* scene = new SceneObject("scene");
@@ -157,6 +116,8 @@ int main(void) {
     glfwShowWindow(window);
     glfwSetTime(0);
 
+    scene->start();
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         
@@ -164,7 +125,6 @@ int main(void) {
         glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0);
 
         Component::deltaTime = getDeltaTime();
-        processInput(helicopterPB);
         scene->update();
         renderer->drawObject(scene);
  

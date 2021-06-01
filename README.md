@@ -1,19 +1,20 @@
 ﻿# River Raid:
-This project is an application of some Computer Graphics concepts in which you control
-a helicopter that needs to leave the screen's boundaries.  
-This repository is a Visual Studio project that requires the installation of `glew` and `glfw`, but it can also be
+This project is an application of some Computer Graphics concepts in an attempt to create a small game engine-like 
+API. To test this API, we've created an application in which you control a helicopter that needs to leave the screens's 
+boundaries.  
+This repository is a Visual Studio project that requires the installation of `glew` and `glfw`, but it can also be 
 compiled without VS by linking the appropriate libraries.
 
 # Project Structure:  
 All relevant `.cpp` and `.h` files are in the `src/` directory.
 ```
 └─── src
-    ├─── engine/      # Scene objects, input reading and kinematic-related code
-    ├─── graphics/    # OpenGL and transformation-related code
-    ├─── application/ # Application-specific code and Components
-    ├─── math/        # Small implementation of vectors and matrices of fixed size
-    ├─── misc/        # Miscellaneous functions and definitions
-    └─── main.cpp     # Main application
+    ├─── application/   # Application-specific code and Components
+    ├─── engine/        # Scene objects, input reading and kinematic-related code
+    ├─── graphics/      # OpenGL and transformation-related code
+    ├─── math/          # Small implementation of vectors and matrices of fixed size
+    ├─── misc/          # Miscellaneous functions and definitions
+    └─── main.cpp       # Main application
 ```
 ## engine/
 - **SceneObject:**  Class that unifies a collection of primitives with a single transformation matrix. Can have children which are transformed in relation to the parent.
