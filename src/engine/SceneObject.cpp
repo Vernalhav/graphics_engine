@@ -2,7 +2,13 @@
 
 #include "SceneObject.h"
 
+
 double Component::deltaTime;
+
+void Component::update() { }
+
+void Component::start() { }
+
 
 void SceneObject::appendChild(SceneObject* child) {
 	if (children.count(child->name) != 0) {
@@ -74,5 +80,15 @@ void SceneObject::update() {
 
 	for (auto& child : children) {
 		child.second->update();
+	}
+}
+
+void SceneObject::start() {
+	for (Component* component : components) {
+		component->start();
+	}
+
+	for (auto& child : children) {
+		child.second->start();
 	}
 }

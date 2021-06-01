@@ -23,6 +23,8 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\application\Helicopter.h" />
+    <ClInclude Include="src\engine\Input.h" />
     <ClInclude Include="src\application\Cloud.h" />
     <ClInclude Include="src\math\matrix.h" />
     <ClInclude Include="src\application\object.h" />
@@ -37,6 +39,8 @@
     <ClInclude Include="src\math\vectors.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\application\Helicopter.cpp" />
+    <ClCompile Include="src\engine\Input.cpp" />
     <ClCompile Include="src\application\Cloud.cpp" />
     <ClCompile Include="src\engine\PhysicsBody.cpp" />
     <ClCompile Include="src\application\object.cpp" />

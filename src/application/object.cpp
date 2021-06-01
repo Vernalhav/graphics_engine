@@ -4,6 +4,7 @@
 #include "Cloud.h"
 #include "../engine/PhysicsBody.h"
 #include "../misc/utils.h"
+#include "Helicopter.h"
 
 #define DEFAULT_PRIMITIVE_Z 1
 
@@ -31,6 +32,7 @@ SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyC
     smallPropeller->addComponent<PhysicsBody>(KinematicProperties(0.0f, PROPELLER_ANG_VELOCITY));
     propeller->addComponent<PhysicsBody>(KinematicProperties(0.0f, PROPELLER_ANG_VELOCITY));
 
+    body->addComponent<Helicopter>();
 	return body;
 }
 
