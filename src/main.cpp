@@ -81,31 +81,38 @@ double getDeltaTime() {
 }
 
 
+SceneObject* setupScene() {
+    
+    SceneObject* scene = new SceneObject("scene");
+    SceneObject* helicopter = object::getHelicopter("player");
+    SceneObject* drone = object::getDrone("drone");
+    SceneObject* bird = object::getBird("bird");
+
+    int numClouds = 3;
+    for (int i = 0; i < numClouds; i++) {
+        SceneObject* cloud = object::getCloud("cloud" + std::to_string(i),
+            { utils::randRange(-1.0, 1.0), utils::randRange(-1.0, 1.0) });
+
+        cloud->transform.scale = 0.1f;
+        scene->appendChild(cloud);
+    }
+
+    helicopter->transform.scale = 0.2f;
+    bird->transform.scale = 0.1f;
+
+    scene->appendChild(drone);
+    scene->appendChild(helicopter);
+    scene->appendChild(bird);
+
+    return scene;
+}
+
+
 int main(void) {
     GLFWwindow* window = initGLFW();
     Input::setWindow(window);
 
-    // Setting up scene
-    SceneObject* scene = new SceneObject("scene");
-    SceneObject* helicopter = object::getHelicopter("player");
-
-    int numClouds = 5;
-    for (int i = 0; i < numClouds; i++) {
-        SceneObject* cloud = object::getCloud("cloud" + std::to_string(i),
-            { utils::randRange(-1.0, 1.0), utils::randRange(-1.0, 1.0) });
-        
-        cloud->transform.scale = 0.1f;
-        scene->appendChild(cloud);
-    }
-    
-    scene->appendChild(helicopter);
-
-    helicopter->transform.scale = 0.2f;
-
-    SceneObject* drone = object::getDrone("drone");
-    scene->appendChild(drone);
-
-    PhysicsBody* helicopterPB = helicopter->getComponent<PhysicsBody>();
+    SceneObject* scene = setupScene();
 
     // Getting renderer and uploading objects to GPU
     Renderer* renderer = setupRenderer();
