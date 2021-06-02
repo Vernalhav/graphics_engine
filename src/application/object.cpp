@@ -2,9 +2,10 @@
 
 #include "object.h"
 #include "Cloud.h"
+#include "Helicopter.h"
+#include "Plane.h"
 #include "../engine/PhysicsBody.h"
 #include "../misc/utils.h"
-#include "Helicopter.h"
 
 #define DEFAULT_PRIMITIVE_Z 1
 
@@ -48,7 +49,7 @@ SceneObject* object::getDrone(const std::string& name, const Vector3& bodyColor)
     float stepAngle = (float)PI / 2;
 
     for (int i = 1; i <= 4; i++) {
-        SceneObject* prop = new SceneObject(name + "_prop_" + std::to_string(i), getPropeller(Color::LIGHT_GRAY));
+        SceneObject* prop = new SceneObject(name + "_prop_" + std::to_string(i), getPropeller(Color::LIGHT_GRAY, 0.1f, 3));
         prop->transform.scale = 0.5f;
         prop->addComponent<PhysicsBody>(KinematicProperties(0, PI));
         prop->transform.translation = { propellerRadius * cos(i * stepAngle), propellerRadius * sin(i * stepAngle) };
@@ -95,7 +96,7 @@ SceneObject* object::getSpinner() {
     return shaft;
 }
 
-SceneObject* object::getCloud(std::string name, Vector2 origin) {
+SceneObject* object::getCloud(const std::string name, Vector2 origin) {
     
     size_t seed = std::hash<std::string>{}(name);
 
@@ -133,6 +134,31 @@ SceneObject* object::getCloud(std::string name, Vector2 origin) {
     cloud->addComponent<Cloud>();
 
     return cloud;
+}
+
+SceneObject* object::getPlane(const std::string& name) {
+    Vector3 A = {1, 0, DEFAULT_PRIMITIVE_Z};
+    Vector3 B = {0.2f, -1, DEFAULT_PRIMITIVE_Z};
+    Vector3 C = {0.4f, -0.2f, DEFAULT_PRIMITIVE_Z};
+    Vector3 D = {-0.4f, -0.13f, DEFAULT_PRIMITIVE_Z};
+    Vector3 E = {-1, -0.4f, DEFAULT_PRIMITIVE_Z};
+    Vector3 F = {-0.7f, 0, DEFAULT_PRIMITIVE_Z};
+    Vector3 G = {-1, 0.4f, DEFAULT_PRIMITIVE_Z};
+    Vector3 H = {-0.4f, 0.12f, DEFAULT_PRIMITIVE_Z};
+    Vector3 I = {0.4f, 0.2f, DEFAULT_PRIMITIVE_Z};
+    Vector3 J = {0.2f, 1, DEFAULT_PRIMITIVE_Z};
+    Vector3 K = {1.3f, 0, DEFAULT_PRIMITIVE_Z};
+
+    Primitive front = { {A, J, I, C, B}, GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
+    Primitive middle = { {I, H, D, C}, GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
+    Primitive back = { {F, G, H, D, E}, GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
+    Primitive head = { {K, I, C}, GL_TRIANGLES, Color::LIGHT_GRAY };
+
+    SceneObject* plane = new SceneObject(name, { head, front, middle, back });
+    plane->addComponent<PhysicsBody>(KinematicProperties(1));
+    plane->addComponent<Plane>();
+
+    return plane;
 }
 
 std::vector<Primitive> object::getHelicopterBody(Vector3 color) {
