@@ -19,7 +19,7 @@ public:
 
 	static SceneObject* getCloud(const std::string name, Vector2 origin);
 
-	static SceneObject* getBird(const std::string& name);
+	static SceneObject* getPlane(const std::string& name);
 
 private:
 	static std::vector<Primitive> getHelicopterBody(Vector3 color = Color::WHITE);

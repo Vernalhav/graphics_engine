@@ -63,6 +63,9 @@
     <ClInclude Include="src\application\Helicopter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\application\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -93,6 +96,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\application\Helicopter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\application\Plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

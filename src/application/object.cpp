@@ -3,6 +3,7 @@
 #include "object.h"
 #include "Cloud.h"
 #include "Helicopter.h"
+#include "Plane.h"
 #include "../engine/PhysicsBody.h"
 #include "../misc/utils.h"
 
@@ -135,26 +136,29 @@ SceneObject* object::getCloud(const std::string name, Vector2 origin) {
     return cloud;
 }
 
-SceneObject* object::getBird(const std::string& name) {
-    Vector3 A = {-1, 0, DEFAULT_PRIMITIVE_Z};
-    Vector3 B = {-0.2f, -1, DEFAULT_PRIMITIVE_Z};
-    Vector3 C = {-0.4f, -0.2f, DEFAULT_PRIMITIVE_Z};
-    Vector3 D = {0.4f, -0.13f, DEFAULT_PRIMITIVE_Z};
-    Vector3 E = {1, -0.4f, DEFAULT_PRIMITIVE_Z};
-    Vector3 F = {0.7f, 0, DEFAULT_PRIMITIVE_Z};
-    Vector3 G = {1, 0.4f, DEFAULT_PRIMITIVE_Z};
-    Vector3 H = {0.4f, 0.12f, DEFAULT_PRIMITIVE_Z};
-    Vector3 I = {-0.4f, 0.2f, DEFAULT_PRIMITIVE_Z};
-    Vector3 J = {-0.2f, 1, DEFAULT_PRIMITIVE_Z};
+SceneObject* object::getPlane(const std::string& name) {
+    Vector3 A = {1, 0, DEFAULT_PRIMITIVE_Z};
+    Vector3 B = {0.2f, -1, DEFAULT_PRIMITIVE_Z};
+    Vector3 C = {0.4f, -0.2f, DEFAULT_PRIMITIVE_Z};
+    Vector3 D = {-0.4f, -0.13f, DEFAULT_PRIMITIVE_Z};
+    Vector3 E = {-1, -0.4f, DEFAULT_PRIMITIVE_Z};
+    Vector3 F = {-0.7f, 0, DEFAULT_PRIMITIVE_Z};
+    Vector3 G = {-1, 0.4f, DEFAULT_PRIMITIVE_Z};
+    Vector3 H = {-0.4f, 0.12f, DEFAULT_PRIMITIVE_Z};
+    Vector3 I = {0.4f, 0.2f, DEFAULT_PRIMITIVE_Z};
+    Vector3 J = {0.2f, 1, DEFAULT_PRIMITIVE_Z};
+    Vector3 K = {1.3f, 0, DEFAULT_PRIMITIVE_Z};
 
     Primitive front = { {A, J, I, C, B}, GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
     Primitive middle = { {I, H, D, C}, GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
     Primitive back = { {F, G, H, D, E}, GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
+    Primitive head = { {K, I, C}, GL_TRIANGLES, Color::LIGHT_GRAY };
 
-    SceneObject* bird = new SceneObject(name, { front, middle, back });
-    bird->addComponent<PhysicsBody>();
+    SceneObject* plane = new SceneObject(name, { head, front, middle, back });
+    plane->addComponent<PhysicsBody>(KinematicProperties(1));
+    plane->addComponent<Plane>();
 
-    return bird;
+    return plane;
 }
 
 std::vector<Primitive> object::getHelicopterBody(Vector3 color) {
