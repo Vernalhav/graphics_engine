@@ -24,6 +24,8 @@ public:
 	static SceneObject* getSun(const std::string& name);
 
 private:
+	static std::vector<Vector3> getCrown(int nSpikes, float innerRadius, float outerRadius);
+
 	static std::vector<Primitive> getHelicopterBody(Vector3 color = Color::WHITE);
 
 	static std::vector<Primitive> getPropeller(Vector3 color = Color::WHITE, float width = 0.1f, int nPropellers = 3);

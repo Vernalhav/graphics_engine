@@ -164,14 +164,31 @@ SceneObject* object::getPlane(const std::string& name) {
 
 SceneObject* object::getSun(const std::string& name) {
     
-    SceneObject* sun = new SceneObject(name, { { getPolygon(32, 0, {0,0,0}), GL_TRIANGLE_FAN, {255, 255, 0} } });
+    Primitive innerCircle = { getPolygon(32), GL_TRIANGLE_FAN, {255, 127, 0} };
+    Primitive crown = { getCrown(16, 1.2f, 1.6f), GL_TRIANGLE_FAN, {255, 255, 0} };
 
-    sun->transform.scale = 0.2;
-
-    sun->addComponent<PhysicsBody>(KinematicProperties(0.5f));
+    SceneObject* sun = new SceneObject(name, { innerCircle, crown });
+    
+    sun->transform.scale = 0.2f;
+    sun->transform.translation = { 0.5f, 0.5f };
+    sun->addComponent<PhysicsBody>(KinematicProperties(0, PI / 4));
     sun->addComponent<Sun>();
 
     return sun;
+}
+
+std::vector<Vector3> object::getCrown(int nSpikes, float innerRadius, float outerRadius) {
+    std::vector<Vector3> vertices = { {0, 0, DEFAULT_PRIMITIVE_Z} };
+
+    float angleStep = 2 * PI / nSpikes;
+    for (int i = 0; i < nSpikes; i++) {
+        vertices.push_back({ innerRadius * cos(i * angleStep), innerRadius * sin(i * angleStep), DEFAULT_PRIMITIVE_Z });
+        vertices.push_back({ outerRadius * cos((i + 0.5f) * angleStep), outerRadius * sin((i + 0.5f) * angleStep), DEFAULT_PRIMITIVE_Z });
+    }
+
+    vertices.push_back({ innerRadius * cos(0.0f), innerRadius * sin(0.0f), DEFAULT_PRIMITIVE_Z });
+
+    return vertices;
 }
 
 std::vector<Primitive> object::getHelicopterBody(Vector3 color) {
