@@ -172,7 +172,7 @@ SceneObject* object::getSun(const std::string& name) {
     sun->transform.scale = 0.2f;
     sun->transform.translation = { 0.5f, 0.5f };
     sun->addComponent<PhysicsBody>(KinematicProperties(0, PI / 4));
-    sun->addComponent<Sun>();
+    sun->addComponent<Sun>(Vector3(255, 255, 0), Vector3(255, 180, 0));
 
     return sun;
 }
@@ -192,9 +192,6 @@ std::vector<Vector3> object::getCrown(int nSpikes, float innerRadius, float oute
 }
 
 std::vector<Primitive> object::getHelicopterBody(Vector3 color) {
-
-    float scale = 1;
-
     Primitive cockpit(getPolygon(4, PI / 4, { 0, 0 }, { 0.5f, 0.3f }), GL_TRIANGLE_FAN, color);
     Primitive topGlass(getPolygon(3, 0, { 0.44f, 0 }, { 0.175f, 0.25f }), GL_TRIANGLE_FAN, color);
     Primitive tail(getPolygon(4, PI / 4, { -1, 0 }, { 1, 0.05f }), GL_TRIANGLE_FAN, color);
@@ -206,7 +203,6 @@ std::vector<Primitive> object::getPropeller(Vector3 color, float width, int nPro
     std::vector<Primitive> prop;
 
     float stepAngle = 2 * PI / nPropellers;
-
     for (int i = 0; i < nPropellers; i++) {
         prop.push_back(Primitive(
             getRectangle(width, 1, i * stepAngle),

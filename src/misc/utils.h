@@ -11,6 +11,8 @@ namespace utils {
 
 	int randRangeInt(int a, int b);
 
+	float interpolate(float t, float a, float b);
+
 	template <typename T>
 	T clamp(const T& n, const T& lower, const T& upper) {
 		return std::max(lower, std::min(n, upper));

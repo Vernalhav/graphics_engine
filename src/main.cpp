@@ -102,8 +102,6 @@ SceneObject* setupScene() {
     plane->transform.translation = { -0.5, -1.5 };
     plane->transform.rotation = PI / 2;
 
-    sun->transform.rotation = -(PI / 2);
-
     scene->appendChild(drone);
     scene->appendChild(helicopter);
     scene->appendChild(plane);
