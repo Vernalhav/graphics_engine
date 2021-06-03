@@ -4,6 +4,7 @@
 #include "Cloud.h"
 #include "Helicopter.h"
 #include "Plane.h"
+#include "Sun.h"
 #include "../engine/PhysicsBody.h"
 #include "../misc/utils.h"
 
@@ -159,6 +160,18 @@ SceneObject* object::getPlane(const std::string& name) {
     plane->addComponent<Plane>();
 
     return plane;
+}
+
+SceneObject* object::getSun(const std::string& name) {
+    
+    SceneObject* sun = new SceneObject(name, { { getPolygon(32, 0, {0,0,0}), GL_TRIANGLE_FAN, {255, 255, 0} } });
+
+    sun->transform.scale = 0.2;
+
+    sun->addComponent<PhysicsBody>(KinematicProperties(0.5f));
+    sun->addComponent<Sun>();
+
+    return sun;
 }
 
 std::vector<Primitive> object::getHelicopterBody(Vector3 color) {

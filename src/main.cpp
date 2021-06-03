@@ -87,6 +87,7 @@ SceneObject* setupScene() {
     SceneObject* helicopter = object::getHelicopter("player");
     SceneObject* drone = object::getDrone("drone");
     SceneObject* plane = object::getPlane("bird");
+    SceneObject* sun = object::getSun("sun");
 
     int numClouds = 3;
     for (int i = 0; i < numClouds; i++) {
@@ -102,9 +103,12 @@ SceneObject* setupScene() {
     plane->transform.translation = { -0.5, -1.5 };
     plane->transform.rotation = PI / 2;
 
+    sun->transform.rotation = -(PI / 2);
+
     scene->appendChild(drone);
     scene->appendChild(helicopter);
     scene->appendChild(plane);
+    scene->appendChild(sun);
 
     return scene;
 }

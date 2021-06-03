@@ -21,6 +21,8 @@ public:
 
 	static SceneObject* getPlane(const std::string& name);
 
+	static SceneObject* getSun(const std::string& name);
+
 private:
 	static std::vector<Primitive> getHelicopterBody(Vector3 color = Color::WHITE);
 
