@@ -1,7 +1,6 @@
-﻿#include <GL/glew.h>
-
-#define GLFW_INCLUDE_NONE
+﻿#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <GL/glew.h>
 
 #include <iostream>
 #include <string>
@@ -87,6 +86,7 @@ SceneObject* setupScene() {
     SceneObject* helicopter = object::getHelicopter("player");
     SceneObject* drone = object::getDrone("drone");
     SceneObject* plane = object::getPlane("bird");
+    SceneObject* sun = object::getSun("sun");
 
     int numClouds = 3;
     for (int i = 0; i < numClouds; i++) {
@@ -105,6 +105,7 @@ SceneObject* setupScene() {
     scene->appendChild(drone);
     scene->appendChild(helicopter);
     scene->appendChild(plane);
+    scene->appendChild(sun);
 
     return scene;
 }

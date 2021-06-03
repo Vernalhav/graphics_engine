@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ostream>
+#include "../misc/utils.h"
 
 struct Vector2 {
     float x, y;
@@ -38,6 +39,10 @@ struct Vector3 {
     Vector3(float x) : x(x), y(0), z(1) { }
     Vector3() : x(0), y(0), z(1) { }
     
+    static Vector3 interpolate(float t, const Vector3& a, const Vector3& b) {
+        return { utils::interpolate(t, a.x, b.x), utils::interpolate(t, a.y, b.y), utils::interpolate(t, a.z, b.z) };
+    }
+
     Vector3 operator+(const Vector3& other) {
         return { x + other.x, y + other.y, z + other.z };
     }
@@ -53,10 +58,21 @@ struct Vector3 {
         return { x * scale, y * scale, z * scale };
     }
 
+    Vector3 operator/(const float scale) {
+        return { x / scale, y / scale, z / scale };
+    }
+
     Vector3& operator*=(const float scale) {
         x *= scale;
         y *= scale;
         z *= scale;
+        return *this;
+    }
+    
+    Vector3& operator/=(const float scale) {
+        x /= scale;
+        y /= scale;
+        z /= scale;
         return *this;
     }
 };
