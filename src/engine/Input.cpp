@@ -10,3 +10,7 @@ int Input::isKeyPressed(int keyCode) {
 	if (window == nullptr) return false;
 	return glfwGetKey(window, keyCode) == GLFW_PRESS;
 }
+
+void Input::closeWindow() {
+	glfwSetWindowShouldClose(window, GLFW_TRUE);
+}

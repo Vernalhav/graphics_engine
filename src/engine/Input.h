@@ -8,5 +8,7 @@ namespace Input {
 	void setWindow(GLFWwindow* window);
 
 	int isKeyPressed(int keyCode);
+
+	void closeWindow();
 	
 };
