@@ -4,6 +4,8 @@
 #include <iostream>
 
 
+constexpr float HELICOPTER_RADIUS = 1.5f;
+
 Helicopter::Helicopter(SceneObject* obj, bool controllable)
     : Component(obj), controllable(controllable), pb(nullptr), maxScale(1), minScale(1) {  }
 
@@ -48,4 +50,8 @@ void Helicopter::update() {
         pb->sceneObject->transform.scale = std::max(pb->sceneObject->transform.scale -
             scaleVelocty * (float)Component::deltaTime, minScale);
     }
+
+    if (abs(sceneObject->transform.translation.x) > HELICOPTER_RADIUS
+        || abs(sceneObject->transform.translation.y) > HELICOPTER_RADIUS)
+        Input::closeWindow();
 }
