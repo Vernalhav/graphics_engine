@@ -52,7 +52,7 @@ private:
 	std::vector<Primitive> primitive;
 	std::map<std::string, SceneObject*> children;
 	std::vector<Component*> components;
-	
+
 public:
 	Transform transform;
 
@@ -64,6 +64,9 @@ public:
 		for (auto& child : children) delete child.second;
 		components.clear();
 	}
+
+	void setPrimitiveColor(Vector3 color);
+	void setPrimitiveColor(Vector3 color, int index);
 
 	void appendChild(SceneObject* child);
 

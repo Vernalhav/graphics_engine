@@ -10,6 +10,17 @@ void Component::update() { }
 void Component::start() { }
 
 
+void SceneObject::setPrimitiveColor(Vector3 color) {
+	color /= 255;
+	for (unsigned int i = 0; i < primitive.size(); i++)
+		primitive[i].color = { color.x, color.y, color.z, 1 };
+}
+
+void SceneObject::setPrimitiveColor(Vector3 color, int index) {
+	color /= 255;
+	primitive[index].color = { color.x, color.y, color.z, 1 };
+}
+
 void SceneObject::appendChild(SceneObject* child) {
 	if (children.count(child->name) != 0) {
 		std::cout << "appendChild: WARNING: SceneObject " << name << " already has child " << child->name << std::endl;

@@ -25,6 +25,7 @@
   <ItemGroup>
     <ClInclude Include="src\application\Plane.h" />
     <ClInclude Include="src\application\Helicopter.h" />
+    <ClInclude Include="src\application\Sun.h" />
     <ClInclude Include="src\engine\Input.h" />
     <ClInclude Include="src\application\Cloud.h" />
     <ClInclude Include="src\math\matrix.h" />
@@ -42,6 +43,7 @@
   <ItemGroup>
     <ClCompile Include="src\application\Plane.cpp" />
     <ClCompile Include="src\application\Helicopter.cpp" />
+    <ClCompile Include="src\application\Sun.cpp" />
     <ClCompile Include="src\engine\Input.cpp" />
     <ClCompile Include="src\application\Cloud.cpp" />
     <ClCompile Include="src\engine\PhysicsBody.cpp" />
