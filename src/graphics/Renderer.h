@@ -3,10 +3,10 @@
 #include <vector>
 #include <gl/glew.h>
 
+#include "../engine/SceneObject.h"
 #include "../math/matrix.h"
 #include "Primitive.h"
 #include "Shader.h"
-#include "../engine/SceneObject.h"
 
 
 class Renderer {
@@ -14,6 +14,13 @@ private:
 	GLuint VAO, VBO;
 	Shader shader;
 
+	/// <summary>
+	/// Internal recursive function that draws all of object's
+	/// primitives according to the relative transformation of
+	/// all of its parents.
+	/// </summary>
+	/// <param name="object">Root object to be drawn</param>
+	/// <param name="globalTransform">Accumulated transform matrix of all of object's parents</param>
 	void _drawObject(const SceneObject* object, Matrix3 globalTransform);
 
 public:

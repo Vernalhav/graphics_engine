@@ -23,10 +23,12 @@ public:
 	~Shader() { }
 
 	void use();
+
+	// Sets the model matrix in the shader to the specified values.
 	void setTransform(const Transform& t);
 	void setTransform(const Matrix3& t);
 
-	void setPositionAttributeLayout();
+	void setPositionAttributeLayout();	// Configures the VAO's input attribute layout
 	void enableAttrib(const std::string& name);
 
 	void setFloat(const std::string& name, float value);
