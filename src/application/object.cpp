@@ -4,6 +4,7 @@
 #include "Cloud.h"
 #include "Helicopter.h"
 #include "Plane.h"
+#include "Sun.h"
 #include "../engine/PhysicsBody.h"
 #include "../misc/utils.h"
 
@@ -161,10 +162,36 @@ SceneObject* object::getPlane(const std::string& name) {
     return plane;
 }
 
+SceneObject* object::getSun(const std::string& name) {
+    
+    Primitive innerCircle = { getPolygon(32), GL_TRIANGLE_FAN, {255, 127, 0} };
+    Primitive crown = { getCrown(16, 1.2f, 1.6f), GL_TRIANGLE_FAN, {255, 255, 0} };
+
+    SceneObject* sun = new SceneObject(name, { innerCircle, crown });
+    
+    sun->transform.scale = 0.2f;
+    sun->transform.translation = { 0.5f, 0.5f };
+    sun->addComponent<PhysicsBody>(KinematicProperties(0, PI / 4));
+    sun->addComponent<Sun>(Vector3(255, 255, 0), Vector3(255, 180, 0));
+
+    return sun;
+}
+
+std::vector<Vector3> object::getCrown(int nSpikes, float innerRadius, float outerRadius) {
+    std::vector<Vector3> vertices = { {0, 0, DEFAULT_PRIMITIVE_Z} };
+
+    float angleStep = 2 * PI / nSpikes;
+    for (int i = 0; i < nSpikes; i++) {
+        vertices.push_back({ innerRadius * cos(i * angleStep), innerRadius * sin(i * angleStep), DEFAULT_PRIMITIVE_Z });
+        vertices.push_back({ outerRadius * cos((i + 0.5f) * angleStep), outerRadius * sin((i + 0.5f) * angleStep), DEFAULT_PRIMITIVE_Z });
+    }
+
+    vertices.push_back({ innerRadius * cos(0.0f), innerRadius * sin(0.0f), DEFAULT_PRIMITIVE_Z });
+
+    return vertices;
+}
+
 std::vector<Primitive> object::getHelicopterBody(Vector3 color) {
-
-    float scale = 1;
-
     Primitive cockpit(getPolygon(4, PI / 4, { 0, 0 }, { 0.5f, 0.3f }), GL_TRIANGLE_FAN, color);
     Primitive topGlass(getPolygon(3, 0, { 0.44f, 0 }, { 0.175f, 0.25f }), GL_TRIANGLE_FAN, color);
     Primitive tail(getPolygon(4, PI / 4, { -1, 0 }, { 1, 0.05f }), GL_TRIANGLE_FAN, color);
@@ -176,7 +203,6 @@ std::vector<Primitive> object::getPropeller(Vector3 color, float width, int nPro
     std::vector<Primitive> prop;
 
     float stepAngle = 2 * PI / nPropellers;
-
     for (int i = 0; i < nPropellers; i++) {
         prop.push_back(Primitive(
             getRectangle(width, 1, i * stepAngle),
