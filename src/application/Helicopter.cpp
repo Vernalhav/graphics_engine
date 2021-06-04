@@ -1,5 +1,5 @@
-#include "Helicopter.h"
 #include "../engine/Input.h"
+#include "Helicopter.h"
 
 #include <iostream>
 

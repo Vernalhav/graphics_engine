@@ -32,6 +32,10 @@ struct KinematicProperties {
 		linearDrag(linearDrag), angularDrag(angularDrag),
 		terminalLinearVelocity(terminalLinearVelocity), terminalAngularVelocity(terminalAngularVelocity) { }
 
+	/// <summary>
+	/// Updates the kinematic properties according to
+	/// the acceleration and drag parameters.
+	/// </summary>
 	void kinematicsUpdate();
 };
 

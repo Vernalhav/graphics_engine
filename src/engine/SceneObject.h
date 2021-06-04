@@ -50,7 +50,17 @@ private:
 	/// share a single Transform.
 	/// </summary>
 	std::vector<Primitive> primitive;
+
+	/// <summary>
+	/// Mapping between the name of each children of this SceneObject and
+	/// its corresponding object pointer.
+	/// </summary>
 	std::map<std::string, SceneObject*> children;
+
+	/// <summary>
+	/// Array of Components attached to this SceneObject
+	/// that will initialized and updated each frame.
+	/// </summary>
 	std::vector<Component*> components;
 
 public:
@@ -65,11 +75,13 @@ public:
 		components.clear();
 	}
 
+	// Changes the color of the object's Primitives.
 	void setPrimitiveColor(Vector3 color);
+	// Changes the color of the object's Primitive at the index provided.
 	void setPrimitiveColor(Vector3 color, int index);
 
+	// Adds child as a child of the current SceneObject.
 	void appendChild(SceneObject* child);
-
 	void appendChildren(std::vector<SceneObject*> children);
 
 	Transform& getTransform() { return transform; }
@@ -98,6 +110,13 @@ public:
 		components.push_back(new ComponentType(this, args...));
 	}
 
+	/// <summary>
+	/// Returns a component attached to the current
+	/// SceneObject that matches the template parameter.
+	/// If there are none, returns nullptr.
+	/// </summary>
+	/// <typeparam name="ComponentType">Type of component to search for</typeparam>
+	/// <returns>Pointer to the Component</returns>
 	template<typename ComponentType>
 	ComponentType* getComponent();
 
@@ -115,6 +134,10 @@ public:
 	/// <returns>Array with object primitives</returns>
 	const std::vector<Primitive>& getObjectPrimitive() const;
 
+	/// <summary>
+	/// Returns all of the object's immediate children
+	/// </summary>
+	/// <returns>Array of pointers to the children SceneObjects</returns>
 	const std::vector<const SceneObject*> getChildren() const;
 
 	/// <summary>
@@ -141,7 +164,7 @@ template<typename ComponentType>
 ComponentType* SceneObject::getComponent() {
 	for (Component* component : components) {
 		if (component->instanceof<ComponentType>()) {
-			return (ComponentType*)component;
+			return reinterpret_cast<ComponentType*>(component);
 		}
 	}
 
