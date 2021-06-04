@@ -73,6 +73,10 @@ Renderer* setupRenderer() {
 }
 
 
+/// <summary>
+/// Calculate time in seconds between
+/// the last getDeltaTime call.
+/// </summary>
 double getDeltaTime() {
     double delta = glfwGetTime();
     glfwSetTime(0);
@@ -80,6 +84,11 @@ double getDeltaTime() {
 }
 
 
+/// <summary>
+/// Creates, configures and lays out all scene objects
+/// in the scene hierarchy. Returns parent SceneObject
+/// to which all root-level objects will be parented to.
+/// </summary>
 SceneObject* setupScene() {
     
     SceneObject* scene = new SceneObject("scene");
@@ -121,7 +130,7 @@ int main(void) {
     Renderer* renderer = setupRenderer();
     renderer->uploadObjects({ scene });
     
-    Vector3 backgroundColor = Color::CYAN * (1 / 255.0f);
+    Vector3 backgroundColor = Color::CYAN / 255.0f;
 
     glfwShowWindow(window);
     glfwSetTime(0);
