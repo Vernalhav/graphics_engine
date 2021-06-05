@@ -92,7 +92,7 @@ double getDeltaTime() {
 SceneObject* setupScene() {
     
     SceneObject* scene = new SceneObject("scene");
-    SceneObject* helicopter = object::getHelicopter("player");
+    SceneObject* helicopter = object::getHelicopter("player", Color::DARK_GRAY, Color::DARK_GRAY);
     SceneObject* drone = object::getDrone("drone");
     SceneObject* plane = object::getPlane("bird");
     SceneObject* sun = object::getSun("sun");
@@ -120,7 +120,7 @@ SceneObject* setupScene() {
 }
 
 
-int main(void) {
+int main() {
     GLFWwindow* window = initGLFW();
     Input::setWindow(window);
 
