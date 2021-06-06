@@ -1,4 +1,10 @@
-﻿#define GLFW_INCLUDE_NONE
+﻿/*
+    Victor Giovannoni Vernalha      10786159
+    João Vitor Silva Ramos          10734769
+    Vitor Santana Cordeiro          10734345
+*/
+
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
