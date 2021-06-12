@@ -1,4 +1,6 @@
 #include "Shader.h"
+
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 
@@ -23,11 +25,11 @@ void Shader::use() {
 }
 
 void Shader::setTransform(const Transform& t) {
-    setTransform(Matrix3(t));
+    setTransform(t.getTransformMatrix());
 }
 
-void Shader::setTransform(const Matrix3& t) {
-    setMatrix3("model", t);
+void Shader::setTransform(const glm::mat3& t) {
+    setMatrix4("model", t);
 }
 
 void Shader::setPositionAttributeLayout() {
@@ -59,24 +61,24 @@ void Shader::setFloat(const std::string& name, float value) {
     glUniform1f(location, value);
 }
 
-void Shader::setFloat2(const std::string& name, Vector2 values) {
+void Shader::setFloat2(const std::string& name, glm::vec2 values) {
     auto location = getUniformLocation(name);
     glUniform2f(location, values.x, values.y);
 }
 
-void Shader::setFloat3(const std::string& name, Vector3 values) {
+void Shader::setFloat3(const std::string& name, glm::vec3 values) {
     auto location = getUniformLocation(name);
     glUniform3f(location, values.x, values.y, values.z);
 }
 
-void Shader::setFloat4(const std::string& name, Vector4 values) {
+void Shader::setFloat4(const std::string& name, glm::vec4 values) {
     auto location = getUniformLocation(name);
     glUniform4f(location, values.x, values.y, values.z, values.w);
 }
 
-void Shader::setMatrix3(const std::string& name, Matrix3 values) {
+void Shader::setMatrix4(const std::string& name, glm::mat4 values) {
     auto location = getUniformLocation(name);
-    glUniformMatrix3fv(location, 1, GL_TRUE, (const GLfloat*)values.matrix);
+    glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*)glm::value_ptr(values));
 }
 
 /// <summary>

@@ -5,11 +5,11 @@ void PhysicsBody::update() {
 	kinematics.kinematicsUpdate();
 	sceneObject->transform.rotation += kinematics.angularVelocity * (float)Component::deltaTime;
 
-	float curRotation = sceneObject->transform.rotation;
-	Vector2 velocity(cos(curRotation), sin(curRotation));
+	float curRotation = sceneObject->transform.rotation.z;
+	glm::vec2 velocity(cos(curRotation), sin(curRotation));
 	velocity *= kinematics.linearVelocity;
 
-	sceneObject->transform.translation += velocity * (float)Component::deltaTime;
+	sceneObject->transform.translation += glm::vec3(velocity * (float)Component::deltaTime, 0);
 }
 
 void KinematicProperties::kinematicsUpdate() {

@@ -9,6 +9,6 @@ void Plane::update() {
 	if (sceneObject->transform.translation.y >= PLANE_THRESHOLD) {
 		sceneObject->transform.translation.y = -PLANE_THRESHOLD;
 		sceneObject->transform.translation.x = utils::randRange(-0.9f, 0.9f);
-		sceneObject->transform.scale = utils::randRange(0.1f, 0.25f);
+		sceneObject->transform.scale = glm::vec3(utils::randRange(0.1f, 0.25f));
 	}
 }

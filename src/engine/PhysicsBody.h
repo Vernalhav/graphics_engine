@@ -1,8 +1,8 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include <algorithm>
 
-#include "../math/vectors.h"
 #include "../misc/utils.h"
 #include "SceneObject.h"
 

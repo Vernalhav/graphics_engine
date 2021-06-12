@@ -1,35 +1,25 @@
 #pragma once
-#include "../math/vectors.h"
+#include <glm/glm.hpp>
 
 struct Transform {
-	Vector3 translation = { 0, 0, 0 };
-	float rotation = 0;
-	float scale = 1;
+	glm::vec3 translation;
+	glm::vec3 rotation;
+	glm::vec3 scale;
 
-	Transform()
-		: Transform({ 0, 0, 0 }, 0, 1) { }
+	Transform();
 
-	Transform(const Vector2& translation, float rotation, float scale)
-		: translation(translation), rotation(rotation), scale(scale) { }
+	// 2D Compatibility constructor (z-axis rotation)
+	Transform(const glm::vec2& translation, float rotation, float scale);
 
-	Transform(const Vector3& translation, float rotation, float scale)
-		: translation(translation), rotation(rotation), scale(scale) { }
+	// Uniform scale constructor
+	Transform(const glm::vec3& translation, const glm::vec3& rotation, float scale);
 
-	Transform operator+(const Transform& other) {
-		return { translation + other.translation, rotation + other.rotation, scale * other.scale };
-	}
+	// Non-uniform scale constructor
+	Transform(const glm::vec3& translation, const glm::vec3& rotation, const glm::vec3& scale);
 
-	Transform& operator+=(const Transform& other) {
-		translation += other.translation;
-		rotation += other.rotation;
-		scale *= other.scale;
-		return *this;
-	}
+	Transform operator+(const Transform& other);
+
+	Transform& operator+=(const Transform& other);
+
+	glm::mat4 getTransformMatrix() const;
 };
-
-static std::ostream& operator<<(std::ostream& out, Transform const& data) {
-	out << "Translation: " << data.translation << std::endl\
-		<< "Rotation: " << data.rotation << std::endl\
-		<< "Scale:" << data.scale << std::endl;
-	return out;
-}

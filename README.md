@@ -2,7 +2,7 @@
 This project is an application of a few 2D Computer Graphics concepts in an attempt to create a small game engine-like 
 API. To test this API, we've created an application in which you control a helicopter that needs to leave the screens's 
 boundaries.  
-This repository is a Visual Studio project that requires the installation of `glew` and `glfw`, but it can also be 
+This repository is a Visual Studio project that requires the installation of `glew`, `glfw` and `glm`, but it can also be 
 compiled without VS by linking the appropriate libraries.
 
 # Project Structure:  
@@ -12,24 +12,19 @@ All relevant `.cpp` and `.h` files are in the `src/` directory.
     ├─── application/   # Application-specific code and Components
     ├─── engine/        # Scene objects, input reading and kinematic-related code
     ├─── graphics/      # OpenGL and transformation-related code
-    ├─── math/          # Small implementation of vectors and matrices of fixed size
     ├─── misc/          # Miscellaneous functions and definitions
     └─── main.cpp       # Main application
 ```
 ## engine/
 - **SceneObject:** Class that unifies a collection of primitives with a single transformation matrix. Can have children which are transformed in relation to the parent.
 - **Component (in SceneObject.h):** Base class of all Components. Extend this class to add custom behaviour to SceneObjects. Has static member deltaTime.
-- **Transform:** Struct containing geometric transformation info like translation, scale and rotation. Can be converted into a Transform matrix using a Matrix3 constructor.
+- **Transform:** Struct containing geometric transformation info like translation, scale and rotation. Can be converted into a Transform matrix using a glm::mat3 constructor.
 - **PhysicsBody:** Component containing simple kinematic properties like linear and angular velocity.
 
 ## graphics/
 - **Primitive:** Struct containing basic information about an OpenGL primitive. Includes vertices, type of primitive and color.
 - **Shader:** Class abstraction of a GLSL shader. Construct it with vertex and fragment shader code string, and optionally name it.
 - **Renderer:** Class abstraction of OpenGL's VAOs, VBOs and `draw` calls. It is responsible for drawing the scene objects relative to their hierarchical parents.
-
-## math/
-- **vectors:** Defines Vector2, Vector3 and Vector4 structs along with some common operations.
-- **matrix:** Defines the struct Matrix3 along with common transformation operations like rotation, scale and translation. Can be constructed from a Transform struct.
 
 # Hierarchical structure:
 SceneObjects can be nested within each other, creating a hierarchical structure.

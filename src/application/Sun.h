@@ -4,12 +4,12 @@
 
 class Sun : public Component {
 private:
-	Vector3 colorStart, colorEnd;
+	glm::vec3 colorStart, colorEnd;
 	unsigned int frameNumber;
 	float initialScale;
 
 public:
-	Sun(SceneObject* obj, const Vector3& colorStart, const Vector3& colorEnd);
+	Sun(SceneObject* obj, const glm::vec3& colorStart, const glm::vec3& colorEnd);
 
 	void start();
 

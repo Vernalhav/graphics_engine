@@ -48,6 +48,7 @@
     <ClCompile Include="src\application\Cloud.cpp" />
     <ClCompile Include="src\engine\PhysicsBody.cpp" />
     <ClCompile Include="src\application\object.cpp" />
+    <ClCompile Include="src\engine\Transform.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />

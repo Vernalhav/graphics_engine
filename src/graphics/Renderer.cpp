@@ -4,7 +4,7 @@
 
 void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
 
-	std::vector<Vector3> vertices;
+	std::vector<glm::vec3> vertices;
 
 	int offset = 0;
 	for (auto object : objects) {
@@ -35,12 +35,12 @@ void Renderer::drawObject(SceneObject* object) {
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	_drawObject(object, Matrix3());
+	_drawObject(object, glm::mat4(1.0f));
 }
 
-void Renderer::_drawObject(const SceneObject* object, Matrix3 globalTransform) {
+void Renderer::_drawObject(const SceneObject* object, glm::mat4 globalTransform) {
 	
-	globalTransform = globalTransform * Matrix3(object->transform);
+	globalTransform = globalTransform * object->transform.getTransformMatrix();
 	shader.setTransform(globalTransform);
 
 	auto objectPrimitive = object->getObjectPrimitive();

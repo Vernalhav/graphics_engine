@@ -2,8 +2,7 @@
 #include <string>
 #include <gl/glew.h>
 
-#include "../math/vectors.h"
-#include "../math/matrix.h"
+#include <glm/glm.hpp>
 #include "../engine/Transform.h"
 
 class Shader
@@ -26,15 +25,15 @@ public:
 
 	// Sets the model matrix in the shader to the specified values.
 	void setTransform(const Transform& t);
-	void setTransform(const Matrix3& t);
+	void setTransform(const glm::mat3& t);
 
 	void setPositionAttributeLayout();	// Configures the VAO's input attribute layout
 	void enableAttrib(const std::string& name);
 
 	void setFloat(const std::string& name, float value);
-	void setFloat2(const std::string& name, Vector2 values);
-	void setFloat3(const std::string& name, Vector3 values);
-	void setFloat4(const std::string& name, Vector4 values);
-	void setMatrix3(const std::string& name, Matrix3 values);
+	void setFloat2(const std::string& name, glm::vec2 values);
+	void setFloat3(const std::string& name, glm::vec3 values);
+	void setFloat4(const std::string& name, glm::vec4 values);
+	void setMatrix4(const std::string& name, glm::mat4 values);
 };
 

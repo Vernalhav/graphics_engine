@@ -1,10 +1,10 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include <map>
 #include <stack>
 #include <string>
 
-#include "../math/vectors.h"
 #include "../graphics/Primitive.h"
 #include "Transform.h"
 
@@ -76,9 +76,9 @@ public:
 	}
 
 	// Changes the color of the object's Primitives.
-	void setPrimitiveColor(Vector3 color);
+	void setPrimitiveColor(glm::vec3 color);
 	// Changes the color of the object's Primitive at the index provided.
-	void setPrimitiveColor(Vector3 color, int index);
+	void setPrimitiveColor(glm::vec3 color, int index);
 
 	// Adds child as a child of the current SceneObject.
 	void appendChild(SceneObject* child);

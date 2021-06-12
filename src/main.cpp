@@ -7,13 +7,13 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
 
-#include "math/vectors.h"
 #include "engine/SceneObject.h"
 #include "engine/PhysicsBody.h"
 #include "engine/Input.h"
@@ -59,11 +59,10 @@ Renderer* setupRenderer() {
     std::string vertex_code =
         "#version 150\n"
         "in vec3 position;\n"
-        "uniform mat3 model;\n"
+        "uniform mat4 model;\n"
         "void main()\n"
         "{\n"
-        "   vec3 computedPosition = model * position;"
-        "   gl_Position = vec4(computedPosition.xy, 0, 1);\n"
+        "   gl_Position = model * vec4(position, 1);\n"
         "}\n";
 
     std::string fragment_code =
@@ -108,14 +107,14 @@ SceneObject* setupScene() {
         SceneObject* cloud = object::getCloud("cloud" + std::to_string(i),
             { utils::randRange(-1.0, 1.0), utils::randRange(-1.0, 1.0) });
 
-        cloud->transform.scale = 0.1f;
+        cloud->transform.scale = glm::vec3(0.1f);
         scene->appendChild(cloud);
     }
 
-    helicopter->transform.scale = 0.2f;
-    plane->transform.scale = 0.2f;
-    plane->transform.translation = { -0.5, -1.5 };
-    plane->transform.rotation = PI / 2;
+    helicopter->transform.scale = glm::vec3(0.2f);
+    plane->transform.scale = glm::vec3(0.2f);
+    plane->transform.translation = { -0.5, -1.5, 0 };
+    plane->transform.rotation = { 0, 0, PI / 2 };
 
     scene->appendChild(drone);
     scene->appendChild(helicopter);
@@ -136,7 +135,7 @@ int main() {
     Renderer* renderer = setupRenderer();
     renderer->uploadObjects({ scene });
     
-    Vector3 backgroundColor = Color::CYAN / 255.0f;
+    glm::vec3 backgroundColor = Color::CYAN / 255.0f;
 
     glfwShowWindow(window);
     glfwSetTime(0);

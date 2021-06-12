@@ -13,8 +13,8 @@ Helicopter::Helicopter(SceneObject* obj, bool controllable)
 void Helicopter::start() {
     pb = sceneObject->getComponent<PhysicsBody>();
     if (pb != nullptr) {
-        maxScale = pb->sceneObject->transform.scale * 3 / 2;
-        minScale = pb->sceneObject->transform.scale / 2;
+        maxScale = pb->sceneObject->transform.scale.x * 3 / 2;
+        minScale = pb->sceneObject->transform.scale.x / 2;
     }
     else {
         maxScale = 1;
@@ -42,13 +42,13 @@ void Helicopter::update() {
     }
 
     if (Input::isKeyPressed(GLFW_KEY_UP)) {
-        pb->sceneObject->transform.scale = std::min(pb->sceneObject->transform.scale +
-            scaleVelocty * (float)Component::deltaTime, maxScale);
+        pb->sceneObject->transform.scale = glm::vec3(std::min(pb->sceneObject->transform.scale.x +
+            scaleVelocty * (float)Component::deltaTime, maxScale));
     }
 
     if (Input::isKeyPressed(GLFW_KEY_DOWN)) {
-        pb->sceneObject->transform.scale = std::max(pb->sceneObject->transform.scale -
-            scaleVelocty * (float)Component::deltaTime, minScale);
+        pb->sceneObject->transform.scale = glm::vec3(std::max(pb->sceneObject->transform.scale.x -
+            scaleVelocty * (float)Component::deltaTime, minScale));
     }
 
     if (abs(sceneObject->transform.translation.x) > HELICOPTER_RADIUS

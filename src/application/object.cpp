@@ -11,14 +11,14 @@
 #define DEFAULT_PRIMITIVE_Z 1
 
 
-SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyColor, const Vector3& propellerColor) {
+SceneObject* object::getHelicopter(const std::string& name, const glm::vec3& bodyColor, const glm::vec3& propellerColor) {
 
     SceneObject* propeller = new SceneObject("propeller", getPropeller(propellerColor));
     SceneObject* smallPropeller = new SceneObject("small_propeller", getPropeller(propellerColor));
     SceneObject* body = new SceneObject(name + "_body", getHelicopterBody(bodyColor));
 
     smallPropeller->transform.translation.x = -1.72f;
-    smallPropeller->transform.scale = 0.3f;
+    smallPropeller->transform.scale = glm::vec3(0.3f);
 
     float LIN_DRAG = 1e-3f;
     float ANG_DRAG = 1e-2f;
@@ -38,7 +38,7 @@ SceneObject* object::getHelicopter(const std::string& name, const Vector3& bodyC
 	return body;
 }
 
-SceneObject* object::getDrone(const std::string& name, const Vector3& bodyColor) {
+SceneObject* object::getDrone(const std::string& name, const glm::vec3& bodyColor) {
     
     Primitive body = { getPolygon(4, PI / 4, {0, 0, 0}, {0.5f, 0.5f}), GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
     Primitive arm1 = { getPolygon(4, 0, {0, 0, 0}, {1.3f, 0.2f}), GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
@@ -51,15 +51,15 @@ SceneObject* object::getDrone(const std::string& name, const Vector3& bodyColor)
 
     for (int i = 1; i <= 4; i++) {
         SceneObject* prop = new SceneObject(name + "_prop_" + std::to_string(i), getPropeller(Color::LIGHT_GRAY, 0.1f, 3));
-        prop->transform.scale = 0.5f;
+        prop->transform.scale = glm::vec3(0.5f);
         prop->addComponent<PhysicsBody>(KinematicProperties(0, PI));
-        prop->transform.translation = { propellerRadius * cos(i * stepAngle), propellerRadius * sin(i * stepAngle) };
+        prop->transform.translation = { propellerRadius * cos(i * stepAngle), propellerRadius * sin(i * stepAngle), 0 };
 
         drone->appendChild(prop);
     }
 
-    drone->transform.rotation = PI / 4;
-    drone->transform.scale = 0.1f;
+    drone->transform.rotation.z = PI / 4;
+    drone->transform.scale = glm::vec3(0.1f);
 
     SceneObject* dronePivot = new SceneObject("drone_pivot");
     drone->addComponent<PhysicsBody>();
@@ -72,32 +72,7 @@ SceneObject* object::getDrone(const std::string& name, const Vector3& bodyColor)
     return dronePivot;
 }
 
-SceneObject* object::getSpinner() {
-    SceneObject* prop1 = new SceneObject("p1", getPropeller());
-    SceneObject* prop2 = new SceneObject("p2", getPropeller({ 0, 255, 0 }, 0.1f, 3));
-    SceneObject* prop3 = new SceneObject("p2", getPropeller());
-    SceneObject* shaft = new SceneObject("shaft", { { getPolygon(4, PI / 4, {0,0,0}, {0.7f, 0.05f}), GL_TRIANGLE_FAN, {255, 255, 255} } });
-
-    prop1->transform.translation.x = 0.5f;
-    prop2->transform.translation.x = -0.5f;
-    prop3->transform.translation.x = 1;
-    prop1->transform.scale = 0.5;
-    prop2->transform.scale = 0.5;
-    prop3->transform.scale = 0.5;
-
-    shaft->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.001f));
-    prop1->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.001f));
-    prop2->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.001f));
-    prop3->addComponent<PhysicsBody>(KinematicProperties(0.0f, 0.001f));
-
-    shaft->appendChild(prop1);
-    shaft->appendChild(prop2);
-    prop2->appendChild(prop3);
-
-    return shaft;
-}
-
-SceneObject* object::getCloud(const std::string name, Vector2 origin) {
+SceneObject* object::getCloud(const std::string name, glm::vec2 origin) {
     
     size_t seed = std::hash<std::string>{}(name);
 
@@ -108,7 +83,7 @@ SceneObject* object::getCloud(const std::string name, Vector2 origin) {
     const int numSubClouds = 8;
 
     std::vector<Primitive> cloudPrims;
-    std::vector<Vector3> originCloud = getPolygon(32, 0, { 0, 0, 0 }, { utils::randRange(0.6f, 0.8f), 1 });
+    std::vector<glm::vec3> originCloud = getPolygon(32, 0, { 0, 0, 0 }, { utils::randRange(0.6f, 0.8f), 1 });
 
     cloudPrims.push_back(Primitive(originCloud, GL_TRIANGLE_FAN, Color::WHITE));
 
@@ -116,7 +91,7 @@ SceneObject* object::getCloud(const std::string name, Vector2 origin) {
         float curX = distribXCoord(generator);
         float curY = distribYCoord(generator);
 
-        std::vector<Vector3> curSubCloud = getPolygon(32, 0, { curX, curY, 0 },
+        std::vector<glm::vec3> curSubCloud = getPolygon(32, 0, { curX, curY, 0 },
             { utils::randRange(0.8f, 1.2f), 1 });
         
         cloudPrims.push_back(Primitive(curSubCloud, GL_TRIANGLE_FAN, Color::WHITE));
@@ -124,8 +99,8 @@ SceneObject* object::getCloud(const std::string name, Vector2 origin) {
 
     SceneObject* cloud = new SceneObject(name, cloudPrims);
 
-    cloud->transform.scale = 0.1f;
-    cloud->transform.translation = origin;
+    cloud->transform.scale = glm::vec3(0.1f);
+    cloud->transform.translation = { origin, 0 };
 
     float terminalVelocity = 3.0f;
 
@@ -138,17 +113,17 @@ SceneObject* object::getCloud(const std::string name, Vector2 origin) {
 }
 
 SceneObject* object::getPlane(const std::string& name) {
-    Vector3 A = {1, 0, DEFAULT_PRIMITIVE_Z};
-    Vector3 B = {0.2f, -1, DEFAULT_PRIMITIVE_Z};
-    Vector3 C = {0.4f, -0.2f, DEFAULT_PRIMITIVE_Z};
-    Vector3 D = {-0.4f, -0.13f, DEFAULT_PRIMITIVE_Z};
-    Vector3 E = {-1, -0.4f, DEFAULT_PRIMITIVE_Z};
-    Vector3 F = {-0.7f, 0, DEFAULT_PRIMITIVE_Z};
-    Vector3 G = {-1, 0.4f, DEFAULT_PRIMITIVE_Z};
-    Vector3 H = {-0.4f, 0.12f, DEFAULT_PRIMITIVE_Z};
-    Vector3 I = {0.4f, 0.2f, DEFAULT_PRIMITIVE_Z};
-    Vector3 J = {0.2f, 1, DEFAULT_PRIMITIVE_Z};
-    Vector3 K = {1.3f, 0, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 A = {1, 0, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 B = {0.2f, -1, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 C = {0.4f, -0.2f, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 D = {-0.4f, -0.13f, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 E = {-1, -0.4f, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 F = {-0.7f, 0, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 G = {-1, 0.4f, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 H = {-0.4f, 0.12f, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 I = {0.4f, 0.2f, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 J = {0.2f, 1, DEFAULT_PRIMITIVE_Z};
+    glm::vec3 K = {1.3f, 0, DEFAULT_PRIMITIVE_Z};
 
     Primitive front = { {A, J, I, C, B}, GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
     Primitive middle = { {I, H, D, C}, GL_TRIANGLE_FAN, Color::LIGHT_GRAY };
@@ -169,16 +144,16 @@ SceneObject* object::getSun(const std::string& name) {
 
     SceneObject* sun = new SceneObject(name, { innerCircle, crown });
     
-    sun->transform.scale = 0.2f;
-    sun->transform.translation = { 0.5f, 0.5f };
+    sun->transform.scale = glm::vec3(0.2f);
+    sun->transform.translation = { 0.5f, 0.5f, 0 };
     sun->addComponent<PhysicsBody>(KinematicProperties(0, PI / 4));
-    sun->addComponent<Sun>(Vector3(255, 255, 0), Vector3(255, 180, 0));
+    sun->addComponent<Sun>(glm::vec3(255, 255, 0), glm::vec3(255, 180, 0));
 
     return sun;
 }
 
-std::vector<Vector3> object::getCrown(int nSpikes, float innerRadius, float outerRadius) {
-    std::vector<Vector3> vertices = { {0, 0, DEFAULT_PRIMITIVE_Z} };
+std::vector<glm::vec3> object::getCrown(int nSpikes, float innerRadius, float outerRadius) {
+    std::vector<glm::vec3> vertices = { {0, 0, DEFAULT_PRIMITIVE_Z} };
 
     float angleStep = 2 * PI / nSpikes;
     for (int i = 0; i < nSpikes; i++) {
@@ -191,15 +166,15 @@ std::vector<Vector3> object::getCrown(int nSpikes, float innerRadius, float oute
     return vertices;
 }
 
-std::vector<Primitive> object::getHelicopterBody(Vector3 color) {
-    Primitive cockpit(getPolygon(4, PI / 4, { 0, 0 }, { 0.5f, 0.3f }), GL_TRIANGLE_FAN, color);
-    Primitive topGlass(getPolygon(3, 0, { 0.44f, 0 }, { 0.175f, 0.25f }), GL_TRIANGLE_FAN, color);
-    Primitive tail(getPolygon(4, PI / 4, { -1, 0 }, { 1, 0.05f }), GL_TRIANGLE_FAN, color);
+std::vector<Primitive> object::getHelicopterBody(glm::vec3 color) {
+    Primitive cockpit(getPolygon(4, PI / 4, { 0, 0, 0 }, { 0.5f, 0.3f }), GL_TRIANGLE_FAN, color);
+    Primitive topGlass(getPolygon(3, 0, { 0.44f, 0, 0 }, { 0.175f, 0.25f }), GL_TRIANGLE_FAN, color);
+    Primitive tail(getPolygon(4, PI / 4, { -1, 0, 0 }, { 1, 0.05f }), GL_TRIANGLE_FAN, color);
 
     return { cockpit, topGlass, tail };
 }
 
-std::vector<Primitive> object::getPropeller(Vector3 color, float width, int nPropellers) {
+std::vector<Primitive> object::getPropeller(glm::vec3 color, float width, int nPropellers) {
     std::vector<Primitive> prop;
 
     float stepAngle = 2 * PI / nPropellers;
@@ -214,8 +189,8 @@ std::vector<Primitive> object::getPropeller(Vector3 color, float width, int nPro
     return prop;
 }
 
-std::vector<Vector3> object::getPolygon(int n, float rotation, Vector3 offset, Vector2 scale) {
-    std::vector<Vector3> polygon(n);
+std::vector<glm::vec3> object::getPolygon(int n, float rotation, glm::vec3 offset, glm::vec2 scale) {
+    std::vector<glm::vec3> polygon(n);
 
     float angleStep = 2 * PI / n;
     for (int i = 0; i < n; i++) {
@@ -227,8 +202,8 @@ std::vector<Vector3> object::getPolygon(int n, float rotation, Vector3 offset, V
     return polygon;
 }
 
-std::vector<Vector3> object::getRectangle(float width, float length, float rotation) {
-    std::vector<Vector3> rectangle(4);
+std::vector<glm::vec3> object::getRectangle(float width, float length, float rotation) {
+    std::vector<glm::vec3> rectangle(4);
 
     rectangle[0] = { 0.0f, width / 2, DEFAULT_PRIMITIVE_Z};
     rectangle[1] = { 0.0f, -width / 2, DEFAULT_PRIMITIVE_Z};

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <vector>
 #include <gl/glew.h>
+#include <glm/glm.hpp>
+#include <vector>
 
 #include "../engine/SceneObject.h"
-#include "../math/matrix.h"
 #include "Primitive.h"
 #include "Shader.h"
 
@@ -21,7 +21,7 @@ private:
 	/// </summary>
 	/// <param name="object">Root object to be drawn</param>
 	/// <param name="globalTransform">Accumulated transform matrix of all of object's parents</param>
-	void _drawObject(const SceneObject* object, Matrix3 globalTransform);
+	void _drawObject(const SceneObject* object, glm::mat4 globalTransform);
 
 public:
 	Renderer(Shader s);
