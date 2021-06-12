@@ -1,4 +1,4 @@
-﻿# River Raid:
+﻿# Graphics Eengine:
 This project is an application of a few 2D Computer Graphics concepts in an attempt to create a small game engine-like 
 API. To test this API, we've created an application in which you control a helicopter that needs to leave the screens's 
 boundaries.  
