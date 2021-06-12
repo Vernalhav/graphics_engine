@@ -28,7 +28,7 @@ void Shader::setTransform(const Transform& t) {
     setTransform(t.getTransformMatrix());
 }
 
-void Shader::setTransform(const glm::mat3& t) {
+void Shader::setTransform(const glm::mat4& t) {
     setMatrix4("model", t);
 }
 

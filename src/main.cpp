@@ -14,12 +14,13 @@
 #include <vector>
 #include <algorithm>
 
+#include "application/Color.h"
+
 #include "engine/SceneObject.h"
 #include "engine/PhysicsBody.h"
 #include "engine/Input.h"
 #include "graphics/Shader.h"
 #include "graphics/Renderer.h"
-#include "application/object.h"
 #include "misc/utils.h"
 
 #define DEBUG 1
@@ -95,32 +96,44 @@ double getDeltaTime() {
 /// to which all root-level objects will be parented to.
 /// </summary>
 SceneObject* setupScene() {
-    
     SceneObject* scene = new SceneObject("scene");
-    SceneObject* helicopter = object::getHelicopter("player", Color::DARK_GRAY, Color::DARK_GRAY);
-    SceneObject* drone = object::getDrone("drone");
-    SceneObject* plane = object::getPlane("bird");
-    SceneObject* sun = object::getSun("sun");
 
-    int numClouds = 3;
-    for (int i = 0; i < numClouds; i++) {
-        SceneObject* cloud = object::getCloud("cloud" + std::to_string(i),
-            { utils::randRange(-1.0, 1.0), utils::randRange(-1.0, 1.0) });
+    Primitive base = {
+        {{+0.5f, +0.0f, +0.5f},
+         {+0.5f, +0.0f, -0.5f},
+         {-0.5f, +0.0f, +0.5f},
+         {-0.5f, +0.0f, -0.5f}},
+         GL_TRIANGLE_FAN, Color::BLACK };
+ 
+    Primitive face1 = {
+        {{+0.5f, +0.0f, +0.5f},
+         {+0.5f, +0.0f, -0.5f},
+         {+0.0f, +1.0f, +0.0f}},
+         GL_TRIANGLE_FAN, Color::GREEN };
 
-        cloud->transform.scale = glm::vec3(0.1f);
-        scene->appendChild(cloud);
-    }
+    Primitive face2 = {
+        {{+0.5f, +0.0f, +0.5f},
+         {-0.5f, +0.0f, +0.5f},
+         {+0.0f, +1.0f, +0.0f}},
+         GL_TRIANGLE_FAN, Color::BLUE };
 
-    helicopter->transform.scale = glm::vec3(0.2f);
-    plane->transform.scale = glm::vec3(0.2f);
-    plane->transform.translation = { -0.5, -1.5, 0 };
-    plane->transform.rotation = { 0, 0, PI / 2 };
+    Primitive face3 = {
+        {{-0.5f, +0.0f, -0.5f},
+         {-0.5f, +0.0f, +0.5f},
+         {+0.0f, +1.0f, +0.0f}},
+         GL_TRIANGLE_FAN, Color::RED };
 
-    scene->appendChild(drone);
-    scene->appendChild(helicopter);
-    scene->appendChild(plane);
-    scene->appendChild(sun);
+    Primitive face4 = {
+        {{-0.5f, +0.0f, -0.5f},
+         {+0.5f, +0.0f, -0.5f},
+         {+0.0f, +1.0f, +0.0f}},
+         GL_TRIANGLE_FAN, Color::WHITE };
 
+    SceneObject* pyramid = new SceneObject("pyramid", {base, face1, face2, face3, face4});
+    pyramid->transform.translation.y = -0.25;
+    pyramid->addComponent<PhysicsBody>(glm::vec3(0), glm::vec3(0, PI, 0));
+    
+    scene->appendChild(pyramid);
     return scene;
 }
 

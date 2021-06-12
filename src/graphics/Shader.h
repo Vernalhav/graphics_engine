@@ -25,7 +25,7 @@ public:
 
 	// Sets the model matrix in the shader to the specified values.
 	void setTransform(const Transform& t);
-	void setTransform(const glm::mat3& t);
+	void setTransform(const glm::mat4& t);
 
 	void setPositionAttributeLayout();	// Configures the VAO's input attribute layout
 	void enableAttrib(const std::string& name);

@@ -66,10 +66,10 @@ private:
 public:
 	Transform transform;
 
-	SceneObject(std::string name, std::vector<Primitive>& p) : name(name), primitive(p) { }
-	SceneObject(std::string name, std::vector<Primitive>&& p) : name(name), primitive(p) { }
-	SceneObject(std::string name) : name(name), primitive() { }
-	SceneObject() : name("unnamed object"), primitive() { }
+	SceneObject(std::string name, std::vector<Primitive>& p) : name(name), primitive(p), transform() { }
+	SceneObject(std::string name, std::vector<Primitive>&& p) : name(name), primitive(p), transform() { }
+	SceneObject(std::string name) : name(name), primitive(), transform() { }
+	SceneObject() : name("unnamed object"), primitive(), transform() { }
 	~SceneObject() {
 		for (auto& child : children) delete child.second;
 		components.clear();
@@ -84,11 +84,10 @@ public:
 	void appendChild(SceneObject* child);
 	void appendChildren(std::vector<SceneObject*> children);
 
-	Transform& getTransform() { return transform; }
-	
 	const std::string& getName() const { return name; }
 	
 	const Transform& getTransform() const { return transform; }
+	Transform& getTransform() { return transform; }
 
 	SceneObject* operator[](const std::string& name);
 	SceneObject* child(const std::string& name);
