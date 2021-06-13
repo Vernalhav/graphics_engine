@@ -1,10 +1,4 @@
-﻿/*
-    Victor Giovannoni Vernalha      10786159
-    João Vitor Silva Ramos          10734769
-    Vitor Santana Cordeiro          10734345
-*/
-
-#define GLFW_INCLUDE_NONE
+﻿#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -103,7 +97,7 @@ SceneObject* setupScene() {
          {+0.5f, +0.0f, -0.5f},
          {-0.5f, +0.0f, +0.5f},
          {-0.5f, +0.0f, -0.5f}},
-         GL_TRIANGLE_FAN, Color::BLACK };
+         GL_TRIANGLE_STRIP, Color::BLACK };
  
     Primitive face1 = {
         {{+0.5f, +0.0f, +0.5f},
@@ -131,7 +125,7 @@ SceneObject* setupScene() {
 
     SceneObject* pyramid = new SceneObject("pyramid", {base, face1, face2, face3, face4});
     pyramid->transform.translation.y = -0.25;
-    pyramid->addComponent<PhysicsBody>(glm::vec3(0), glm::vec3(0, PI, 0));
+    pyramid->addComponent<PhysicsBody>(glm::vec3(0), glm::vec3(PI, PI, PI));
     
     scene->appendChild(pyramid);
     return scene;

@@ -26,6 +26,7 @@
     <ClInclude Include="src\engine\PhysicsBody.h" />
     <ClInclude Include="src\application\Color.h" />
     <ClInclude Include="src\engine\Input.h" />
+    <ClInclude Include="src\graphics\MeshLoader.h" />
     <ClInclude Include="src\math\matrix.h" />
     <ClInclude Include="src\engine\PhysicsBody2D.h" />
     <ClInclude Include="src\graphics\Shader.h" />
@@ -36,8 +37,10 @@
     <ClInclude Include="src\engine\Transform.h" />
     <ClInclude Include="src\misc\utils.h" />
     <ClInclude Include="src\math\vectors.h" />
+    <ClInclude Include="src\graphics\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\MeshLoader.cpp" />
     <ClCompile Include="src\engine\PhysicsBody.cpp" />
     <ClCompile Include="src\engine\Input.cpp" />
     <ClCompile Include="src\engine\PhysicsBody2D.cpp" />
@@ -47,6 +50,7 @@
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\engine\SceneObject.cpp" />
     <ClCompile Include="src\misc\utils.cpp" />
+    <ClCompile Include="src\graphics\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="src\NatvisFile.natvis" />

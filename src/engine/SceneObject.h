@@ -33,7 +33,7 @@ public:
 	/// </summary>
 	virtual void start();
 
-	virtual ~Component() { delete this; };
+	virtual ~Component() = default;
 
 	template<typename Target>
 	bool instanceof();
@@ -94,7 +94,7 @@ public:
 
 	/// Adds a component to this SceneObject.
 	/// ComponentType is the name of the Component subclass
-	/// that will be added to this object. ...Args is a list
+	/// that will be added to this object. ...args is a list
 	/// of arguments that will be passed to ComponentType's
 	/// constructor.
 	/// 
@@ -106,7 +106,7 @@ public:
 	/// parameter for the Cloud component.
 	template<typename ComponentType, typename ...Args>
 	inline void addComponent(Args ...args) {
-		components.push_back(new ComponentType(this, args...));
+		components.push_back(new ComponentType(this, std::forward<Args>(args)...));
 	}
 
 	/// <summary>
