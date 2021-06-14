@@ -6,79 +6,12 @@
 #include <unordered_map>
 
 
-Mesh* MeshLoader::loadMesh(const std::string& filePath) {
-
-	std::ifstream objFile;
-	objFile.open(filePath);
-
-	if (objFile.is_open()) {
-
-		std::vector<glm::vec3> positions;
-		std::vector<glm::vec2> textureCoords;
-		std::vector<glm::vec3> normals;
-		std::vector<Face> faces;
-
-		std::string material;
-		for (std::string line, int lineNum = 1; std::getline(objFile, line); lineNum++) {
-			std::vector<std::string> lineTokens = utils::split(line);
-			if (lineTokens.size() == 0 || lineTokens[0][0] == '#') continue;
-
-			if (lineTokens[0] == "v") positions.push_back(parseVertexPosition(lineTokens));
-			if (lineTokens[0] == "vn") normals.push_back(parseNormal(lineTokens));
-			if (lineTokens[0] == "vt") textureCoords.push_back(parseTextureCoords(lineTokens));
-			if (lineTokens[0] == "f") faces.push_back(parseFace(lineTokens));
-			if (lineTokens[0] == "usemtl") material = lineTokens[1];
-		}
-
-		Mesh* mesh = new Mesh();
-		mesh->material = material;
-
-		// As an optimization, we'll try to reuse as many vertices as possible by
-		// indexing, therefore we must know which vertices have already been used.
-		
-		// Mapping between unique vertex attribute indices and the vertex index in the vertex array
-		std::unordered_map<VertexIndexInfo, int> vertexIndexInBuffer;
-
-		for (Face face : faces) {
-			for (VertexIndexInfo vertex : face) {
-				if (vertexIndexInBuffer.count(vertex)) {
-					mesh->indices.push_back(vertexIndexInBuffer[vertex]);
-				}
-				else {
-					int newVertexIndex = mesh->vertices.size();
-
-					Vertex newVertex;
-					if (vertex.positionIdx >= 0) newVertex.position = positions[vertex.positionIdx];
-					if (vertex.textureCoordsIdx >= 0) newVertex.textureCoords = textureCoords[vertex.textureCoordsIdx];
-					if (vertex.normalIdx >= 0) newVertex.normal = positions[vertex.normalIdx];
-
-					mesh->indices.push_back(newVertexIndex);
-					vertexIndexInBuffer[vertex] = newVertexIndex;
-					
-					mesh->vertices.push_back(newVertex);
-				}
-			}
-		}
-
-		return mesh;
-	}
-	else {
-		std::cout << "ERROR: loadMesh: could not open object file " << filePath << std::endl;
-		return nullptr;
-	}
-
-	objFile.close();
-}
-
-
 /// <summary>
 /// Using an unnamed namespace to declare
 /// "private" funcions that are only accessible
 /// in this .cpp file
 /// </summary>
 namespace {
-
-	using Face = std::vector<VertexIndexInfo>;
 
 	/// <summary>
 	/// Position, normal and texture coordinate index
@@ -102,10 +35,12 @@ namespace {
 		}
 	};
 
+	using Face = std::vector<VertexIndexInfo>;
+
 	Face parseFace(const std::vector<std::string>& lineTokens) {
 		Face face;
 
-		for (int i = 1; i < lineTokens.size(); i++) {
+		for (size_t i = 1; i < lineTokens.size(); i++) {
 			std::vector<std::string> vertexIndices = utils::split(lineTokens[i], '/', false);
 			int nAttributes = vertexIndices.size();
 
@@ -118,7 +53,7 @@ namespace {
 
 			if (nAttributes >= 3 && !vertexIndices[2].empty())
 				currentVertex.normalIdx = std::stoi(vertexIndices[2]) - 1;
-			
+
 			face.push_back(currentVertex);
 		}
 
@@ -163,3 +98,76 @@ namespace {
 		return glm::vec3(x, y, z);
 	}
 }
+
+
+Mesh* MeshLoader::loadMesh(const std::string& filePath) {
+
+	std::ifstream objFile;
+	objFile.open(filePath);
+
+
+	if (objFile.is_open()) {
+
+		std::vector<glm::vec3> positions;
+		std::vector<glm::vec2> textureCoords;
+		std::vector<glm::vec3> normals;
+		std::vector<Face> faces;
+
+		std::string material;
+		int lineNum = 1;
+		for (std::string line; std::getline(objFile, line); lineNum++) {
+			std::vector<std::string> lineTokens = utils::split(line);
+			if (lineTokens.size() == 0 || lineTokens[0][0] == '#') continue;
+
+			if (lineTokens[0] == "v") positions.push_back(parseVertexPosition(lineTokens));
+			if (lineTokens[0] == "vn") normals.push_back(parseNormal(lineTokens));
+			if (lineTokens[0] == "vt") textureCoords.push_back(parseTextureCoords(lineTokens));
+			if (lineTokens[0] == "f") faces.push_back(parseFace(lineTokens));
+			if (lineTokens[0] == "usemtl") material = lineTokens[1];
+		}
+
+		Mesh* mesh = new Mesh();
+		mesh->material = material;
+
+		// As an optimization, we'll try to reuse as many vertices as possible by
+		// indexing, therefore we must know which vertices have already been used.
+
+		// Quick and dirty hash function for VertexIndexInfo to use with unordered_map
+		auto hash = [](const VertexIndexInfo& a) {
+			return (a.normalIdx << 16) ^ (a.textureCoordsIdx << 8) ^ (a.positionIdx);
+		};
+
+		// Mapping between unique vertex attribute indices and the vertex index in the vertex array
+		std::unordered_map<VertexIndexInfo, int, decltype(hash)> vertexIndexInBuffer(256, hash);
+
+		for (Face& face : faces) {
+			for (VertexIndexInfo& vertex : face) {
+				if (vertexIndexInBuffer.count(vertex)) {
+					mesh->indices.push_back(vertexIndexInBuffer[vertex]);
+				}
+				else {
+					int newVertexIndex = mesh->vertices.size();
+
+					Vertex newVertex;
+					if (vertex.positionIdx >= 0) newVertex.position = positions[vertex.positionIdx];
+					if (vertex.textureCoordsIdx >= 0) newVertex.textureCoords = textureCoords[vertex.textureCoordsIdx];
+					if (vertex.normalIdx >= 0) newVertex.normal = positions[vertex.normalIdx];
+
+					mesh->indices.push_back(newVertexIndex);
+					vertexIndexInBuffer[vertex] = newVertexIndex;
+					
+					mesh->vertices.push_back(newVertex);
+				}
+			}
+		}
+
+		objFile.close();
+		return mesh;
+	}
+	else {
+		std::cout << "ERROR: loadMesh: could not open object file " << filePath << std::endl;
+		return nullptr;
+	}
+}
+
+

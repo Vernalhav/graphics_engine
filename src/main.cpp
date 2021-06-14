@@ -13,6 +13,7 @@
 #include "engine/SceneObject.h"
 #include "engine/PhysicsBody.h"
 #include "engine/Input.h"
+#include "graphics/MeshLoader.h"
 #include "graphics/Shader.h"
 #include "graphics/Renderer.h"
 #include "misc/utils.h"
@@ -126,8 +127,11 @@ SceneObject* setupScene() {
     SceneObject* pyramid = new SceneObject("pyramid", {base, face1, face2, face3, face4});
     pyramid->transform.translation.y = -0.25;
     pyramid->addComponent<PhysicsBody>(glm::vec3(0), glm::vec3(PI, PI, PI));
-    
+
+    Mesh* box = MeshLoader::loadMesh("assets/box.obj");
+
     scene->appendChild(pyramid);
+    delete box;
     return scene;
 }
 
