@@ -129,9 +129,9 @@ SceneObject* setupScene() {
     pyramid->addComponent<PhysicsBody>(glm::vec3(0), glm::vec3(PI, PI, PI));
 
     Mesh* box = MeshLoader::loadMesh("assets/box.obj");
+    delete box;
 
     scene->appendChild(pyramid);
-    delete box;
     return scene;
 }
 

@@ -13,6 +13,7 @@ All relevant `.cpp` and `.h` files are in the `src/` directory.
     ├─── engine/        # Scene objects, input reading and kinematic-related code
     ├─── graphics/      # OpenGL and transformation-related code
     ├─── misc/          # Miscellaneous functions and definitions
+    ├─── external/      # Source code from external libs (like stb_image)
     └─── main.cpp       # Main application
 ```
 ## engine/
@@ -66,3 +67,8 @@ The main program structure is as follows
     - Calls renderer->drawObject(scene) to calculate the objects' global transforms and make all OpenGL draw calls
 - Frees memory and terminates GLFW
 ```
+
+
+# Improvements:  
+- Split Component and SceneObject files  
+- Remove Transform dependency from Shader
