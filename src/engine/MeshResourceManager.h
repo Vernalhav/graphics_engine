@@ -24,8 +24,9 @@ namespace MeshResourceManager {
 	static MeshRenderData* getResource(const MeshResourceId& resource);
 
 	/// <summary>
-	/// Unloads resource and frees its memory if it exists.
-	/// Otherwise, issues a warning.
+	/// Decrements resource user count and frees its memory
+	/// if there are none. If the resource cannot be located,
+	/// issues a warning.
 	/// </summary>
 	static void unloadResource(const MeshResourceId& resource);
 	
