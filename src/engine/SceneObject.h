@@ -105,9 +105,7 @@ public:
 	/// the PhysicsBody component and "my_cloud" is the constructor
 	/// parameter for the Cloud component.
 	template<typename ComponentType, typename ...Args>
-	inline void addComponent(Args ...args) {
-		components.push_back(new ComponentType(this, std::forward<Args>(args)...));
-	}
+	void addComponent(Args ...args);
 
 	/// <summary>
 	/// Returns a component attached to the current
@@ -151,6 +149,12 @@ public:
 	/// </summary>
 	void start();
 };
+
+
+template<typename ComponentType, typename ...Args>
+void SceneObject::addComponent(Args ...args) {
+	components.push_back(new ComponentType(this, std::forward<Args>(args)...));
+}
 
 
 template<typename Target>

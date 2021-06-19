@@ -35,6 +35,7 @@ namespace {
 		}
 	};
 
+	// Aliasing type std::vector<VertexIndexInfo> to refer to a mesh Face
 	using Face = std::vector<VertexIndexInfo>;
 
 	Face parseFace(const std::vector<std::string>& lineTokens) {
@@ -100,7 +101,7 @@ namespace {
 }
 
 
-Mesh* MeshLoader::loadMesh(const std::string& filePath) {
+MeshRenderData* MeshLoader::loadMesh(const std::string& filePath, const std::string& texturePath) {
 
 	std::ifstream objFile;
 	objFile.open(filePath);
@@ -123,14 +124,15 @@ Mesh* MeshLoader::loadMesh(const std::string& filePath) {
 			if (lineTokens[0] == "vn") normals.push_back(parseNormal(lineTokens));
 			if (lineTokens[0] == "vt") textureCoords.push_back(parseTextureCoords(lineTokens));
 			if (lineTokens[0] == "f") faces.push_back(parseFace(lineTokens));
-			if (lineTokens[0] == "usemtl") material = lineTokens[1];
+			if (lineTokens[0] == "mtllib") material = lineTokens[1];
 		}
 
-		Mesh* mesh = new Mesh();
-		mesh->material = material;
+		MeshRenderData* mesh = new MeshRenderData();
+		mesh->materialPath = material;
+		mesh->texturePath = texturePath;
 
 		// As an optimization, we'll try to reuse as many vertices as possible by
-		// indexing, therefore we must know which vertices have already been used.
+		// indexing; therefore we must know which vertices have already been used.
 
 		// Quick and dirty hash function for VertexIndexInfo to use with unordered_map
 		auto hash = [](const VertexIndexInfo& a) {

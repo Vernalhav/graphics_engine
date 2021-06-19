@@ -92,46 +92,7 @@ double getDeltaTime() {
 /// </summary>
 SceneObject* setupScene() {
     SceneObject* scene = new SceneObject("scene");
-
-    Primitive base = {
-        {{+0.5f, +0.0f, +0.5f},
-         {+0.5f, +0.0f, -0.5f},
-         {-0.5f, +0.0f, +0.5f},
-         {-0.5f, +0.0f, -0.5f}},
-         GL_TRIANGLE_STRIP, Color::BLACK };
- 
-    Primitive face1 = {
-        {{+0.5f, +0.0f, +0.5f},
-         {+0.5f, +0.0f, -0.5f},
-         {+0.0f, +1.0f, +0.0f}},
-         GL_TRIANGLE_FAN, Color::GREEN };
-
-    Primitive face2 = {
-        {{+0.5f, +0.0f, +0.5f},
-         {-0.5f, +0.0f, +0.5f},
-         {+0.0f, +1.0f, +0.0f}},
-         GL_TRIANGLE_FAN, Color::BLUE };
-
-    Primitive face3 = {
-        {{-0.5f, +0.0f, -0.5f},
-         {-0.5f, +0.0f, +0.5f},
-         {+0.0f, +1.0f, +0.0f}},
-         GL_TRIANGLE_FAN, Color::RED };
-
-    Primitive face4 = {
-        {{-0.5f, +0.0f, -0.5f},
-         {+0.5f, +0.0f, -0.5f},
-         {+0.0f, +1.0f, +0.0f}},
-         GL_TRIANGLE_FAN, Color::WHITE };
-
-    SceneObject* pyramid = new SceneObject("pyramid", {base, face1, face2, face3, face4});
-    pyramid->transform.translation.y = -0.25;
-    pyramid->addComponent<PhysicsBody>(glm::vec3(0), glm::vec3(PI, PI, PI));
-
-    Mesh* box = MeshLoader::loadMesh("assets/box.obj");
-    delete box;
-
-    scene->appendChild(pyramid);
+    // TODO: populate scene
     return scene;
 }
 

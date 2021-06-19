@@ -23,6 +23,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\MeshResourceManager.h" />
     <ClInclude Include="src\engine\PhysicsBody.h" />
     <ClInclude Include="src\application\Color.h" />
     <ClInclude Include="src\engine\Input.h" />
@@ -38,8 +39,10 @@
     <ClInclude Include="src\misc\utils.h" />
     <ClInclude Include="src\math\vectors.h" />
     <ClInclude Include="src\graphics\Vertex.h" />
+    <ClInclude Include="src\external\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\MeshResourceManager.cpp" />
     <ClCompile Include="src\graphics\MeshLoader.cpp" />
     <ClCompile Include="src\engine\PhysicsBody.cpp" />
     <ClCompile Include="src\engine\Input.cpp" />
@@ -51,6 +54,7 @@
     <ClCompile Include="src\engine\SceneObject.cpp" />
     <ClCompile Include="src\misc\utils.cpp" />
     <ClCompile Include="src\graphics\Vertex.cpp" />
+    <ClCompile Include="src\external\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="src\NatvisFile.natvis" />
