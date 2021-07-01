@@ -28,9 +28,12 @@ Texture::Texture(const std::string& texPath, GLenum wrapMode, GLenum rescaleFilt
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 
 	GLenum imageChannelMode = -1;
-	if (channelMode == STBI_rgb) imageChannelMode = GL_RGB8;
-	if (channelMode == STBI_rgb_alpha) imageChannelMode = GL_RGBA8;
-
+	if (channelMode == STBI_rgb) imageChannelMode = GL_RGB;
+	else if (channelMode == STBI_rgb_alpha) imageChannelMode = GL_RGBA;
+	else {
+		std::cout << "Texture: WARNING: Invalid channel mode " << channelMode << std::endl;
+	}
+	
 	const int LOD = 0;
 	glTexImage2D(GL_TEXTURE_2D, LOD, imageChannelMode, width, height, 0, imageChannelMode, GL_UNSIGNED_BYTE, image);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -47,6 +50,7 @@ void Texture::bind(int textureSlot) {
 		return;
 	}
 	glActiveTexture(GL_TEXTURE0 + textureSlot);
+	glBindTexture(GL_TEXTURE_2D, textureId);
 }
 
 void Texture::unbind() {

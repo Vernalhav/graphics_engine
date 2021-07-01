@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "../engine/SceneObject.h"
-#include "Primitive.h"
 #include "Shader.h"
 #include "MeshLoader.h"
 

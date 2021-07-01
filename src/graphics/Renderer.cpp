@@ -10,6 +10,7 @@ void Renderer::uploadMesh(MeshRenderData* mesh) {
 	glGenBuffers(1, (GLuint*)&(mesh->vboId));
 	glGenBuffers(1, (GLuint*)&(mesh->eboId));
 
+	// FIXME: INTERLEAVE TEXTURE COORDINATES AS WELL!!
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vboId);
 	glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(float), mesh->vertices.data(), GL_STATIC_DRAW);
 
@@ -49,6 +50,7 @@ void Renderer::drawObject(MeshRenderData* object) {
 	glBindBuffer(GL_VERTEX_ARRAY, object->vboId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->eboId);
 
+	object->texture.bind(Shader::MAIN_TEXTURE_SLOT);
 	glDrawElements(GL_TRIANGLES, object->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 

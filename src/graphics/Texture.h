@@ -19,7 +19,7 @@ struct Texture {
 
 	Texture();
 	Texture(const std::string& texPath, GLenum wrapMode = GL_REPEAT,
-		GLenum rescaleFilter = GL_LINEAR, int channelMode = STBI_rgb);
+		GLenum rescaleFilter = GL_NEAREST, int channelMode = STBI_rgb);
 	
 	~Texture();
 

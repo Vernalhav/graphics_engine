@@ -4,28 +4,26 @@
 #include <iostream>
 
 
-constexpr int POSITION_LAYOUT_LOC = 0;
-constexpr int TEX_COORD_LAYOUT_LOC = 1;
-constexpr int MODEL_LAYOUT_LOC = 0;
-constexpr int MAIN_TEXTURE_LAYOUT_LOC = 1;
-
-
 Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode)
     : Shader(vertexCode, fragmentCode, "Unnamed Shader") { }
 
 Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name)
     : name(name) {
-	this->id = glCreateProgram();
+	id = glCreateProgram();
 
-	GLuint vertex = Shader::compileShader(vertexCode, GL_VERTEX_SHADER, this->name + ": Vertex shader");
-	GLuint fragment = Shader::compileShader(fragmentCode, GL_FRAGMENT_SHADER, this->name + ": Fragment shader");
+	GLuint vertex = Shader::compileShader(vertexCode, GL_VERTEX_SHADER, name + ": Vertex shader");
+	GLuint fragment = Shader::compileShader(fragmentCode, GL_FRAGMENT_SHADER, name + ": Fragment shader");
 
-    glAttachShader(this->id, vertex);
-    glAttachShader(this->id, fragment);
+    glAttachShader(id, vertex);
+    glAttachShader(id, fragment);
 
     // TODO: Add error checking here
-    glLinkProgram(this->id);
-    this->use();
+    glLinkProgram(id);
+    use();
+
+    // Sets the main texture sampler to read the texture
+    // that is assigned to the main texture slot.
+    setInt(MAIN_TEXTURE_LAYOUT_LOC, MAIN_TEXTURE_SLOT);
 }
 
 void Shader::use() {
@@ -37,7 +35,7 @@ void Shader::setTransform(const Transform& t) {
 }
 
 void Shader::setTransform(const glm::mat4& t) {
-    setMatrix4("model", t);
+    setMatrix4(MODEL_LAYOUT_LOC, t);
 }
 
 void Shader::setAttributeLayout() {
@@ -48,6 +46,15 @@ void Shader::setAttributeLayout() {
 void Shader::enableAttrib(const std::string& name) {
     auto location = getAttribLocation(name);
     glEnableVertexAttribArray(location);
+}
+
+void Shader::setInt(const std::string& name, int value) {
+    auto location = getUniformLocation(name);
+    setInt(location, value);
+}
+
+void Shader::setInt(int location, int value) {
+    glUniform1i(location, value);
 }
 
 GLint Shader::getUniformLocation(const std::string& name) {
