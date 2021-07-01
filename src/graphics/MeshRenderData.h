@@ -3,15 +3,18 @@
 #include <string>
 #include <vector>
 #include "Vertex.h"
+#include "Texture.h"
 
 
 struct MeshRenderData {
-	std::string texturePath;
-	std::string materialPath;
 	std::vector<Vertex> vertices;	// Unique vertices and their attributes
 	std::vector<int> indices;		// Vertex indices for each face (GL_TRIANGLES)
+	
+	Texture texture;
+	std::string materialPath;
 
-	MeshRenderData() : vaoId(-1), vboId(-1), eboId(-1), texturePath(""), materialPath("") { }
+	MeshRenderData();
+	MeshRenderData(const std::string& texturePath);
 
 	friend class Renderer;
 

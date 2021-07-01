@@ -23,6 +23,7 @@ Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode, c
     glAttachShader(this->id, vertex);
     glAttachShader(this->id, fragment);
 
+    // TODO: Add error checking here
     glLinkProgram(this->id);
     this->use();
 }

@@ -127,9 +127,8 @@ MeshRenderData* MeshLoader::loadMesh(const std::string& filePath, const std::str
 			if (lineTokens[0] == "mtllib") material = lineTokens[1];
 		}
 
-		MeshRenderData* mesh = new MeshRenderData();
+		MeshRenderData* mesh = new MeshRenderData(texturePath);
 		mesh->materialPath = material;
-		mesh->texturePath = texturePath;
 
 		// As an optimization, we'll try to reuse as many vertices as possible by
 		// indexing; therefore we must know which vertices have already been used.
