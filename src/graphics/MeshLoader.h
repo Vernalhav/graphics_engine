@@ -5,6 +5,7 @@
 
 #include "MeshRenderData.h"
 
+
 namespace MeshLoader {
 	/// <summary>
 	/// Loads .obj file into a mesh object.
