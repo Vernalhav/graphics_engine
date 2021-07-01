@@ -96,7 +96,7 @@ double getDeltaTime() {
 /// </summary>
 SceneObject* setupScene() {
     SceneObject* scene = new SceneObject("scene");
-    // TODO: populate scene
+
     return scene;
 }
 
@@ -106,10 +106,11 @@ int main() {
     Input::setWindow(window);
 
     SceneObject* scene = setupScene();
+    MeshRenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
 
     // Getting renderer and uploading objects to GPU
     Renderer* renderer = setupRenderer();
-    renderer->uploadObjects({ scene });
+    renderer->uploadMesh(renderData);
     
     glm::vec3 backgroundColor = Color::CYAN / 255.0f;
 
@@ -126,7 +127,7 @@ int main() {
 
         Component::deltaTime = getDeltaTime();
         scene->update();
-        renderer->drawObject(scene);
+        //renderer->drawObject(scene);
  
         glfwSwapBuffers(window);
     }

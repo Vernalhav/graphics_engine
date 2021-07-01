@@ -36,5 +36,5 @@ public:
 
 	void uploadMesh(MeshRenderData* mesh);
 
-	void drawObject(SceneObject* object);
+	void drawObject(MeshRenderData* object);
 };

@@ -7,8 +7,14 @@ void Renderer::uploadMesh(MeshRenderData* mesh) {
 	if (mesh->vaoId > 0) return;
 
 	mesh->vaoId = VAO;
-	glGenBuffers(1, (GLuint*)&(mesh->vaoId));
+	glGenBuffers(1, (GLuint*)&(mesh->vboId));
 	glGenBuffers(1, (GLuint*)&(mesh->eboId));
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->vboId);
+	glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(float), mesh->vertices.data(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->eboId);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(int), mesh->indices.data(), GL_STATIC_DRAW);
 }
 
 void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
@@ -39,12 +45,11 @@ void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
 	shader.setAttributeLayout();
 }
 
-void Renderer::drawObject(SceneObject* object) {
-	shader.use();
-	glBindVertexArray(VAO);
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+void Renderer::drawObject(MeshRenderData* object) {
+	glBindBuffer(GL_VERTEX_ARRAY, object->vboId);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->eboId);
 
-	_drawObject(object, glm::mat4(1.0f));
+	glDrawElements(GL_TRIANGLES, object->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Renderer::_drawObject(const SceneObject* object, glm::mat4 globalTransform) {

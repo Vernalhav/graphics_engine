@@ -24,5 +24,6 @@ struct Texture {
 	~Texture();
 
 	void bind(int textureSlot);
+	void unbind();
 };
 

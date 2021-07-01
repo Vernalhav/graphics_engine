@@ -13,6 +13,7 @@ namespace {
         int referenceCount;     // Number of users of this resource that have not unloaded yet
 
         ResourceData(MeshRenderData* resource) : resource(resource), referenceCount(0) { }
+        ResourceData() : resource(nullptr), referenceCount(0) { }
         ~ResourceData() {
             delete resource;
         }
