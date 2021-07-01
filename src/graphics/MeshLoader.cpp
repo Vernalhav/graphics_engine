@@ -8,8 +8,8 @@
 
 /// <summary>
 /// Using an unnamed namespace to declare
-/// "private" funcions that are only accessible
-/// in this .cpp file
+/// "private" funcions and structs that are
+/// only visible in this .cpp file
 /// </summary>
 namespace {
 

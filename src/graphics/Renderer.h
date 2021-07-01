@@ -7,11 +7,12 @@
 #include "../engine/SceneObject.h"
 #include "Primitive.h"
 #include "Shader.h"
+#include "MeshLoader.h"
 
 
 class Renderer {
 private:
-	GLuint VAO, VBO;
+	GLuint VAO;
 	Shader shader;
 
 	/// <summary>
@@ -32,6 +33,8 @@ public:
 	/// </summary>
 	/// <param name="objects">Top-level objects in the scene</param>
 	void uploadObjects(std::vector<SceneObject*> objects);
+
+	void uploadMesh(MeshRenderData* mesh);
 
 	void drawObject(SceneObject* object);
 };

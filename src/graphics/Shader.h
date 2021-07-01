@@ -31,9 +31,14 @@ public:
 	void enableAttrib(const std::string& name);
 
 	void setFloat(const std::string& name, float value);
-	void setFloat2(const std::string& name, glm::vec2 values);
-	void setFloat3(const std::string& name, glm::vec3 values);
-	void setFloat4(const std::string& name, glm::vec4 values);
-	void setMatrix4(const std::string& name, glm::mat4 values);
+	void setFloat(int location, float value);
+	void setFloat2(const std::string& name, const glm::vec2& values);
+	void setFloat2(int location, const glm::vec2& values);
+	void setFloat3(const std::string& name, const glm::vec3& values);
+	void setFloat3(int location, const glm::vec3& values);
+	void setFloat4(const std::string& name, const glm::vec4& values);
+	void setFloat4(int location, const glm::vec4& values);
+	void setMatrix4(const std::string& name, const glm::mat4& values);
+	void setMatrix4(int location, const glm::mat4& values);
 };
 

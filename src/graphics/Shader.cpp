@@ -4,10 +4,17 @@
 #include <iostream>
 
 
-Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode) : Shader(vertexCode, fragmentCode, "Unnamed Shader") {
-}
+constexpr int POSITION_LAYOUT_LOC = 0;
+constexpr int TEX_COORD_LAYOUT_LOC = 1;
+constexpr int MODEL_LAYOUT_LOC = 0;
+constexpr int MAIN_TEXTURE_LAYOUT_LOC = 1;
 
-Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name) : name(name) {
+
+Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode)
+    : Shader(vertexCode, fragmentCode, "Unnamed Shader") { }
+
+Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name)
+    : name(name) {
 	this->id = glCreateProgram();
 
 	GLuint vertex = Shader::compileShader(vertexCode, GL_VERTEX_SHADER, this->name + ": Vertex shader");
@@ -58,26 +65,46 @@ GLint Shader::getAttribLocation(const std::string& name) {
 
 void Shader::setFloat(const std::string& name, float value) {
     auto location = getUniformLocation(name);
+    setFloat(location, value);
+}
+
+void Shader::setFloat(int location, float value) {
     glUniform1f(location, value);
 }
 
-void Shader::setFloat2(const std::string& name, glm::vec2 values) {
+void Shader::setFloat2(const std::string& name, const glm::vec2& values) {
     auto location = getUniformLocation(name);
+    setFloat2(location, values);
+}
+
+void Shader::setFloat2(int location, const glm::vec2& values) {
     glUniform2f(location, values.x, values.y);
 }
 
-void Shader::setFloat3(const std::string& name, glm::vec3 values) {
+void Shader::setFloat3(const std::string& name, const glm::vec3& values) {
     auto location = getUniformLocation(name);
+    setFloat3(location, values);
+}
+
+void Shader::setFloat3(int location, const glm::vec3& values) {
     glUniform3f(location, values.x, values.y, values.z);
 }
 
-void Shader::setFloat4(const std::string& name, glm::vec4 values) {
+void Shader::setFloat4(const std::string& name, const glm::vec4& values) {
     auto location = getUniformLocation(name);
+    setFloat4(location, values);
+}
+
+void Shader::setFloat4(int location, const glm::vec4& values) {
     glUniform4f(location, values.x, values.y, values.z, values.w);
 }
 
-void Shader::setMatrix4(const std::string& name, glm::mat4 values) {
+void Shader::setMatrix4(const std::string& name, const glm::mat4& values) {
     auto location = getUniformLocation(name);
+    setMatrix4(location, values);
+}
+
+void Shader::setMatrix4(int location, const glm::mat4& values) {
     glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*)glm::value_ptr(values));
 }
 

@@ -54,20 +54,24 @@ GLFWwindow* initGLFW() {
 Renderer* setupRenderer() {
     std::string vertex_code =
         "#version 150\n"
-        "in vec3 position;\n"
-        "uniform mat4 model;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = model * vec4(position, 1);\n"
-        "}\n";
+        "layout (location = 0) in vec3 position;"
+        "layout (location = 1) in vec2 texCoord;"
+        "out vec2 fragTexCoord;"
+        "layout (location = 0) uniform mat4 model;"
+        
+        "void main() {"
+        "   outTexCoord = texCoord;"
+        "   gl_Position = model * vec4(position, 1);"
+        "}";
 
     std::string fragment_code =
         "#version 150\n"
-        "uniform vec4 color;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = color;\n"
-        "}\n";
+        "in vec4 fragTexCoord;"
+        "layout (location = 1) uniform sampler2D mainTexture;"
+        
+        "void main() {"
+        "    gl_FragColor = texture(mainTexture, fragTexCoord);"
+        "}";
 
     Shader shader(vertex_code, fragment_code, "Standard shader");
     return new Renderer(shader);
