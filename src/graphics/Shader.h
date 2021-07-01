@@ -27,7 +27,7 @@ public:
 	void setTransform(const Transform& t);
 	void setTransform(const glm::mat4& t);
 
-	void setPositionAttributeLayout();	// Configures the VAO's input attribute layout
+	void setAttributeLayout();	// Configures the VAO's input attribute layout
 	void enableAttrib(const std::string& name);
 
 	void setFloat(const std::string& name, float value);

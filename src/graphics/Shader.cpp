@@ -39,9 +39,9 @@ void Shader::setTransform(const glm::mat4& t) {
     setMatrix4("model", t);
 }
 
-void Shader::setPositionAttributeLayout() {
-    auto location = getAttribLocation("position");
-    glVertexAttribPointer((GLuint)location, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (const void*)0);
+void Shader::setAttributeLayout() {
+    glVertexAttribPointer((GLuint)POSITION_LAYOUT_LOC, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)0);
+    glVertexAttribPointer((GLuint)TEX_COORD_LAYOUT_LOC, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)(3*sizeof(float)));
 }
 
 void Shader::enableAttrib(const std::string& name) {
