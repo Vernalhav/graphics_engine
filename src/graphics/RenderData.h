@@ -6,15 +6,15 @@
 #include "Texture.h"
 
 
-struct MeshRenderData {
+struct RenderData {
 	std::vector<Vertex> vertices;	// Unique vertices and their attributes
 	std::vector<int> indices;		// Vertex indices for each face (GL_TRIANGLES)
 	
 	Texture texture;
 	std::string materialPath;
 
-	MeshRenderData();
-	MeshRenderData(const std::string& texturePath);
+	RenderData();
+	RenderData(const std::string& texturePath);
 
 	friend class Renderer;
 

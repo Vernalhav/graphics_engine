@@ -101,7 +101,7 @@ namespace {
 }
 
 
-MeshRenderData* MeshLoader::loadMesh(const std::string& filePath, const std::string& texturePath) {
+RenderData* MeshLoader::loadMesh(const std::string& filePath, const std::string& texturePath) {
 
 	std::ifstream objFile;
 	objFile.open(filePath);
@@ -127,7 +127,7 @@ MeshRenderData* MeshLoader::loadMesh(const std::string& filePath, const std::str
 			if (lineTokens[0] == "mtllib") material = lineTokens[1];
 		}
 
-		MeshRenderData* mesh = new MeshRenderData(texturePath);
+		RenderData* mesh = new RenderData(texturePath);
 		mesh->materialPath = material;
 
 		// As an optimization, we'll try to reuse as many vertices as possible by

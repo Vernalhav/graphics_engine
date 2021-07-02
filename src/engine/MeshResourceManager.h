@@ -21,7 +21,7 @@ namespace MeshResourceManager {
 	/// to construct MeshRenderData than just its resourceID, so
 	/// the method addResource was created to handle this issue.
 	/// </summary>
-	static MeshRenderData* getResource(const MeshResourceId& resource);
+	static RenderData* getResource(const MeshResourceId& resource);
 
 	/// <summary>
 	/// Decrements resource user count and frees its memory

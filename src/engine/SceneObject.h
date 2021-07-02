@@ -50,7 +50,7 @@ private:
 	/// share a single Transform.
 	/// </summary>
 	std::vector<Primitive> primitive;
-
+		
 	/// <summary>
 	/// Mapping between the name of each children of this SceneObject and
 	/// its corresponding object pointer.
@@ -108,7 +108,7 @@ public:
 	void addComponent(Args ...args);
 
 	/// <summary>
-	/// Returns a component attached to the current
+	/// Returns the first component attached to the current
 	/// SceneObject that matches the template parameter.
 	/// If there are none, returns nullptr.
 	/// </summary>
@@ -116,6 +116,16 @@ public:
 	/// <returns>Pointer to the Component</returns>
 	template<typename ComponentType>
 	ComponentType* getComponent();
+
+	/// <summary>
+	/// Returns all components attached to the current
+	/// SceneObject that match the template parameter.
+	/// If there are none, returns an empty array.
+	/// </summary>
+	/// <typeparam name="ComponentType">Type of component to search for</typeparam>
+	/// <returns>Array with the Components in the same order that they haeve been added</returns>
+	template<typename ComponentType>
+	std::vector<ComponentType*> getComponents();
 
 	/// <summary>
 	/// Returns the object's and all of its children's
@@ -152,19 +162,19 @@ public:
 
 
 template<typename ComponentType, typename ...Args>
-void SceneObject::addComponent(Args ...args) {
+inline void SceneObject::addComponent(Args ...args) {
 	components.push_back(new ComponentType(this, std::forward<Args>(args)...));
 }
 
 
 template<typename Target>
-bool Component::instanceof() {
+inline bool Component::instanceof() {
 	return dynamic_cast<Target*>(this) != nullptr;
 }
 
 
 template<typename ComponentType>
-ComponentType* SceneObject::getComponent() {
+inline ComponentType* SceneObject::getComponent() {
 	for (Component* component : components) {
 		if (component->instanceof<ComponentType>()) {
 			return reinterpret_cast<ComponentType*>(component);
@@ -172,4 +182,15 @@ ComponentType* SceneObject::getComponent() {
 	}
 
 	return nullptr;
+}
+
+template<typename ComponentType>
+inline std::vector<ComponentType*> SceneObject::getComponents() {
+	std::vector<ComponentType*> matches;
+	for (Component* component : components) {
+		if (component->instanceof<ComponentType>()) {
+			matches.push_back(reinterpret_cast<ComponentType*>(component));
+		}
+	}
+	return matches;
 }

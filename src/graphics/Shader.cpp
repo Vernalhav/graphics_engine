@@ -26,8 +26,12 @@ Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode, c
     setInt(MAIN_TEXTURE_LAYOUT_LOC, MAIN_TEXTURE_SLOT);
 }
 
+Shader::~Shader() {
+    glDeleteProgram(id);
+}
+
 void Shader::use() {
-    glUseProgram(this->id);
+    glUseProgram(id);
 }
 
 void Shader::setTransform(const glm::mat4& t) {

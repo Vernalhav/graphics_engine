@@ -23,7 +23,9 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\graphics\MeshRenderData.h" />
+    <ClInclude Include="src\engine\Scene.h" />
+    <ClInclude Include="src\engine\Camera.h" />
+    <ClInclude Include="src\graphics\RenderData.h" />
     <ClInclude Include="src\engine\MeshResourceManager.h" />
     <ClInclude Include="src\engine\PhysicsBody.h" />
     <ClInclude Include="src\application\Color.h" />
@@ -44,7 +46,9 @@
     <ClInclude Include="src\graphics\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\graphics\MeshRenderData.cpp" />
+    <ClCompile Include="src\engine\Scene.cpp" />
+    <ClCompile Include="src\engine\Camera.cpp" />
+    <ClCompile Include="src\graphics\RenderData.cpp" />
     <ClCompile Include="src\engine\MeshResourceManager.cpp" />
     <ClCompile Include="src\graphics\MeshLoader.cpp" />
     <ClCompile Include="src\engine\PhysicsBody.cpp" />

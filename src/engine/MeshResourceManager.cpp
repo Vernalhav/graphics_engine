@@ -9,10 +9,10 @@
 namespace {
 
     struct ResourceData {
-        MeshRenderData* resource;
+        RenderData* resource;
         int referenceCount;     // Number of users of this resource that have not unloaded yet
 
-        ResourceData(MeshRenderData* resource) : resource(resource), referenceCount(0) { }
+        ResourceData(RenderData* resource) : resource(resource), referenceCount(0) { }
         ResourceData() : resource(nullptr), referenceCount(0) { }
         ~ResourceData() {
             delete resource;
@@ -35,7 +35,7 @@ static void MeshResourceManager::addResource(const MeshResourceId& id, const std
     resources[id].referenceCount++;
 }
 
-MeshRenderData* MeshResourceManager::getResource(const MeshResourceId& resource) {
+RenderData* MeshResourceManager::getResource(const MeshResourceId& resource) {
     if (resources.count(resource)) {
         resources[resource].referenceCount++;
         return resources[resource].resource;

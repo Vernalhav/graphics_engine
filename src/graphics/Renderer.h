@@ -25,15 +25,9 @@ private:
 
 public:
 	Renderer(Shader s);
+	~Renderer();
 
-	/// <summary>
-	/// Uploads the scene objects' vertex data to a Vertex Buffer Object
-	/// and writes to each Primitive's offset member.
-	/// </summary>
-	/// <param name="objects">Top-level objects in the scene</param>
-	void uploadObjects(std::vector<SceneObject*> objects);
+	void uploadMesh(RenderData* mesh);
 
-	void uploadMesh(MeshRenderData* mesh);
-
-	void drawObject(MeshRenderData* object, const glm::mat4& transform);
+	void drawObject(RenderData* object, const glm::mat4& transform);
 };

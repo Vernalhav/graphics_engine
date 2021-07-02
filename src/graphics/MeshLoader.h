@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#include "MeshRenderData.h"
+#include "RenderData.h"
 
 
 namespace MeshLoader {
@@ -13,5 +13,5 @@ namespace MeshLoader {
 	/// (This function does not yet 
 	/// take materials into account)
 	/// </summary>
-	MeshRenderData* loadMesh(const std::string& filePath, const std::string& texturePath = "");
+	RenderData* loadMesh(const std::string& filePath, const std::string& texturePath = "");
 };

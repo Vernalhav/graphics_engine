@@ -3,7 +3,7 @@
 #include "Renderer.h"
 
 
-void Renderer::uploadMesh(MeshRenderData* mesh) {
+void Renderer::uploadMesh(RenderData* mesh) {
 	if (mesh->vaoId > 0) return;
 
 	mesh->vaoId = VAO;
@@ -34,36 +34,7 @@ void Renderer::uploadMesh(MeshRenderData* mesh) {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(int), mesh->indices.data(), GL_STATIC_DRAW);
 }
 
-void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
-
-	std::vector<glm::vec3> vertices;
-
-	int offset = 0;
-	for (auto object : objects) {
-		std::vector<Primitive*> curPrimitives = object->getObjectPrimitives();
-
-		for (Primitive* primitive : curPrimitives) {
-			primitive->offset = offset;
-			int size = primitive->getSizeOfVertices();
-
-			vertices.insert(vertices.end(), primitive->vertices.begin(), primitive->vertices.end());
-			offset += size;
-		}
-	}
-
-	GLuint VBO;
-	glBindVertexArray(VAO);
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	GLsizeiptr bufferSize = vertices.size() * sizeof(vertices[0]);
-	glBufferData(GL_ARRAY_BUFFER, bufferSize, vertices.data(), GL_STATIC_DRAW);
-
-	shader.setAttributeLayout();
-	shader.enableAttributes();
-}
-
-void Renderer::drawObject(MeshRenderData* object, const glm::mat4& transform) {
+void Renderer::drawObject(RenderData* object, const glm::mat4& transform) {
 	glBindBuffer(GL_ARRAY_BUFFER, object->vboId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->eboId);
 
@@ -94,4 +65,8 @@ void Renderer::_drawObject(const SceneObject* object, glm::mat4 globalTransform)
 Renderer::Renderer(Shader s) : shader(s) {
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);	
+}
+
+Renderer::~Renderer() {
+	glDeleteVertexArrays(1, &VAO);
 }

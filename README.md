@@ -71,4 +71,4 @@ The main program structure is as follows
 
 # Improvements:  
 - Split Component and SceneObject files  
-- Remove Transform dependency from Shader
+- Use smart pointers instead of standard ones

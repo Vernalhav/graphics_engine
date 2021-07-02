@@ -25,7 +25,7 @@ public:
 	Shader() : name("Unnamed Shader"), id(0) { }
 	Shader(const std::string& vertexCode, const std::string& fragmentCode);
 	Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name);
-	~Shader() { }
+	~Shader();
 
 	void use();
 

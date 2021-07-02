@@ -107,11 +107,12 @@ int main() {
     GLFWwindow* window = initGLFW();
     Input::setWindow(window);
 
-    //MeshRenderData* renderData = new MeshRenderData("assets/caixa.jpg");
-    MeshRenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa2.jpg");
+    RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa2.jpg");
+    RenderData* renderData2 = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
 
     Transform transform;
-    transform.scale = { 0.25f, 0.25f, 0.25f };
+    transform.scale = glm::vec3(0.25f);
+    
     Renderer* renderer = setupRenderer();
     renderer->uploadMesh(renderData);
     
@@ -137,7 +138,6 @@ int main() {
         glfwSwapBuffers(window);
     }
 
-    //delete scene;
     delete renderer;
 
     glfwDestroyWindow(window);
