@@ -3,7 +3,7 @@
 #include <gl/glew.h>
 
 #include <glm/glm.hpp>
-#include "../engine/Transform.h"
+
 
 class Shader
 {
@@ -29,12 +29,13 @@ public:
 
 	void use();
 
-	// Sets the model matrix in the shader to the specified values.
-	void setTransform(const Transform& t);
+	// Hardcoded: Sets the model matrix in the shader to the specified values.
 	void setTransform(const glm::mat4& t);
 
-	void setAttributeLayout();	// Configures the VAO's input attribute layout
+	void setAttributeLayout();	// Hardcoded: Configures the VAO's input attribute layout
+	void enableAttributes();	// Hardcoded
 	void enableAttrib(const std::string& name);
+	void enableAttrib(int location);
 
 	void setInt(const std::string& name, int value);
 	void setInt(int location, int value);

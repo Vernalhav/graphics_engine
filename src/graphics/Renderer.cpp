@@ -10,9 +10,25 @@ void Renderer::uploadMesh(MeshRenderData* mesh) {
 	glGenBuffers(1, (GLuint*)&(mesh->vboId));
 	glGenBuffers(1, (GLuint*)&(mesh->eboId));
 
-	// FIXME: INTERLEAVE TEXTURE COORDINATES AS WELL!!
+	// Stores all vertex attributes in a contiguous array
+	std::vector<float> vboData(5 * mesh->vertices.size());
+
+	for (unsigned int i = 0; i < mesh->vertices.size(); i++) {
+		int baseIdx = 5 * i;
+
+		// FIXME: quick and dirty implementation (should ideally just be sending mesh->vertices to VBO)
+		vboData[baseIdx + 0] = mesh->vertices[i].position[0];
+		vboData[baseIdx + 1] = mesh->vertices[i].position[1];
+		vboData[baseIdx + 2] = mesh->vertices[i].position[2];
+		vboData[baseIdx + 3] = mesh->vertices[i].textureCoords[0];
+		vboData[baseIdx + 4] = mesh->vertices[i].textureCoords[1];
+	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vboId);
-	glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(float), mesh->vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vboData.size() * sizeof(float), vboData.data(), GL_STATIC_DRAW);
+
+	shader.enableAttributes();
+	shader.setAttributeLayout();
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->eboId);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(int), mesh->indices.data(), GL_STATIC_DRAW);
@@ -44,13 +60,17 @@ void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
 	glBufferData(GL_ARRAY_BUFFER, bufferSize, vertices.data(), GL_STATIC_DRAW);
 
 	shader.setAttributeLayout();
+	shader.enableAttributes();
 }
 
-void Renderer::drawObject(MeshRenderData* object) {
-	glBindBuffer(GL_VERTEX_ARRAY, object->vboId);
+void Renderer::drawObject(MeshRenderData* object, const glm::mat4& transform) {
+	glBindBuffer(GL_ARRAY_BUFFER, object->vboId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->eboId);
 
 	object->texture.bind(Shader::MAIN_TEXTURE_SLOT);
+
+	shader.setTransform(transform);
+
 	glDrawElements(GL_TRIANGLES, object->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
@@ -73,5 +93,5 @@ void Renderer::_drawObject(const SceneObject* object, glm::mat4 globalTransform)
 
 Renderer::Renderer(Shader s) : shader(s) {
 	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	glBindVertexArray(VAO);	
 }

@@ -30,21 +30,26 @@ void Shader::use() {
     glUseProgram(this->id);
 }
 
-void Shader::setTransform(const Transform& t) {
-    setTransform(t.getTransformMatrix());
-}
-
 void Shader::setTransform(const glm::mat4& t) {
     setMatrix4(MODEL_LAYOUT_LOC, t);
 }
 
 void Shader::setAttributeLayout() {
-    glVertexAttribPointer((GLuint)POSITION_LAYOUT_LOC, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)0);
-    glVertexAttribPointer((GLuint)TEX_COORD_LAYOUT_LOC, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)(3*sizeof(float)));
+    glVertexAttribPointer(POSITION_LAYOUT_LOC, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)0);
+    glVertexAttribPointer(TEX_COORD_LAYOUT_LOC, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)(3*sizeof(float)));
+}
+
+void Shader::enableAttributes() {
+    enableAttrib(POSITION_LAYOUT_LOC);
+    enableAttrib(TEX_COORD_LAYOUT_LOC);
 }
 
 void Shader::enableAttrib(const std::string& name) {
     auto location = getAttribLocation(name);
+    enableAttrib(location);
+}
+
+void Shader::enableAttrib(int location) {
     glEnableVertexAttribArray(location);
 }
 

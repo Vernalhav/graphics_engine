@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Shader.h"
 
 Texture::Texture()
 	: image(nullptr), wrapMode(GL_REPEAT), rescaleFilter(GL_LINEAR),
@@ -36,7 +37,6 @@ Texture::Texture(const std::string& texPath, GLenum wrapMode, GLenum rescaleFilt
 	
 	const int LOD = 0;
 	glTexImage2D(GL_TEXTURE_2D, LOD, imageChannelMode, width, height, 0, imageChannelMode, GL_UNSIGNED_BYTE, image);
-	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture::~Texture() {

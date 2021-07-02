@@ -17,9 +17,11 @@ struct Transform {
 	// Non-uniform scale constructor
 	Transform(const glm::vec3& translation, const glm::vec3& rotation, const glm::vec3& scale);
 
+	glm::mat4 getTransformMatrix() const;
+
 	Transform operator+(const Transform& other);
 
 	Transform& operator+=(const Transform& other);
 
-	glm::mat4 getTransformMatrix() const;
+	operator glm::mat4() const;
 };

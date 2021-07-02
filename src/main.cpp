@@ -103,14 +103,16 @@ SceneObject* setupScene() {
 
 
 int main() {
+    
     GLFWwindow* window = initGLFW();
     Input::setWindow(window);
 
-    //SceneObject* scene = setupScene();
+    //MeshRenderData* renderData = new MeshRenderData("assets/caixa.jpg");
+    MeshRenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa2.jpg");
 
-    // Getting renderer and uploading objects to GPU
+    Transform transform;
+    transform.scale = { 0.25f, 0.25f, 0.25f };
     Renderer* renderer = setupRenderer();
-    MeshRenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
     renderer->uploadMesh(renderData);
     
     glm::vec3 backgroundColor = Color::CYAN / 255.0f;
@@ -129,6 +131,8 @@ int main() {
         Component::deltaTime = getDeltaTime();
         //scene->update();
         //renderer->drawObject(scene);
+        transform.rotation[1] += 0.0001f;
+        renderer->drawObject(renderData, transform);
  
         glfwSwapBuffers(window);
     }

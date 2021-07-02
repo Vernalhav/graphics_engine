@@ -32,3 +32,7 @@ Transform& Transform::operator+=(const Transform& other) {
 	scale *= other.scale;
 	return *this;
 }
+
+Transform::operator glm::mat4() const {
+	return getTransformMatrix();
+}

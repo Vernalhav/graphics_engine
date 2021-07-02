@@ -35,5 +35,5 @@ public:
 
 	void uploadMesh(MeshRenderData* mesh);
 
-	void drawObject(MeshRenderData* object);
+	void drawObject(MeshRenderData* object, const glm::mat4& transform);
 };
