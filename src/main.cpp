@@ -28,13 +28,14 @@ Scene* setupScene() {
     RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
     box->addComponent<Renderable>(renderData);
     box->addComponent<PhysicsBody>(glm::vec3({ 0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
+    box->transform.translation = { 0, 0, -5 };
 
-    scene->makeActiveScene();
+    mainCam->transform.translation = { 0, 0, 10 };
+    //mainCam->addComponent<PhysicsBody>(glm::vec3({ 0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
+
     scene->addRootObject(box);
     scene->addRootObject(mainCam);
-
-    mainCam->transform.translation = {0, 0, 10};
-
+    scene->makeActiveScene();
     return scene;
 }
 

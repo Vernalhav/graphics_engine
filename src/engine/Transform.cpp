@@ -19,11 +19,11 @@ Transform Transform::operator+(const Transform& other) {
 
 glm::mat4 Transform::getTransformMatrix() const {
 	glm::mat4 transform(1);
-	transform = glm::scale(transform, scale);
+	transform = glm::translate(transform, translation);
 	transform = glm::rotate(transform, rotation.x, {1, 0, 0});
 	transform = glm::rotate(transform, rotation.y, {0, 1, 0});
 	transform = glm::rotate(transform, rotation.z, {0, 0, 1});
-	transform = glm::translate(transform, translation);
+	transform = glm::scale(transform, scale);
 	return transform;
 }
 
