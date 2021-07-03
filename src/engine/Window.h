@@ -13,12 +13,12 @@ private:
 
 	friend class Input;
 
-	void captureMouseCursor();
 
 public:
 	Window(int width = 800, int height = 800, const std::string& name = "OpenGL Window");
 	~Window();
 
+	void captureMouseCursor();
 	void releaseMouseCursor();
 	void setActive();
 

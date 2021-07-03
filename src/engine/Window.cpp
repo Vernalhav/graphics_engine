@@ -31,7 +31,7 @@ void initGraphicsContext() {
 void onMouseButtonPressed(GLFWwindow* window, int button, int action, int mods) {
     Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
     if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
-        winObject->setActive();
+        winObject->captureMouseCursor();
     }
 }
 
