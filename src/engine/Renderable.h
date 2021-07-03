@@ -4,9 +4,11 @@
 
 class Renderable : public Component {
 private:
-	friend class Renderer;
 	RenderData* renderData;
 
 public:
 	Renderable(SceneObject* parent, RenderData* data);
+	~Renderable();
+
+	RenderData* getRenderData();
 };

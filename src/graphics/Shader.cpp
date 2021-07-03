@@ -34,8 +34,8 @@ void Shader::use() {
     glUseProgram(id);
 }
 
-void Shader::setTransform(const glm::mat4& t) {
-    setMatrix4(MODEL_LAYOUT_LOC, t);
+void Shader::setMVPMatrix(const glm::mat4 & mvp) {
+    setMatrix4(MVP_MATRIX_LAYOUT_LOC, mvp);
 }
 
 void Shader::setAttributeLayout() {

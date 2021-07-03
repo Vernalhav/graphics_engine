@@ -18,7 +18,7 @@ private:
 public:
 	static constexpr int POSITION_LAYOUT_LOC = 0;
 	static constexpr int TEX_COORD_LAYOUT_LOC = 1;
-	static constexpr int MODEL_LAYOUT_LOC = 0;
+	static constexpr int MVP_MATRIX_LAYOUT_LOC = 0;
 	static constexpr int MAIN_TEXTURE_LAYOUT_LOC = 1;
 	static constexpr int MAIN_TEXTURE_SLOT = 0;
 
@@ -29,8 +29,8 @@ public:
 
 	void use();
 
-	// Hardcoded: Sets the model matrix in the shader to the specified values.
-	void setTransform(const glm::mat4& t);
+	// Hardcoded: Sets the MVP matrix in the shader to the specified values.
+	void setMVPMatrix(const glm::mat4 & mvp);
 
 	void setAttributeLayout();	// Hardcoded: Configures the VAO's input attribute layout
 	void enableAttributes();	// Hardcoded

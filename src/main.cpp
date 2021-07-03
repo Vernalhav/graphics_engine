@@ -13,6 +13,7 @@
 #include "engine/SceneObject.h"
 #include "engine/PhysicsBody.h"
 #include "engine/Input.h"
+#include "engine/Scene.h"
 #include "graphics/MeshLoader.h"
 #include "graphics/Shader.h"
 #include "graphics/Renderer.h"
@@ -23,6 +24,7 @@
 #ifdef DEBUG
 #include "graphics/glDebugMessage.h"
 #endif
+#include "engine/Renderable.h"
 
 
 GLFWwindow* initGLFW() {
@@ -61,45 +63,39 @@ double getDeltaTime() {
     return delta;
 }
 
-const std::string vertex_code =
-    "#version 430 core\n"
-    "layout(location = 0) in vec3 position;"
-    "layout(location = 1) in vec2 texCoord;"
-    "out vec2 fragTexCoord;"
-    "layout(location = 0) uniform mat4 model;"
+Scene* setupScene() {
+    Scene* scene = new Scene();
 
-    "void main() {"
-    "   fragTexCoord = texCoord;"
-    "   gl_Position = model * vec4(position, 1);"
-    "}";
+    SceneObject* mainCam = new SceneObject("mainCam");
+    mainCam->addComponent<Camera>();
+    scene->setMainCamera(mainCam->getComponent<Camera>());
 
-const std::string fragment_code =
-    "#version 430 core\n"
-    "in vec2 fragTexCoord;"
-    "out vec4 fragColor;"
-    "layout(location = 1) uniform sampler2D mainTexture;"
+    SceneObject* box = new SceneObject("box");
+    RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa2.jpg");
+    box->addComponent<Renderable>(renderData);
+    box->addComponent<PhysicsBody>(glm::vec3({0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
 
-    "void main() {"
-    "    fragColor = texture(mainTexture, fragTexCoord);"
-    "}";
+    scene->makeActiveScene();
+    scene->addRootObject(box);
+    scene->addRootObject(mainCam);
+
+    mainCam->transform.translation = {0, 0, 10};
+
+    return scene;
+}
 
 int main() {
     GLFWwindow* window = initGLFW();
     Input::setWindow(window);
 
-    RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa2.jpg");
+    Scene* scene = setupScene();
 
-    Transform transform;
-    transform.scale = glm::vec3(0.25f);
-    
-    Renderer* renderer = new Renderer(Shader(vertex_code, fragment_code, "standard shader"));
-    renderer->uploadMesh(renderData);
-    
     glm::vec3 backgroundColor = Color::CYAN / 255.0f;
 
     glfwShowWindow(window);
     glfwSetTime(0);
 
+    scene->start();
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         
@@ -107,13 +103,11 @@ int main() {
         glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0);
 
         Component::deltaTime = getDeltaTime();
-        transform.rotation[1] += 0.0001f;
-        renderer->drawObject(renderData, transform);
- 
+        scene->update();
+        scene->render();
+
         glfwSwapBuffers(window);
     }
-
-    delete renderer;
 
     glfwDestroyWindow(window);
 

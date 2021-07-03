@@ -118,7 +118,7 @@ public:
 	/// <typeparam name="ComponentType">Type of component to search for</typeparam>
 	/// <returns>Array with the Components in the same order that they haeve been added</returns>
 	template<typename ComponentType>
-	std::vector<ComponentType*> getComponents();
+	std::vector<ComponentType*> getComponents() const;
 
 	/// <summary>
 	/// Returns all of the object's immediate children
@@ -164,7 +164,7 @@ inline ComponentType* SceneObject::getComponent() {
 }
 
 template<typename ComponentType>
-inline std::vector<ComponentType*> SceneObject::getComponents() {
+inline std::vector<ComponentType*> SceneObject::getComponents() const {
 	std::vector<ComponentType*> matches;
 	for (Component* component : components) {
 		if (component->instanceof<ComponentType>()) {

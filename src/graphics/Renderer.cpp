@@ -34,13 +34,13 @@ void Renderer::uploadMesh(RenderData* mesh) {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(int), mesh->indices.data(), GL_STATIC_DRAW);
 }
 
-void Renderer::drawObject(RenderData* object, const glm::mat4& transform) {
+void Renderer::drawObject(RenderData* object, const glm::mat4& mvp) {
 	glBindBuffer(GL_ARRAY_BUFFER, object->vboId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->eboId);
 
 	object->texture.bind(Shader::MAIN_TEXTURE_SLOT);
 
-	shader.setTransform(transform);
+	shader.setMVPMatrix(mvp);
 
 	glDrawElements(GL_TRIANGLES, object->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
