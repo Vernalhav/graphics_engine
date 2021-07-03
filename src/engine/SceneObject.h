@@ -1,11 +1,11 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include <map>
 #include <stack>
 #include <string>
+#include <vector>
 
-#include "../math/vectors.h"
-#include "../graphics/Primitive.h"
 #include "Transform.h"
 
 class SceneObject;
@@ -33,7 +33,7 @@ public:
 	/// </summary>
 	virtual void start();
 
-	virtual ~Component() { delete this; };
+	virtual ~Component() = default;
 
 	template<typename Target>
 	bool instanceof();
@@ -43,13 +43,6 @@ public:
 class SceneObject {
 private:
 	std::string name;
-
-	/// <summary>
-	/// Vector of primitives that should represent a semantic object, for instance
-	/// 4 rectangles forming a windmill. The collection of these primitives will
-	/// share a single Transform.
-	/// </summary>
-	std::vector<Primitive> primitive;
 
 	/// <summary>
 	/// Mapping between the name of each children of this SceneObject and
@@ -65,37 +58,36 @@ private:
 
 public:
 	Transform transform;
+	SceneObject* parent;
 
-	SceneObject(std::string name, std::vector<Primitive>& p) : name(name), primitive(p) { }
-	SceneObject(std::string name, std::vector<Primitive>&& p) : name(name), primitive(p) { }
-	SceneObject(std::string name) : name(name), primitive() { }
-	SceneObject() : name("unnamed object"), primitive() { }
+	SceneObject(const std::string& name) : name(name), transform(), parent(nullptr) { }
+	SceneObject() : name("unnamed object"), transform(), parent(nullptr) { }
 	~SceneObject() {
 		for (auto& child : children) delete child.second;
 		components.clear();
 	}
 
-	// Changes the color of the object's Primitives.
-	void setPrimitiveColor(Vector3 color);
-	// Changes the color of the object's Primitive at the index provided.
-	void setPrimitiveColor(Vector3 color, int index);
-
 	// Adds child as a child of the current SceneObject.
 	void appendChild(SceneObject* child);
 	void appendChildren(std::vector<SceneObject*> children);
 
-	Transform& getTransform() { return transform; }
+	std::string getName() const { return name; }
 	
-	const std::string& getName() const { return name; }
-	
-	const Transform& getTransform() const { return transform; }
+	Transform getTransform() { return transform; }
+
+	/// <summary>
+	/// Returns 4x4 transformation matrix that
+	/// is the composition of this object and all
+	/// of its parents' Transforms.
+	/// </summary>
+	glm::mat4 getGlobalTransform();
 
 	SceneObject* operator[](const std::string& name);
 	SceneObject* child(const std::string& name);
 
 	/// Adds a component to this SceneObject.
 	/// ComponentType is the name of the Component subclass
-	/// that will be added to this object. ...Args is a list
+	/// that will be added to this object. ...args is a list
 	/// of arguments that will be passed to ComponentType's
 	/// constructor.
 	/// 
@@ -106,12 +98,10 @@ public:
 	/// the PhysicsBody component and "my_cloud" is the constructor
 	/// parameter for the Cloud component.
 	template<typename ComponentType, typename ...Args>
-	inline void addComponent(Args ...args) {
-		components.push_back(new ComponentType(this, args...));
-	}
+	void addComponent(Args ...args);
 
 	/// <summary>
-	/// Returns a component attached to the current
+	/// Returns the first component attached to the current
 	/// SceneObject that matches the template parameter.
 	/// If there are none, returns nullptr.
 	/// </summary>
@@ -121,18 +111,14 @@ public:
 	ComponentType* getComponent();
 
 	/// <summary>
-	/// Returns the object's and all of its children's
-	/// Primitives as a single array.
+	/// Returns all components attached to the current
+	/// SceneObject that match the template parameter.
+	/// If there are none, returns an empty array.
 	/// </summary>
-	/// <returns>Array with all Primitives</returns>
-	std::vector<Primitive*> getObjectPrimitives();
-
-	/// <summary>
-	/// Returns the object's primitives that share the
-	/// same transform.
-	/// </summary>
-	/// <returns>Array with object primitives</returns>
-	const std::vector<Primitive>& getObjectPrimitive() const;
+	/// <typeparam name="ComponentType">Type of component to search for</typeparam>
+	/// <returns>Array with the Components in the same order that they haeve been added</returns>
+	template<typename ComponentType>
+	std::vector<ComponentType*> getComponents() const;
 
 	/// <summary>
 	/// Returns all of the object's immediate children
@@ -154,14 +140,20 @@ public:
 };
 
 
+template<typename ComponentType, typename ...Args>
+inline void SceneObject::addComponent(Args ...args) {
+	components.push_back(new ComponentType(this, std::forward<Args>(args)...));
+}
+
+
 template<typename Target>
-bool Component::instanceof() {
+inline bool Component::instanceof() {
 	return dynamic_cast<Target*>(this) != nullptr;
 }
 
 
 template<typename ComponentType>
-ComponentType* SceneObject::getComponent() {
+inline ComponentType* SceneObject::getComponent() {
 	for (Component* component : components) {
 		if (component->instanceof<ComponentType>()) {
 			return reinterpret_cast<ComponentType*>(component);
@@ -169,4 +161,15 @@ ComponentType* SceneObject::getComponent() {
 	}
 
 	return nullptr;
+}
+
+template<typename ComponentType>
+inline std::vector<ComponentType*> SceneObject::getComponents() const {
+	std::vector<ComponentType*> matches;
+	for (Component* component : components) {
+		if (component->instanceof<ComponentType>()) {
+			matches.push_back(reinterpret_cast<ComponentType*>(component));
+		}
+	}
+	return matches;
 }

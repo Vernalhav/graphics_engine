@@ -1,25 +1,12 @@
 #include "PhysicsBody.h"
 
+PhysicsBody::PhysicsBody(SceneObject* obj)
+	: Component(obj), linearVelocity(0), angularVelocity(0) {  }
+
+PhysicsBody::PhysicsBody(SceneObject* obj, const glm::vec3& linearVelocity, const glm::vec3& angularVelocity) 
+	: Component(obj), linearVelocity(linearVelocity), angularVelocity(angularVelocity) { }
 
 void PhysicsBody::update() {
-	kinematics.kinematicsUpdate();
-	sceneObject->transform.rotation += kinematics.angularVelocity * (float)Component::deltaTime;
-
-	float curRotation = sceneObject->transform.rotation;
-	Vector2 velocity(cos(curRotation), sin(curRotation));
-	velocity *= kinematics.linearVelocity;
-
-	sceneObject->transform.translation += velocity * (float)Component::deltaTime;
-}
-
-void KinematicProperties::kinematicsUpdate() {
-	linearVelocity = utils::clamp(linearVelocity - utils::sign(linearVelocity) * linearDrag + linearAcceleration,
-		-terminalLinearVelocity, terminalLinearVelocity);
-	
-	angularVelocity = utils::clamp(angularVelocity - utils::sign(angularVelocity) * angularDrag + angularAcceleration,
-		-terminalAngularVelocity, terminalAngularVelocity);
-
-	// FIXME: Gambiarra
-	if (abs(linearVelocity) <= linearDrag) linearVelocity = 0;
-	if (abs(angularVelocity) <= angularDrag) angularVelocity = 0;
+	sceneObject->transform.rotation += angularVelocity * (float)Component::deltaTime;
+	sceneObject->transform.translation += linearVelocity * (float)Component::deltaTime;
 }

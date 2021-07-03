@@ -2,59 +2,54 @@
 
 #include "Renderer.h"
 
-void Renderer::uploadObjects(std::vector<SceneObject*> objects) {
 
-	std::vector<Vector3> vertices;
+void Renderer::uploadMesh(RenderData* mesh) {
+	if (mesh->vaoId > 0) return;
 
-	int offset = 0;
-	for (auto object : objects) {
-		std::vector<Primitive*> curPrimitives = object->getObjectPrimitives();
+	mesh->vaoId = VAO;
+	glGenBuffers(1, (GLuint*)&(mesh->vboId));
+	glGenBuffers(1, (GLuint*)&(mesh->eboId));
 
-		for (Primitive* primitive : curPrimitives) {
-			primitive->offset = offset;
-			int size = primitive->getSizeOfVertices();
+	// Stores all vertex attributes in a contiguous array
+	std::vector<float> vboData(5 * mesh->vertices.size());
 
-			vertices.insert(vertices.end(), primitive->vertices.begin(), primitive->vertices.end());
-			offset += size;
-		}
+	for (unsigned int i = 0; i < mesh->vertices.size(); i++) {
+		int baseIdx = 5 * i;
+
+		// FIXME: quick and dirty implementation (should ideally just be sending mesh->vertices to VBO)
+		vboData[baseIdx + 0] = mesh->vertices[i].position[0];
+		vboData[baseIdx + 1] = mesh->vertices[i].position[1];
+		vboData[baseIdx + 2] = mesh->vertices[i].position[2];
+		vboData[baseIdx + 3] = mesh->vertices[i].textureCoords[0];
+		vboData[baseIdx + 4] = mesh->vertices[i].textureCoords[1];
 	}
 
-	glBindVertexArray(VAO);
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->vboId);
+	glBufferData(GL_ARRAY_BUFFER, vboData.size() * sizeof(float), vboData.data(), GL_STATIC_DRAW);
 
-	GLsizeiptr bufferSize = vertices.size() * sizeof(vertices[0]);
-	glBufferData(GL_ARRAY_BUFFER, bufferSize, vertices.data(), GL_STATIC_DRAW);
+	shader.enableAttributes();
+	shader.setAttributeLayout();
 
-	shader.setPositionAttributeLayout();
-	shader.enableAttrib("position");
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->eboId);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(int), mesh->indices.data(), GL_STATIC_DRAW);
 }
 
-void Renderer::drawObject(SceneObject* object) {
-	shader.use();
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+void Renderer::drawObject(RenderData* object, const glm::mat4& mvp) {
+	glBindBuffer(GL_ARRAY_BUFFER, object->vboId);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->eboId);
 
-	_drawObject(object, Matrix3());
+	object->texture.bind(Shader::MAIN_TEXTURE_SLOT);
+
+	shader.setMVPMatrix(mvp);
+
+	glDrawElements(GL_TRIANGLES, object->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
-void Renderer::_drawObject(const SceneObject* object, Matrix3 globalTransform) {
-	
-	globalTransform = globalTransform * Matrix3(object->transform);
-	shader.setTransform(globalTransform);
-
-	auto objectPrimitive = object->getObjectPrimitive();
-
-	for (auto& subprimitive : objectPrimitive) {
-		shader.setFloat4("color", subprimitive.color);
-		glDrawArrays(subprimitive.primitive, subprimitive.offset / subprimitive.getSingleVertexSize(), subprimitive.getVertexCount());
-	}
-
-	for (auto& child : object->getChildren()) {
-		_drawObject(child, globalTransform);
-	}
-}
-
-Renderer::Renderer(Shader s) : shader(s), VBO(0) {
+Renderer::Renderer(Shader s) : shader(s) {
 	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);	
+}
+
+Renderer::~Renderer() {
+	glDeleteVertexArrays(1, &VAO);
 }

@@ -9,29 +9,39 @@ void Component::update() { }
 
 void Component::start() { }
 
-
-void SceneObject::setPrimitiveColor(Vector3 color) {
-	color /= 255;
-	for (unsigned int i = 0; i < primitive.size(); i++)
-		primitive[i].color = { color.x, color.y, color.z, 1 };
-}
-
-void SceneObject::setPrimitiveColor(Vector3 color, int index) {
-	color /= 255;
-	primitive[index].color = { color.x, color.y, color.z, 1 };
-}
-
 void SceneObject::appendChild(SceneObject* child) {
 	if (children.count(child->name) != 0) {
 		std::cout << "appendChild: WARNING: SceneObject " << name << " already has child " << child->name << std::endl;
 		return;
 	}
+	if (child->parent != nullptr) {
+		// FIXME: Should add a removeChild method and remove child from the previous parent to mantain consistency
+		std::cout << "appendChild: WARNING: SceneObject " << child->name << " already has a parent. " << \
+						"Remove it before calling appendChild." << std::endl;
+		return;
+	}
+
+	// FIXME: data duplication could allow for inconsistencies
 	children[child->name] = child;
+	child->parent = this;
 }
 
 void SceneObject::appendChildren(std::vector<SceneObject*> children) {
 	for (auto child : children)
 		appendChild(child);
+}
+
+glm::mat4 SceneObject::getGlobalTransform() {
+	glm::mat4 globalTransform = transform;
+
+	// FIXME: Possible endless loop if tree hierarchy is not enforced
+	SceneObject* curAncestor = parent;
+	while (curAncestor != nullptr) {
+		globalTransform = curAncestor->transform.getTransformMatrix() * globalTransform;
+		curAncestor = curAncestor->parent;
+	}
+
+	return globalTransform;
 }
 
 SceneObject* SceneObject::operator[](const std::string& name) {
@@ -40,38 +50,6 @@ SceneObject* SceneObject::operator[](const std::string& name) {
 
 SceneObject* SceneObject::child(const std::string& name) {
 	return children[name];
-}
-
-/// <summary>
-/// Returns the object's and all its children's
-/// Primitives as a single array.
-/// </summary>
-/// <returns></returns>
-std::vector<Primitive*> SceneObject::getObjectPrimitives() {
-	std::vector<Primitive*> primitives;
-	std::stack<SceneObject*> childrenStack;
-
-	childrenStack.push(this);
-
-	SceneObject* cur;
-	while (!childrenStack.empty()) {
-		cur = childrenStack.top();
-		childrenStack.pop();
-
-		for (const auto& child : cur->children) {
-			childrenStack.push(child.second);
-		}
-
-		for (unsigned int i = 0; i < cur->primitive.size(); i++) {
-			primitives.push_back(&(cur->primitive[i]));
-		}
-	}
-
-	return primitives;
-}
-
-const std::vector<Primitive>& SceneObject::getObjectPrimitive() const {
-	return primitive;
 }
 
 const std::vector<const SceneObject*> SceneObject::getChildren() const {

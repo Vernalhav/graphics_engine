@@ -1,16 +1,6 @@
 #include "Input.h"
-
-static GLFWwindow* window = nullptr;
-
-void Input::setWindow(GLFWwindow* newWindow) {
-	window = newWindow;
-}
+#include "Window.h"
 
 bool Input::isKeyPressed(int keyCode) {
-	if (window == nullptr) return false;
-	return glfwGetKey(window, keyCode) == GLFW_PRESS;
-}
-
-void Input::closeWindow() {
-	glfwSetWindowShouldClose(window, GLFW_TRUE);
+	return Window::activeWindow->isKeyPressed(keyCode);
 }
