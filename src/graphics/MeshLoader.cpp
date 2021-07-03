@@ -106,7 +106,6 @@ RenderData* MeshLoader::loadMesh(const std::string& filePath, const std::string&
 	std::ifstream objFile;
 	objFile.open(filePath);
 
-
 	if (objFile.is_open()) {
 
 		std::vector<glm::vec3> positions;

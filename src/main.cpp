@@ -51,34 +51,6 @@ GLFWwindow* initGLFW() {
 }
 
 
-Renderer* setupRenderer() {
-    std::string vertex_code =
-        "#version 430 core\n"
-        "layout(location = 0) in vec3 position;"
-        "layout(location = 1) in vec2 texCoord;"
-        "out vec2 fragTexCoord;"
-        "layout(location = 0) uniform mat4 model;"
-        
-        "void main() {"
-        "   fragTexCoord = texCoord;"
-        "   gl_Position = model * vec4(position, 1);"
-        "}";
-
-    std::string fragment_code =
-        "#version 430 core\n"
-        "in vec2 fragTexCoord;"
-        "out vec4 fragColor;"
-        "layout(location = 1) uniform sampler2D mainTexture;"
-        
-        "void main() {"
-        "    fragColor = texture(mainTexture, fragTexCoord);"
-        "}";
-
-    Shader shader(vertex_code, fragment_code, "Standard shader");
-    return new Renderer(shader);
-}
-
-
 /// <summary>
 /// Calculate time in seconds between
 /// the last getDeltaTime call.
@@ -89,39 +61,44 @@ double getDeltaTime() {
     return delta;
 }
 
+const std::string vertex_code =
+    "#version 430 core\n"
+    "layout(location = 0) in vec3 position;"
+    "layout(location = 1) in vec2 texCoord;"
+    "out vec2 fragTexCoord;"
+    "layout(location = 0) uniform mat4 model;"
 
-/// <summary>
-/// Creates, configures and lays out all scene objects
-/// in the scene hierarchy. Returns parent SceneObject
-/// to which all root-level objects will be parented to.
-/// </summary>
-SceneObject* setupScene() {
-    SceneObject* scene = new SceneObject("scene");
+    "void main() {"
+    "   fragTexCoord = texCoord;"
+    "   gl_Position = model * vec4(position, 1);"
+    "}";
 
-    return scene;
-}
+const std::string fragment_code =
+    "#version 430 core\n"
+    "in vec2 fragTexCoord;"
+    "out vec4 fragColor;"
+    "layout(location = 1) uniform sampler2D mainTexture;"
 
+    "void main() {"
+    "    fragColor = texture(mainTexture, fragTexCoord);"
+    "}";
 
 int main() {
-    
     GLFWwindow* window = initGLFW();
     Input::setWindow(window);
 
     RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa2.jpg");
-    RenderData* renderData2 = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
 
     Transform transform;
     transform.scale = glm::vec3(0.25f);
     
-    Renderer* renderer = setupRenderer();
+    Renderer* renderer = new Renderer(Shader(vertex_code, fragment_code, "standard shader"));
     renderer->uploadMesh(renderData);
     
     glm::vec3 backgroundColor = Color::CYAN / 255.0f;
 
     glfwShowWindow(window);
     glfwSetTime(0);
-
-    //scene->start();
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -130,8 +107,6 @@ int main() {
         glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0);
 
         Component::deltaTime = getDeltaTime();
-        //scene->update();
-        //renderer->drawObject(scene);
         transform.rotation[1] += 0.0001f;
         renderer->drawObject(renderData, transform);
  

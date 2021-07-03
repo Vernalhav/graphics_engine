@@ -18,19 +18,13 @@ Transform Transform::operator+(const Transform& other) {
 }
 
 glm::mat4 Transform::getTransformMatrix() const {
-	glm::mat4 transform = glm::scale(glm::mat4(1.0f), scale);
+	glm::mat4 transform(1);
+	transform = glm::scale(transform, scale);
 	transform = glm::rotate(transform, rotation.x, {1, 0, 0});
 	transform = glm::rotate(transform, rotation.y, {0, 1, 0});
 	transform = glm::rotate(transform, rotation.z, {0, 0, 1});
 	transform = glm::translate(transform, translation);
 	return transform;
-}
-
-Transform& Transform::operator+=(const Transform& other) {
-	translation += other.translation;
-	rotation += other.rotation;
-	scale *= other.scale;
-	return *this;
 }
 
 Transform::operator glm::mat4() const {

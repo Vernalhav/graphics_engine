@@ -45,13 +45,6 @@ private:
 	std::string name;
 
 	/// <summary>
-	/// Vector of primitives that should represent a semantic object, for instance
-	/// 4 rectangles forming a windmill. The collection of these primitives will
-	/// share a single Transform.
-	/// </summary>
-	std::vector<Primitive> primitive;
-		
-	/// <summary>
 	/// Mapping between the name of each children of this SceneObject and
 	/// its corresponding object pointer.
 	/// </summary>
@@ -65,29 +58,29 @@ private:
 
 public:
 	Transform transform;
+	SceneObject* parent;
 
-	SceneObject(std::string name, std::vector<Primitive>& p) : name(name), primitive(p), transform() { }
-	SceneObject(std::string name, std::vector<Primitive>&& p) : name(name), primitive(p), transform() { }
-	SceneObject(std::string name) : name(name), primitive(), transform() { }
-	SceneObject() : name("unnamed object"), primitive(), transform() { }
+	SceneObject(const std::string& name) : name(name), transform(), parent(nullptr) { }
+	SceneObject() : name("unnamed object"), transform(), parent(nullptr) { }
 	~SceneObject() {
 		for (auto& child : children) delete child.second;
 		components.clear();
 	}
 
-	// Changes the color of the object's Primitives.
-	void setPrimitiveColor(glm::vec3 color);
-	// Changes the color of the object's Primitive at the index provided.
-	void setPrimitiveColor(glm::vec3 color, int index);
-
 	// Adds child as a child of the current SceneObject.
 	void appendChild(SceneObject* child);
 	void appendChildren(std::vector<SceneObject*> children);
 
-	const std::string& getName() const { return name; }
+	std::string getName() const { return name; }
 	
-	const Transform& getTransform() const { return transform; }
-	Transform& getTransform() { return transform; }
+	Transform getTransform() { return transform; }
+
+	/// <summary>
+	/// Returns 4x4 transformation matrix that
+	/// is the composition of this object and all
+	/// of its parents' Transforms.
+	/// </summary>
+	glm::mat4 getGlobalTransform();
 
 	SceneObject* operator[](const std::string& name);
 	SceneObject* child(const std::string& name);
@@ -126,20 +119,6 @@ public:
 	/// <returns>Array with the Components in the same order that they haeve been added</returns>
 	template<typename ComponentType>
 	std::vector<ComponentType*> getComponents();
-
-	/// <summary>
-	/// Returns the object's and all of its children's
-	/// Primitives as a single array.
-	/// </summary>
-	/// <returns>Array with all Primitives</returns>
-	std::vector<Primitive*> getObjectPrimitives();
-
-	/// <summary>
-	/// Returns the object's primitives that share the
-	/// same transform.
-	/// </summary>
-	/// <returns>Array with object primitives</returns>
-	const std::vector<Primitive>& getObjectPrimitive() const;
 
 	/// <summary>
 	/// Returns all of the object's immediate children

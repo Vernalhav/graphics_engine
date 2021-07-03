@@ -45,23 +45,6 @@ void Renderer::drawObject(RenderData* object, const glm::mat4& transform) {
 	glDrawElements(GL_TRIANGLES, object->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
-void Renderer::_drawObject(const SceneObject* object, glm::mat4 globalTransform) {
-	
-	globalTransform = globalTransform * object->transform.getTransformMatrix();
-	shader.setTransform(globalTransform);
-
-	auto objectPrimitive = object->getObjectPrimitive();
-
-	for (auto& subprimitive : objectPrimitive) {
-		shader.setFloat4("color", subprimitive.color);
-		glDrawArrays(subprimitive.primitive, subprimitive.offset / subprimitive.getSingleVertexSize(), subprimitive.getVertexCount());
-	}
-
-	for (auto& child : object->getChildren()) {
-		_drawObject(child, globalTransform);
-	}
-}
-
 Renderer::Renderer(Shader s) : shader(s) {
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);	

@@ -14,3 +14,7 @@ bool Input::isKeyPressed(int keyCode) {
 void Input::closeWindow() {
 	glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+
+void Input::getWindowSize(int& width, int& height) {
+	glfwGetFramebufferSize(window, &width, &height);
+}

@@ -21,7 +21,5 @@ struct Transform {
 
 	Transform operator+(const Transform& other);
 
-	Transform& operator+=(const Transform& other);
-
 	operator glm::mat4() const;
 };

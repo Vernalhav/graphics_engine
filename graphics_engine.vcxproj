@@ -23,6 +23,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\Renderable.h" />
     <ClInclude Include="src\engine\Scene.h" />
     <ClInclude Include="src\engine\Camera.h" />
     <ClInclude Include="src\graphics\RenderData.h" />
@@ -46,6 +47,7 @@
     <ClInclude Include="src\graphics\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\Renderable.cpp" />
     <ClCompile Include="src\engine\Scene.cpp" />
     <ClCompile Include="src\engine\Camera.cpp" />
     <ClCompile Include="src\graphics\RenderData.cpp" />
