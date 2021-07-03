@@ -24,7 +24,8 @@ glm::mat4 Camera::getViewMatrix() {
 }
 
 glm::mat4 Camera::getProjectionMatrix() {
-	return glm::perspectiveFov(fov, (float)screenWidth, (float)screenHeight, zNear, zFar);
+	return glm::perspective(glm::radians(fov), screenWidth/(float)screenHeight, zNear, zFar);
+	//return glm::perspectiveFov(glm::radians(fov), (float)screenWidth, (float)screenHeight, zNear, zFar);
 }
 
 glm::mat4 Camera::getViewProjectionMatrix() {

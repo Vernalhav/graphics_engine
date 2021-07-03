@@ -41,6 +41,13 @@ void onKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mod
     }
 }
 
+void onResize(GLFWwindow* window, int width, int height) {
+    Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    int w, h;
+    winObject->getWindowSize(w, h);
+    glViewport(0, 0, w, h);
+}
+
 void Window::captureMouseCursor() {
     setActive();
 
@@ -127,6 +134,7 @@ Window::Window(int width, int height, const std::string& name) {
 
     glfwSetKeyCallback(window, onKeyPressed);
     glfwSetMouseButtonCallback(window, onMouseButtonPressed);
+    glfwSetWindowSizeCallback(window, onResize);
     glfwMakeContextCurrent(window);
     glfwSetTime(0);
     

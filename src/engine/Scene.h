@@ -4,11 +4,12 @@
 
 class Scene {
 private:
+	friend class Renderable;	// FIXME: quick and dirty way to allow Renderable to access activeScene's renderer
+	static Scene* activeScene;
+
 	Camera* mainCamera;
 	SceneObject* root;
-	static Scene* activeScene;
 	Renderer* renderer;
-	friend class Renderable;	// FIXME: quick and dirty way to allow Renderable to access activeScene's renderer
 
 public:
 	Scene();
