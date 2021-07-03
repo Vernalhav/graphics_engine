@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
-#include "Input.h"
+#include "Window.h"
 
 
 Camera::Camera(SceneObject* obj)
@@ -10,7 +10,7 @@ Camera::Camera(SceneObject* obj)
 Camera::~Camera() { }
 
 void Camera::update() {
-	Input::getWindowSize(screenWidth, screenHeight);
+	Window::getActiveWindowSize(screenWidth, screenHeight);
 }
 
 glm::mat4 Camera::getViewMatrix() {

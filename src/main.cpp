@@ -9,13 +9,12 @@
 
 #include "engine/SceneObject.h"
 #include "engine/PhysicsBody.h"
-#include "engine/Input.h"
 #include "engine/Scene.h"
 #include "engine/Renderable.h"
+#include "engine/Window.h"
 
 #include "graphics/MeshLoader.h"
 #include "misc/utils.h"
-#include "engine/Window.h"
 
 
 Scene* setupScene() {
@@ -28,7 +27,7 @@ Scene* setupScene() {
     SceneObject* box = new SceneObject("box");
     RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
     box->addComponent<Renderable>(renderData);
-    box->addComponent<PhysicsBody>(glm::vec3({0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
+    box->addComponent<PhysicsBody>(glm::vec3({ 0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
 
     scene->makeActiveScene();
     scene->addRootObject(box);
@@ -41,7 +40,6 @@ Scene* setupScene() {
 
 int main() {
     Window* window = new Window();
-    Input::setWindow(window);
 
     Scene* scene = setupScene();
 

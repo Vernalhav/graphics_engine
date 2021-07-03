@@ -6,7 +6,7 @@
 
 #define DEBUG 1;
 
-static Window* activeWindow = nullptr;
+Window* Window::activeWindow = nullptr;
 
 
 void initWindowSystem() {
@@ -26,7 +26,6 @@ void initGraphicsContext() {
     glDebugMessageCallback(GLDebugMessageCallback, NULL);
 #endif
 }
-
 
 void onMouseButtonPressed(GLFWwindow* window, int button, int action, int mods) {
     Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
@@ -56,14 +55,11 @@ void Window::releaseMouseCursor() {
     if (glfwRawMouseMotionSupported()) {
         glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
     }
-
-    isFocused = false;
 }
 
 void Window::setActive() {
     glfwMakeContextCurrent(window);
     activeWindow = this;
-    isFocused = true;
 }
 
 bool Window::shouldClose() {
@@ -76,11 +72,18 @@ void Window::show() {
 
 void Window::close() {
     glfwDestroyWindow(window);
-    isFocused = false;
 }
 
 void Window::display() {
     glfwSwapBuffers(window);
+}
+
+void Window::getWindowSize(int& width, int& height) {
+    glfwGetFramebufferSize(window, &width, &height);
+}
+
+bool Window::isKeyPressed(int keyCode) {
+    return glfwGetKey(window, keyCode) == GLFW_PRESS;
 }
 
 void Window::pollEvents() {
@@ -99,6 +102,10 @@ double Window::getDeltaTime() {
     double delta = glfwGetTime();
     glfwSetTime(0);
     return delta;
+}
+
+void Window::getActiveWindowSize(int& width, int& height) {
+    activeWindow->getWindowSize(width, height);
 }
 
 void Window::terminate() {
