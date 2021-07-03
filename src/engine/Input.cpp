@@ -2,8 +2,8 @@
 
 static GLFWwindow* window = nullptr;
 
-void Input::setWindow(GLFWwindow* newWindow) {
-	window = newWindow;
+void Input::setWindow(Window* newWindow) {
+	window = newWindow->window;
 }
 
 bool Input::isKeyPressed(int keyCode) {

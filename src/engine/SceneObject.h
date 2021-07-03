@@ -4,8 +4,8 @@
 #include <map>
 #include <stack>
 #include <string>
+#include <vector>
 
-#include "../graphics/Primitive.h"
 #include "Transform.h"
 
 class SceneObject;
