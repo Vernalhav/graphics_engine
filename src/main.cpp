@@ -1,4 +1,5 @@
 ﻿#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 #include <iostream>
 #include <string>
@@ -31,7 +32,7 @@ Scene* setupScene() {
     box->transform.translation = { 0, 0, -5 };
 
     mainCam->transform.translation = { 0, 0, 10 };
-    //mainCam->addComponent<PhysicsBody>(glm::vec3({ 0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
+    mainCam->addComponent<PhysicsBody>(glm::vec3({ 0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
 
     scene->addRootObject(box);
     scene->addRootObject(mainCam);
@@ -41,12 +42,10 @@ Scene* setupScene() {
 
 int main() {
     Window* window = new Window();
+    window->show();
 
     Scene* scene = setupScene();
-
     glm::vec3 backgroundColor = Color::CYAN;
-
-    window->show();
 
     scene->start();
     while (!window->shouldClose()) {

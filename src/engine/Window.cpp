@@ -9,6 +9,34 @@
 Window* Window::activeWindow = nullptr;
 
 
+class WindowCallbacks {
+public:
+    static void onMouseButtonPressed(GLFWwindow* window, int button, int action, int mods) {
+        Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+        if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
+            winObject->captureMouseCursor();
+        }
+    }
+
+    static void onKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods) {
+        Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+        if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE) {
+            winObject->releaseMouseCursor();
+        }
+    }
+
+    static void onResize(GLFWwindow* window, int width, int height) {
+        Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+        int w, h;
+        winObject->getWindowSize(w, h);
+        glViewport(0, 0, w, h);
+    }
+
+    static void onMouseMovement(GLFWwindow* window, double x, double y) {
+
+    }
+};
+
 void initWindowSystem() {
     glfwInit();
 }
@@ -27,27 +55,6 @@ void initGraphicsContext() {
 #endif
 }
 
-void onMouseButtonPressed(GLFWwindow* window, int button, int action, int mods) {
-    Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
-    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
-        winObject->captureMouseCursor();
-    }
-}
-
-void onKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
-    if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE) {
-        winObject->releaseMouseCursor();
-    }
-}
-
-void onResize(GLFWwindow* window, int width, int height) {
-    Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
-    int w, h;
-    winObject->getWindowSize(w, h);
-    glViewport(0, 0, w, h);
-}
-
 void Window::captureMouseCursor() {
     setActive();
 
@@ -62,6 +69,34 @@ void Window::releaseMouseCursor() {
     if (glfwRawMouseMotionSupported()) {
         glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
     }
+}
+
+Window::Window(int width, int height, const std::string& name) {
+    if (activeWindow == nullptr) {
+        initWindowSystem();
+    }
+
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
+    window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
+    glfwSetWindowUserPointer(window, (void*)this);
+
+    glfwSetKeyCallback(window, WindowCallbacks::onKeyPressed);
+    glfwSetMouseButtonCallback(window, WindowCallbacks::onMouseButtonPressed);
+    glfwSetWindowSizeCallback(window, WindowCallbacks::onResize);
+    glfwSetCursorPosCallback(window, WindowCallbacks::onMouseMovement);
+
+    glfwMakeContextCurrent(window);
+    glfwSetTime(0);
+
+    if (activeWindow == nullptr) {
+        initGraphicsContext();
+    }
+
+    setActive();
 }
 
 void Window::setActive() {
@@ -117,32 +152,6 @@ void Window::getActiveWindowSize(int& width, int& height) {
 
 void Window::terminate() {
     glfwTerminate();
-}
-
-Window::Window(int width, int height, const std::string& name) {
-	if (activeWindow == nullptr) {
-		initWindowSystem();
-	}
-
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-
-    window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
-    glfwSetWindowUserPointer(window, (void *)this);
-
-    glfwSetKeyCallback(window, onKeyPressed);
-    glfwSetMouseButtonCallback(window, onMouseButtonPressed);
-    glfwSetWindowSizeCallback(window, onResize);
-    glfwMakeContextCurrent(window);
-    glfwSetTime(0);
-    
-    if (activeWindow == nullptr) {
-        initGraphicsContext();
-    }
-
-    setActive();
 }
 
 Window::~Window() { }

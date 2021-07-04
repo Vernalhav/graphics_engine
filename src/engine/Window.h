@@ -11,21 +11,22 @@ private:
 	static Window* activeWindow;
 	
 	friend class Input;
+	friend class WindowCallbacks;
 	GLFWwindow* window;
-
-public:
-	Window(int width = 800, int height = 800, const std::string& name = "OpenGL Window");
-	~Window();
 
 	void captureMouseCursor();
 	void releaseMouseCursor();
 	void setActive();
 
+public:
+	Window(int width = 800, int height = 800, const std::string& name = "OpenGL Window");
+	~Window();
+
 	bool shouldClose();
 	void show();
 	void close();
 	void display();
-	void getWindowSize(int& width, int& height);
+	void getWindowSize(int& width, int& height);	// Returns window size in pixels
 
 	bool isKeyPressed(int keyCode);
 
