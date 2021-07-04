@@ -13,6 +13,7 @@
 #include "engine/Scene.h"
 #include "engine/Renderable.h"
 #include "engine/Window.h"
+#include "engine/FirstPersonController.h"
 
 #include "graphics/MeshLoader.h"
 #include "misc/utils.h"
@@ -23,24 +24,24 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
+    mainCam->addComponent<FirstPersonController>();
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* box = new SceneObject("box");
     RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
     box->addComponent<Renderable>(renderData);
-    box->addComponent<PhysicsBody>(glm::vec3({ 0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
-    box->transform.translation = { 0, 0, -5 };
+    //box->transform.setTranslation({ 0, 0, -10 });
+    box->transform.setScale(20);
 
-    mainCam->transform.translation = { 0, 0, 10 };
-    mainCam->addComponent<PhysicsBody>(glm::vec3({ 0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
+    mainCam->transform.setTranslation({ 0, 0, 0 });
 
     scene->addRootObject(box);
     scene->addRootObject(mainCam);
-    scene->makeActiveScene();
     return scene;
 }
 
 int main() {
+
     Window* window = new Window();
     window->show();
 
@@ -49,7 +50,7 @@ int main() {
 
     scene->start();
     while (!window->shouldClose()) {
-        Window::pollEvents();
+        window->pollEvents();
         Window::clearBuffers();
         Window::setColor(backgroundColor);
 

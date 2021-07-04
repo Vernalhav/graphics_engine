@@ -31,15 +31,6 @@ public:
         winObject->getWindowSize(w, h);
         glViewport(0, 0, w, h);
     }
-
-    static void onMouseMovement(GLFWwindow* window, double x, double y) {
-        Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
-        winObject->dx = x - winObject->lastX;
-        winObject->dy = y - winObject->lastY;
-
-        winObject->lastX = x;
-        winObject->lastY = y;
-    }
 };
 
 void initWindowSystem() {
@@ -76,7 +67,9 @@ void Window::releaseMouseCursor() {
     }
 }
 
-Window::Window(int width, int height, const std::string& name) {
+Window::Window(int width, int height, const std::string& name)
+    : lastX(0), lastY(0), dx(0), dy(0) {
+
     if (activeWindow == nullptr) {
         initWindowSystem();
     }
@@ -92,7 +85,6 @@ Window::Window(int width, int height, const std::string& name) {
     glfwSetKeyCallback(window, WindowCallbacks::onKeyPressed);
     glfwSetMouseButtonCallback(window, WindowCallbacks::onMouseButtonPressed);
     glfwSetWindowSizeCallback(window, WindowCallbacks::onResize);
-    glfwSetCursorPosCallback(window, WindowCallbacks::onMouseMovement);
 
     glfwMakeContextCurrent(window);
     glfwSetTime(0);
@@ -134,12 +126,20 @@ void Window::getMouseDelta(double& dx, double& dy) {
     dy = this->dy;
 }
 
-bool Window::isKeyPressed(int keyCode) {
-    return glfwGetKey(window, keyCode) == GLFW_PRESS;
+bool Window::isKeyPressed(int KeyCode) {
+    return glfwGetKey(window, KeyCode) == GLFW_PRESS;
 }
 
 void Window::pollEvents() {
     glfwPollEvents();
+
+    double x, y;
+    glfwGetCursorPos(this->window, &x, &y);
+    dx = x - lastX;
+    dy = lastY - y;
+
+    lastX = x;
+    lastY = y;
 }
 
 void Window::clearBuffers() {

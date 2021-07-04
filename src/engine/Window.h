@@ -46,9 +46,9 @@ public:
 	/// </summary>
 	void getMouseDelta(double& dx, double& dy);
 
-	bool isKeyPressed(int keyCode);
+	bool isKeyPressed(int KeyCode);
+	void pollEvents();
 
-	static void pollEvents();
 	static void clearBuffers();
 	static void setColor(const glm::vec3& color);
 	static double getDeltaTime();
