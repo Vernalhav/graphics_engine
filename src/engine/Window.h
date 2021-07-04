@@ -8,11 +8,15 @@
 
 class Window {
 private:
-	static Window* activeWindow;
-	
 	friend class Input;
 	friend class WindowCallbacks;
+	
 	GLFWwindow* window;
+	static Window* activeWindow;
+	double lastX;
+	double lastY;
+	double dx;
+	double dy;
 
 	void captureMouseCursor();
 	void releaseMouseCursor();
@@ -26,7 +30,21 @@ public:
 	void show();
 	void close();
 	void display();
-	void getWindowSize(int& width, int& height);	// Returns window size in pixels
+
+	/// <summary>
+	/// Sets width and height parameters to
+	/// contain the window's width and height
+	/// in pixels, not in screen coordinates.
+	/// </summary>
+	void getWindowSize(int& width, int& height);
+	
+	/// <summary>
+	/// Sets dx and dy to contain the mouse's
+	/// delta in x and y screen coordinates between
+	/// the current frame and previous frame.
+	/// The deltas are not normalized.
+	/// </summary>
+	void getMouseDelta(double& dx, double& dy);
 
 	bool isKeyPressed(int keyCode);
 

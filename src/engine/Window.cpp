@@ -33,7 +33,12 @@ public:
     }
 
     static void onMouseMovement(GLFWwindow* window, double x, double y) {
+        Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+        winObject->dx = x - winObject->lastX;
+        winObject->dy = y - winObject->lastY;
 
+        winObject->lastX = x;
+        winObject->lastY = y;
     }
 };
 
@@ -122,6 +127,11 @@ void Window::display() {
 
 void Window::getWindowSize(int& width, int& height) {
     glfwGetFramebufferSize(window, &width, &height);
+}
+
+void Window::getMouseDelta(double& dx, double& dy) {
+    dx = this->dx;
+    dy = this->dy;
 }
 
 bool Window::isKeyPressed(int keyCode) {
