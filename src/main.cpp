@@ -26,20 +26,18 @@ Scene* setupScene() {
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
     mainCam->addComponent<FirstPersonController>();
+    mainCam->transform.setTranslation({ 0, 0, 0 });
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");
     RenderData* houseRenderData = MeshLoader::loadMesh("assets/casa.obj", "assets/casa.jpg");
     house->transform.setScale(1);
+    house->addComponent<Renderable>(houseRenderData);
 
     SceneObject* sky = new SceneObject("skybox");
     RenderData* skyRenderData = MeshLoader::loadMesh("assets/skycube.obj", "assets/bluesunset_skybox.png");
     sky->transform.setScale(1000);
-
-    house->addComponent<Renderable>(houseRenderData);
     sky->addComponent<Renderable>(skyRenderData);
-
-    mainCam->transform.setTranslation({ 0, 0, 0 });
 
     scene->addRootObject(house);
     scene->addRootObject(sky);
@@ -63,10 +61,6 @@ int main() {
         Component::deltaTime = Window::getDeltaTime();
         scene->update();
         scene->render();
-
-        if (Input::isKeyPressed(KeyCode::S)) {
-            scene->toggleDrawMode();
-        }
 
         window->display();
     }
