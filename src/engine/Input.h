@@ -6,5 +6,5 @@ public:
 	/// Returns whether or not the keyCode
 	/// (GLFW key enum) is pressed or not
 	/// </summary>
-	static bool isKeyPressed(int keyCode);
+	inline static bool isKeyPressed(int keyCode);
 };
