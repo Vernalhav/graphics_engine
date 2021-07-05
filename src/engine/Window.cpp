@@ -15,6 +15,7 @@ public:
         Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
         if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
             winObject->captureMouseCursor();
+            winObject->setActive();
         }
     }
 
@@ -22,6 +23,7 @@ public:
         Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
         if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE) {
             winObject->releaseMouseCursor();
+            Window::activeWindow = nullptr;
         }
     }
 
@@ -30,6 +32,18 @@ public:
         int w, h;
         winObject->getWindowSize(w, h);
         glViewport(0, 0, w, h);
+    }
+
+    static void onWindowChangeFocus(GLFWwindow* window, int focused) {
+        Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+        if (focused == GLFW_TRUE) {
+            winObject->captureMouseCursor();
+            winObject->setActive();
+        }
+        else {
+            winObject->releaseMouseCursor();
+            Window::activeWindow = nullptr;
+        }
     }
 };
 
@@ -85,6 +99,7 @@ Window::Window(int width, int height, const std::string& name)
     glfwSetKeyCallback(window, WindowCallbacks::onKeyPressed);
     glfwSetMouseButtonCallback(window, WindowCallbacks::onMouseButtonPressed);
     glfwSetWindowSizeCallback(window, WindowCallbacks::onResize);
+    glfwSetWindowFocusCallback(window, WindowCallbacks::onWindowChangeFocus);
 
     glfwMakeContextCurrent(window);
     glfwSetTime(0);
@@ -133,8 +148,11 @@ bool Window::isKeyPressed(int KeyCode) {
 void Window::pollEvents() {
     glfwPollEvents();
 
+    if (activeWindow == nullptr) return;
+
     double x, y;
     glfwGetCursorPos(this->window, &x, &y);
+
     dx = x - lastX;
     dy = lastY - y;
 
@@ -157,6 +175,7 @@ double Window::getDeltaTime() {
 }
 
 void Window::getActiveWindowSize(int& width, int& height) {
+    if (activeWindow == nullptr) return;
     activeWindow->getWindowSize(width, height);
 }
 

@@ -3,8 +3,9 @@
 
 #include <glm/gtc/constants.hpp>
 
+
 FirstPersonController::FirstPersonController(SceneObject* obj)
-	: Component(obj), parentTransform(nullptr), mouseSensitivity(.7f),
+	: Component(obj), parentTransform(nullptr), mouseSensitivity(.001f),
 	moveSpeed(20), maxVerticalAngle(glm::radians(60.0f)) { }
 
 FirstPersonController::~FirstPersonController() { }
@@ -25,10 +26,11 @@ void FirstPersonController::update() {
 	double dx, dy;
 	Input::getMouseDelta(dx, dy);
 
-	glm::vec3 rotationDiff = { dy, -dx, 0 };
+	glm::vec3 rotationDelta = { dy, -dx, 0 };
 	glm::vec3 rotation = parentTransform->getRotation();
 
-	rotation += (float)Component::deltaTime * mouseSensitivity * rotationDiff;
+	// No need to multiply by deltaTime because dx, dy are already in pixels/frame
+	rotation += mouseSensitivity * rotationDelta;
 	rotation[0] = limitVerticalAngle(rotation[0], maxVerticalAngle);
 
 	parentTransform->setRotation(rotation);

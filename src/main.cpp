@@ -27,21 +27,19 @@ Scene* setupScene() {
     mainCam->addComponent<FirstPersonController>();
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
-    SceneObject* box = new SceneObject("box");
-    RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
-    box->addComponent<Renderable>(renderData);
-    //box->transform.setTranslation({ 0, 0, -10 });
-    box->transform.setScale(20);
+    SceneObject* house = new SceneObject("house");
+    RenderData* renderData = MeshLoader::loadMesh("assets/casa.obj", "assets/casa.jpg");
+    house->addComponent<Renderable>(renderData);
+    house->transform.setScale(1);
 
     mainCam->transform.setTranslation({ 0, 0, 0 });
 
-    scene->addRootObject(box);
+    scene->addRootObject(house);
     scene->addRootObject(mainCam);
     return scene;
 }
 
 int main() {
-
     Window* window = new Window();
     window->show();
 

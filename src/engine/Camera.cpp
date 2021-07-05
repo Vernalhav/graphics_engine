@@ -23,6 +23,11 @@ glm::mat4 Camera::getViewMatrix() {
 	return glm::lookAt(camPosition, camPosition + lookDirection, viewUp);
 }
 
+glm::mat4 Camera::getOrtoghraphicMatrix() {
+	// FIXME: adapt to screen resize
+	return glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, zNear, zFar);
+}
+
 glm::mat4 Camera::getProjectionMatrix() {
 	return glm::perspective(glm::radians(fov), screenWidth/(float)screenHeight, zNear, zFar);
 }

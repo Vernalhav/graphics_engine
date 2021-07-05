@@ -5,9 +5,10 @@ class FirstPersonController : public Component {
 private:
 	Transform* parentTransform;
 
-	float moveSpeed;
-	float mouseSensitivity;
-	float maxVerticalAngle;
+	float moveSpeed;			// Units per second
+	float mouseSensitivity;		// Radians per frame
+	float maxVerticalAngle;		// In radians
+
 public:	
 	FirstPersonController(SceneObject* obj);
 	~FirstPersonController();

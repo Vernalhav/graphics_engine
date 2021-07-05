@@ -11,9 +11,15 @@ const std::map<KeyCode, int> keyCodes{
 };
 
 bool Input::isKeyPressed(KeyCode keyCode) {
+	if (Window::activeWindow == nullptr) return false;
 	return Window::activeWindow->isKeyPressed(keyCodes.at(keyCode));
 }
 
 void Input::getMouseDelta(double& dx, double& dy) {
+	if (Window::activeWindow == nullptr) {
+		dx = 0;
+		dy = 0;
+		return;
+	}
 	Window::activeWindow->getMouseDelta(dx, dy);
 }
