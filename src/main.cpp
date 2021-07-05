@@ -17,6 +17,7 @@
 
 #include "graphics/MeshLoader.h"
 #include "misc/utils.h"
+#include "engine/Input.h"
 
 
 Scene* setupScene() {
@@ -28,23 +29,30 @@ Scene* setupScene() {
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");
-    RenderData* renderData = MeshLoader::loadMesh("assets/casa.obj", "assets/casa.jpg");
-    house->addComponent<Renderable>(renderData);
+    RenderData* houseRenderData = MeshLoader::loadMesh("assets/casa.obj", "assets/casa.jpg");
     house->transform.setScale(1);
+
+    SceneObject* sky = new SceneObject("skybox");
+    RenderData* skyRenderData = MeshLoader::loadMesh("assets/skycube.obj", "assets/bluesunset_skybox.png");
+    sky->transform.setScale(1000);
+
+    house->addComponent<Renderable>(houseRenderData);
+    sky->addComponent<Renderable>(skyRenderData);
 
     mainCam->transform.setTranslation({ 0, 0, 0 });
 
     scene->addRootObject(house);
+    scene->addRootObject(sky);
     scene->addRootObject(mainCam);
     return scene;
 }
 
 int main() {
     Window* window = new Window();
-    window->show();
 
     Scene* scene = setupScene();
     glm::vec3 backgroundColor = Color::CYAN;
+    window->show();
 
     scene->start();
     while (!window->shouldClose()) {
@@ -55,6 +63,10 @@ int main() {
         Component::deltaTime = Window::getDeltaTime();
         scene->update();
         scene->render();
+
+        if (Input::isKeyPressed(KeyCode::S)) {
+            scene->toggleDrawMode();
+        }
 
         window->display();
     }

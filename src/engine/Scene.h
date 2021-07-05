@@ -22,6 +22,7 @@ public:
 	void render();
 	void start();
 	void update();
+	void toggleDrawMode();
 
 	static Scene* getActiveScene();
 };

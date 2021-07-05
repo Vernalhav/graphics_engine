@@ -94,6 +94,10 @@ void Scene::update() {
 	root->update();
 }
 
+void Scene::toggleDrawMode() {
+	renderer->toggleDrawMode();
+}
+
 Scene* Scene::getActiveScene() {
 	return activeScene;
 }
