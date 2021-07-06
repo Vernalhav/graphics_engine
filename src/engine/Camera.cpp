@@ -13,6 +13,22 @@ void Camera::update() {
 	Window::getActiveWindowSize(screenWidth, screenHeight);
 }
 
+float Camera::getFov() { return fov; }
+float Camera::getNear() { return zNear; }
+float Camera::getFar() { return zFar; }
+
+void Camera::setFov(float fov) {
+	this->fov = glm::clamp(fov, 10.0f, 170.0f);
+}
+
+void Camera::setNear(float near) {
+	this->zNear = glm::max(near, 0.0f);
+}
+
+void Camera::setFar(float far) {
+	this->zFar = glm::max(far, this->zNear + (float)1e-8);
+};
+
 glm::mat4 Camera::getViewMatrix() {
 	glm::mat4 globalTransform = sceneObject->getGlobalTransform();
 

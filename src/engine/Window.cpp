@@ -17,6 +17,10 @@ public:
             winObject->captureMouseCursor();
             winObject->setActive();
         }
+
+        MouseButton btn = Input::convertMouseButton(button);
+        ActionState state = Input::convertActionState(action);
+        winObject->onMouseButtonClick(btn, state);
     }
 
     static void onKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -25,6 +29,16 @@ public:
             winObject->releaseMouseCursor();
             Window::activeWindow = nullptr;
         }
+
+        KeyCode pressedKey = Input::convertKeyCode(key);
+        ActionState state = Input::convertActionState(action);
+        winObject->onKeyPress(pressedKey, state);
+    }
+
+
+    static void onScroll(GLFWwindow* window, double x, double y) {
+        Window* winObject = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+        winObject->onScroll((float)y);
     }
 
     static void onResize(GLFWwindow* window, int width, int height) {
@@ -98,6 +112,7 @@ Window::Window(int width, int height, const std::string& name)
 
     glfwSetKeyCallback(window, WindowCallbacks::onKeyPressed);
     glfwSetMouseButtonCallback(window, WindowCallbacks::onMouseButtonPressed);
+    glfwSetScrollCallback(window, WindowCallbacks::onScroll);
     glfwSetWindowSizeCallback(window, WindowCallbacks::onResize);
     glfwSetWindowFocusCallback(window, WindowCallbacks::onWindowChangeFocus);
 
@@ -116,6 +131,51 @@ void Window::setActive() {
     activeWindow = this;
 }
 
+void Window::addKeyListener(KeyPressListener* listener) {
+    keyPressListeners.push_back(listener);
+}
+
+void Window::addMouseButtonListener(MouseButtonListener* listener) {
+    mouseButtonListeners.push_back(listener);
+}
+
+void Window::addScrollListener(MouseScrollListener* listener) {
+    scrollListeners.push_back(listener);
+}
+
+void Window::removeKeyListener(KeyPressListener* listener) {
+    auto it = std::find(keyPressListeners.begin(), keyPressListeners.end(), listener);
+    keyPressListeners.erase(it);
+}
+
+void Window::removeMouseButtonListener(MouseButtonListener* listener) {
+    auto it = std::find(mouseButtonListeners.begin(), mouseButtonListeners.end(), listener);
+    mouseButtonListeners.erase(it);
+}
+
+void Window::removeScrollListener(MouseScrollListener* listener) {
+    auto it = std::find(scrollListeners.begin(), scrollListeners.end(), listener);
+    scrollListeners.erase(it);
+}
+
+void Window::onKeyPress(KeyCode key, ActionState state) {
+    for (int i = keyPressListeners.size() - 1; i >= 0; i--) {
+        keyPressListeners[i]->onKeyPressed(key, state);
+    }
+}
+
+void Window::onMouseButtonClick(MouseButton button, ActionState state) {
+    for (int i = mouseButtonListeners.size() - 1; i >= 0; i--) {
+        mouseButtonListeners[i]->onMouseButtonClicked(button, state);
+    }
+}
+
+void Window::onScroll(float amount) {
+    for (int i = scrollListeners.size() - 1; i >= 0; i--) {
+        scrollListeners[i]->onMouseScroll(amount);
+    }
+}
+
 bool Window::shouldClose() {
     return glfwWindowShouldClose(window);
 }
@@ -125,6 +185,9 @@ void Window::show() {
 }
 
 void Window::close() {
+    mouseButtonListeners.clear();
+    scrollListeners.clear();
+    keyPressListeners.clear();
     glfwDestroyWindow(window);
 }
 

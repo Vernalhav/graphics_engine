@@ -5,22 +5,55 @@
 #include <glm/glm.hpp>
 
 #include <string>
+#include <vector>
+
+#include "Input.h"
+#include "SceneObject.h"
+
+#include "KeyPressListener.h"
+#include "MouseButtonListener.h"
+#include "MouseScrollListener.h"
+
+enum class KeyCode;
+enum class ActionState;
+enum class MouseButton;
+
+class Window;
+
+using KeyCallbackFunction = void (KeyPressListener::*)(Window*, KeyCode, ActionState);
+using MouseCallbackFunction = void (MouseButtonListener::*)(Window*, MouseButton, ActionState);
+using ScrollCallbackFunction = void (MouseScrollListener::*)(Window*, MouseButton, ActionState);
 
 class Window {
 private:
 	friend class Input;
 	friend class WindowCallbacks;
+	static Window* activeWindow;
 	
 	GLFWwindow* window;
-	static Window* activeWindow;
 	double lastX;
 	double lastY;
 	double dx;
 	double dy;
 
+	std::vector<KeyPressListener*> keyPressListeners;
+	std::vector<MouseButtonListener*> mouseButtonListeners;
+	std::vector<MouseScrollListener*> scrollListeners;
+
 	void captureMouseCursor();
 	void releaseMouseCursor();
 	void setActive();
+
+	void addKeyListener(KeyPressListener* listener);
+	void addMouseButtonListener(MouseButtonListener* listener);
+	void addScrollListener(MouseScrollListener* listener);
+	void removeKeyListener(KeyPressListener* listener);
+	void removeMouseButtonListener(MouseButtonListener* listener);
+	void removeScrollListener(MouseScrollListener* listener);
+
+	void onKeyPress(KeyCode key, ActionState state);
+	void onMouseButtonClick(MouseButton button, ActionState state);
+	void onScroll(float amount);
 
 public:
 	Window(int width = 800, int height = 800, const std::string& name = "OpenGL Window");

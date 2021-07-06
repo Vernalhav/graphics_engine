@@ -54,9 +54,9 @@ void Renderer::drawObject(RenderData* object, const glm::mat4& mvp) {
 }
 
 void Renderer::toggleDrawMode() {
+	polygonMode = (polygonMode == PolygonMode::Fill) ? PolygonMode::Wireframe : PolygonMode::Fill;
 	GLenum mode = (polygonMode == PolygonMode::Fill) ? GL_FILL : GL_LINE;
 	glPolygonMode(GL_FRONT_AND_BACK, mode);
-	polygonMode = (polygonMode == PolygonMode::Fill) ? PolygonMode::Wireframe : PolygonMode::Fill;
 }
 
 Renderer::Renderer(Shader s) : shader(s), polygonMode(PolygonMode::Fill), VAO(0) {

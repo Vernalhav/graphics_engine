@@ -18,6 +18,7 @@
 #include "graphics/MeshLoader.h"
 #include "misc/utils.h"
 #include "engine/Input.h"
+#include "application/Controls.h"
 
 
 Scene* setupScene() {
@@ -26,6 +27,7 @@ Scene* setupScene() {
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
     mainCam->addComponent<FirstPersonController>();
+    mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
     mainCam->transform.setTranslation({ 0, 0, 0 });
     scene->setMainCamera(mainCam->getComponent<Camera>());
 

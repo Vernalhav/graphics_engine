@@ -23,6 +23,10 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\application\Controls.h" />
+    <ClInclude Include="src\engine\MouseScrollListener.h" />
+    <ClInclude Include="src\engine\KeyPressListener.h" />
+    <ClInclude Include="src\engine\MouseButtonListener.h" />
     <ClInclude Include="src\engine\FirstPersonController.h" />
     <ClInclude Include="src\engine\Renderable.h" />
     <ClInclude Include="src\engine\Scene.h" />
@@ -47,6 +51,10 @@
     <ClInclude Include="src\engine\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\application\Controls.cpp" />
+    <ClCompile Include="src\engine\MouseScrollListener.cpp" />
+    <ClCompile Include="src\engine\KeyPressListener.cpp" />
+    <ClCompile Include="src\engine\MouseButtonListener.cpp" />
     <ClCompile Include="src\engine\FirstPersonController.cpp" />
     <ClCompile Include="src\engine\Renderable.cpp" />
     <ClCompile Include="src\engine\Scene.cpp" />
