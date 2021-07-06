@@ -22,16 +22,18 @@ namespace {
 		int positionIdx;
 		int textureCoordsIdx;
 		int normalIdx;
+		std::string textureName;
 
 		VertexIndexInfo() : positionIdx(-1), textureCoordsIdx(-1), normalIdx(-1) { }
 
-		VertexIndexInfo(int posIdx, int uvCoordsIdx, int normalIdx)
-			: positionIdx(posIdx), textureCoordsIdx(uvCoordsIdx), normalIdx(normalIdx) { };
+		VertexIndexInfo(int posIdx, int uvCoordsIdx, int normalIdx, const std::string& textureName)
+			: positionIdx(posIdx), textureCoordsIdx(uvCoordsIdx), normalIdx(normalIdx), textureName(textureName){ };
 
 		bool operator==(const VertexIndexInfo& other) const {
 			return positionIdx == other.positionIdx &&
 				textureCoordsIdx == other.textureCoordsIdx &&
-				normalIdx == other.normalIdx;
+				normalIdx == other.normalIdx &&
+				textureName == other.textureName;
 		}
 	};
 
@@ -98,10 +100,50 @@ namespace {
 
 		return glm::vec3(x, y, z);
 	}
+
+	std::map<std::string, Material> loadMTL(const std::string& filePath) {
+	
+		std::ifstream mtlFile;
+		mtlFile.open(filePath);
+
+		std::map<std::string, Material> textures;
+
+		if (mtlFile.is_open()) {
+		
+			int lineNum = 1;
+			std::string textureName;
+			glm::vec3 textureColor;
+			std::string texturePath;
+
+			for (std::string line; std::getline(mtlFile, line); lineNum++) {
+				std::vector<std::string> lineTokens = utils::split(line);
+
+				if (lineTokens.size() == 0 || lineTokens[0][0] == '#') continue;
+
+				if (lineTokens[0] == "newmtl") textureName = lineTokens[1];
+				if (lineTokens[0] == "Kd") textureColor = { std::stod(lineTokens[1]), 
+															std::stod(lineTokens[1]), 
+															std::stod(lineTokens[1]) };
+				if (lineTokens[0] == "map_Kd") {
+					texturePath = lineTokens[1];
+					textures[textureName] = Material(textureName, textureColor, texturePath);
+				}
+				
+			}
+
+			mtlFile.close();
+			return textures;
+		}
+		else {
+			std::cout << "ERROR: loadMesh: could not open mtl file " << filePath << std::endl;
+			return std::map<std::string, Material>();
+		}
+
+	}
+
 }
 
-
-RenderData* MeshLoader::loadMesh(const std::string& filePath, const std::string& texturePath) {
+RenderData* MeshLoader::loadMesh(const std::string& filePath) {
 
 	std::ifstream objFile;
 	objFile.open(filePath);
@@ -134,7 +176,8 @@ RenderData* MeshLoader::loadMesh(const std::string& filePath, const std::string&
 
 		// Quick and dirty hash function for VertexIndexInfo to use with unordered_map
 		auto hash = [](const VertexIndexInfo& a) {
-			return (a.normalIdx << 16) ^ (a.textureCoordsIdx << 8) ^ (a.positionIdx);
+			return (a.normalIdx << 16) ^ (a.textureCoordsIdx << 8) ^ (a.positionIdx)
+				+ std::hash<std::string>{}(a.textureName);
 		};
 
 		// Mapping between unique vertex attribute indices and the vertex index in the vertex array
