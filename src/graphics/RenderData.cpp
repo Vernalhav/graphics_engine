@@ -121,15 +121,31 @@ namespace {
 
 				if (lineTokens.size() == 0 || lineTokens[0][0] == '#') continue;
 
-				if (lineTokens[0] == "newmtl") textureName = lineTokens[1];
+				if (lineTokens[0] == "newmtl") {
+					if (!textureName.empty()) {
+						std::cout << "Loading texture " << textureName << " (" << texturePath.generic_string() << ")... ";
+						textures[textureName] = Material(textureName, textureColor, texturePath);
+						std::cout << "done!" << std::endl;
+						texturePath = "";
+					}
+					
+					textureName = lineTokens[1];
+				}
 				if (lineTokens[0] == "Kd") textureColor = { std::stod(lineTokens[1]),
 															std::stod(lineTokens[2]),
 															std::stod(lineTokens[3]) };
 				
 				if (lineTokens[0] == "map_Kd" || lineTokens[0] == "map_d") {
-					texturePath = lineTokens[1];
-					textures[textureName] = Material(textureName, textureColor, texturePath);
+					fs::path basePath = filePath;
+					texturePath = basePath.replace_filename(lineTokens[1]);
 				}
+			}
+
+			if (!textureName.empty()) {
+				std::cout << "Loading texture " << textureName << " (" << texturePath.generic_string() << ")... ";
+				textures[textureName] = Material(textureName, textureColor, texturePath);
+				std::cout << "done!" << std::endl;
+				texturePath = "";
 			}
 
 			mtlFile.close();
@@ -139,9 +155,7 @@ namespace {
 			std::cout << "ERROR: loadMesh: could not open mtl file " << filePath << std::endl;
 			return std::map<std::string, Material>();
 		}
-
 	}
-
 }
 
 RenderData::RenderData(const fs::path& filePath)
@@ -166,9 +180,12 @@ RenderData::RenderData(const fs::path& filePath)
 			if (lineTokens.size() == 0 || lineTokens[0][0] == '#') continue;
 
 			if (lineTokens[0] == "mtllib") {
-				std::cout << "Loading material lib " << lineTokens[1] << "... ";
-				materials = loadMTL(lineTokens[1]);
-				std::cout << "done!" << std::endl;
+				fs::path pathToObj = filePath;
+				fs::path mtlLibPath = pathToObj.replace_filename(lineTokens[1]);
+
+				std::cout << "Loading material lib " << mtlLibPath.generic_string() << "... " << std::endl;
+				materials = loadMTL(mtlLibPath);
+				std::cout << "done loading " << mtlLibPath.generic_string() << std::endl;
 			}
 
 			if (lineTokens[0] == "v") positions.push_back(parseVertexPosition(lineTokens));
@@ -197,7 +214,6 @@ RenderData::RenderData(const fs::path& filePath)
 			const std::string& materialName = _materialFaces.first;
 			const std::vector<Face>& materialFaces = _materialFaces.second;
 
-			// FIXME: pretty dangerous (probably should be using smart pointers)
 			this->subMeshes[materialName].material = materials[materialName];
 
 			for (const Face& face : materialFaces) {
@@ -233,4 +249,8 @@ RenderData::RenderData(const fs::path& filePath)
 RenderData::~RenderData() {
 	glDeleteBuffers(1, (const GLuint*)&vboId);
 	glDeleteVertexArrays(1, (const GLuint*)&vaoId);
+
+	for (auto& elem : subMeshes) {
+		elem.second.material.freeTexture();
+	}
 }

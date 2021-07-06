@@ -19,5 +19,6 @@ struct Material {
 	Material() : name(""), color(glm::vec3(0)), texture(nullptr) { };
 	
 	Material(const std::string& name, const glm::vec3& color, const fs::path& texturePath);
-	~Material() { delete texture; };
+
+	void freeTexture() { delete texture; }
 };

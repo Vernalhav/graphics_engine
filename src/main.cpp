@@ -14,10 +14,14 @@
 #include "engine/Renderable.h"
 #include "engine/Window.h"
 #include "engine/FirstPersonController.h"
+#include "engine/Camera.h"
 
 #include "misc/utils.h"
 #include "engine/Input.h"
 
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 Scene* setupScene() {
     Scene* scene = new Scene();
@@ -29,12 +33,12 @@ Scene* setupScene() {
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");
-    RenderData* houseRenderData = new RenderData("assets/casa.obj");
+    RenderData* houseRenderData = new RenderData("assets/models/house/casa.obj");
     house->transform.setScale(1);
     house->addComponent<Renderable>(houseRenderData);
 
     SceneObject* sky = new SceneObject("skybox");
-    RenderData* skyRenderData = new RenderData("assets/skycube.obj");
+    RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");
     sky->transform.setScale(1000);
     sky->addComponent<Renderable>(skyRenderData);
 

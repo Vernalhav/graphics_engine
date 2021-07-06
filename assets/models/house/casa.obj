@@ -1,6 +1,6 @@
 # Blender v2.82 (sub 7) OBJ File: 'cottage_blender.blend'
 # www.blender.org
-mtllib cottage_blender.mtl
+mtllib casa.mtl
 o Cube_Cube.002
 v -18.223083 9.349226 -6.876914
 v 12.564275 14.635716 -1.045099
