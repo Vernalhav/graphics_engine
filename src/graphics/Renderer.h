@@ -4,9 +4,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "../engine/SceneObject.h"
 #include "Shader.h"
-#include "MeshLoader.h"
+#include "RenderData.h"
 
 enum class PolygonMode;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
-#include "../graphics/MeshLoader.h"
+#include "../graphics/RenderData.h"
 
 using MeshResourceId = std::string;
 

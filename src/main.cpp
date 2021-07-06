@@ -15,7 +15,6 @@
 #include "engine/Window.h"
 #include "engine/FirstPersonController.h"
 
-#include "graphics/MeshLoader.h"
 #include "misc/utils.h"
 #include "engine/Input.h"
 
@@ -30,12 +29,12 @@ Scene* setupScene() {
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");
-    RenderData* houseRenderData = MeshLoader::loadMesh("assets/casa.obj");
+    RenderData* houseRenderData = new RenderData("assets/casa.obj");
     house->transform.setScale(1);
     house->addComponent<Renderable>(houseRenderData);
 
     SceneObject* sky = new SceneObject("skybox");
-    RenderData* skyRenderData = MeshLoader::loadMesh("assets/skycube.obj");
+    RenderData* skyRenderData = new RenderData("assets/skycube.obj");
     sky->transform.setScale(1000);
     sky->addComponent<Renderable>(skyRenderData);
 

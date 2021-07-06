@@ -1,5 +1,4 @@
 #include "MeshResourceManager.h"
-#include "../graphics/MeshLoader.h"
 
 #include <iostream>
 
@@ -28,9 +27,9 @@ namespace {
     static std::unordered_map<MeshResourceId, ResourceData> resources;
 }
 
-static void MeshResourceManager::addResource(const MeshResourceId& id) {
+void MeshResourceManager::addResource(const MeshResourceId& id) {
     if (!resources.count(id)) {
-        resources[id] = MeshLoader::loadMesh(id);
+        resources[id] = new RenderData(id);
     }
     resources[id].referenceCount++;
 }

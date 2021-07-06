@@ -27,12 +27,12 @@
     <ClInclude Include="src\engine\Renderable.h" />
     <ClInclude Include="src\engine\Scene.h" />
     <ClInclude Include="src\engine\Camera.h" />
+    <ClInclude Include="src\graphics\Material.h" />
     <ClInclude Include="src\graphics\RenderData.h" />
     <ClInclude Include="src\engine\MeshResourceManager.h" />
     <ClInclude Include="src\engine\PhysicsBody.h" />
     <ClInclude Include="src\application\Color.h" />
     <ClInclude Include="src\engine\Input.h" />
-    <ClInclude Include="src\graphics\MeshLoader.h" />
     <ClInclude Include="src\math\matrix.h" />
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\glDebugMessage.h" />
@@ -51,9 +51,9 @@
     <ClCompile Include="src\engine\Renderable.cpp" />
     <ClCompile Include="src\engine\Scene.cpp" />
     <ClCompile Include="src\engine\Camera.cpp" />
+    <ClCompile Include="src\graphics\Material.cpp" />
     <ClCompile Include="src\graphics\RenderData.cpp" />
     <ClCompile Include="src\engine\MeshResourceManager.cpp" />
-    <ClCompile Include="src\graphics\MeshLoader.cpp" />
     <ClCompile Include="src\engine\PhysicsBody.cpp" />
     <ClCompile Include="src\engine\Input.cpp" />
     <ClCompile Include="src\engine\Transform.cpp" />
@@ -141,7 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,6 +156,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
