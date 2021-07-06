@@ -227,7 +227,7 @@ RenderData::RenderData(const fs::path& filePath)
 						Vertex newVertex;
 						if (vertex.positionIdx >= 0) newVertex.position = positions[vertex.positionIdx];
 						if (vertex.textureCoordsIdx >= 0) newVertex.textureCoords = textureCoords[vertex.textureCoordsIdx];
-						if (vertex.normalIdx >= 0) newVertex.normal = positions[vertex.normalIdx];
+						if (vertex.normalIdx >= 0) newVertex.normal = normals[vertex.normalIdx];
 
 						this->subMeshes[materialName].indices.push_back(newVertexIndex);
 						vertexIndexInBuffer[vertex] = newVertexIndex;
