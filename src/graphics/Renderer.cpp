@@ -2,11 +2,16 @@
 
 #include "Renderer.h"
 
+enum class PolygonMode {
+	Fill, Wireframe
+};
+
 
 void Renderer::uploadMesh(RenderData* mesh) {
 	if (mesh->vaoId > 0) return;
 
-	mesh->vaoId = VAO;
+	// FIXME: use single VAO?
+	glGenVertexArrays(1, (GLuint*)&(mesh->vaoId));
 	glGenBuffers(1, (GLuint*)&(mesh->vboId));
 	glGenBuffers(1, (GLuint*)&(mesh->eboId));
 
@@ -24,6 +29,8 @@ void Renderer::uploadMesh(RenderData* mesh) {
 		vboData[baseIdx + 4] = mesh->vertices[i].textureCoords[1];
 	}
 
+	glBindVertexArray(mesh->vaoId);
+
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vboId);
 	glBufferData(GL_ARRAY_BUFFER, vboData.size() * sizeof(float), vboData.data(), GL_STATIC_DRAW);
 
@@ -35,6 +42,7 @@ void Renderer::uploadMesh(RenderData* mesh) {
 }
 
 void Renderer::drawObject(RenderData* object, const glm::mat4& mvp) {
+	glBindVertexArray(object->vaoId);
 	glBindBuffer(GL_ARRAY_BUFFER, object->vboId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->eboId);
 
@@ -45,11 +53,15 @@ void Renderer::drawObject(RenderData* object, const glm::mat4& mvp) {
 	glDrawElements(GL_TRIANGLES, object->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
-Renderer::Renderer(Shader s) : shader(s) {
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);	
+void Renderer::toggleDrawMode() {
+	polygonMode = (polygonMode == PolygonMode::Fill) ? PolygonMode::Wireframe : PolygonMode::Fill;
+	GLenum mode = (polygonMode == PolygonMode::Fill) ? GL_FILL : GL_LINE;
+	glPolygonMode(GL_FRONT_AND_BACK, mode);
+}
+
+Renderer::Renderer(Shader s) : shader(s), polygonMode(PolygonMode::Fill), VAO(0) {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 Renderer::~Renderer() {
-	glDeleteVertexArrays(1, &VAO);
 }

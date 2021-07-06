@@ -16,8 +16,17 @@ public:
 	~Camera();
 
 	void update();
+	
+	float getFov();
+	float getNear();
+	float getFar();
+
+	void setFov(float fov);
+	void setNear(float near);
+	void setFar(float far);
 
 	glm::mat4 getViewMatrix();
+	glm::mat4 getOrtoghraphicMatrix();
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getViewProjectionMatrix();	// Returns projection * view
 };

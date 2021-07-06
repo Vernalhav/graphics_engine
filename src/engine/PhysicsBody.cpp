@@ -7,6 +7,6 @@ PhysicsBody::PhysicsBody(SceneObject* obj, const glm::vec3& linearVelocity, cons
 	: Component(obj), linearVelocity(linearVelocity), angularVelocity(angularVelocity) { }
 
 void PhysicsBody::update() {
-	sceneObject->transform.rotation += angularVelocity * (float)Component::deltaTime;
-	sceneObject->transform.translation += linearVelocity * (float)Component::deltaTime;
+	sceneObject->transform.rotate(angularVelocity * (float)Component::deltaTime);
+	sceneObject->transform.translate(linearVelocity * (float)Component::deltaTime);
 }

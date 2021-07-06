@@ -1,4 +1,5 @@
 ﻿#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 #include <iostream>
 #include <string>
@@ -12,9 +13,12 @@
 #include "engine/Scene.h"
 #include "engine/Renderable.h"
 #include "engine/Window.h"
+#include "engine/FirstPersonController.h"
 
 #include "graphics/MeshLoader.h"
 #include "misc/utils.h"
+#include "engine/Input.h"
+#include "application/Controls.h"
 
 
 Scene* setupScene() {
@@ -22,19 +26,24 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
+    mainCam->addComponent<FirstPersonController>();
+    mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
+    mainCam->transform.setTranslation({ 0, 0, 0 });
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
-    SceneObject* box = new SceneObject("box");
-    RenderData* renderData = MeshLoader::loadMesh("assets/box.obj", "assets/caixa.jpg");
-    box->addComponent<Renderable>(renderData);
-    box->addComponent<PhysicsBody>(glm::vec3({ 0, 0, 0 }), glm::vec3({ 0, 1, 0 }));
+    SceneObject* house = new SceneObject("house");
+    RenderData* houseRenderData = MeshLoader::loadMesh("assets/casa.obj", "assets/casa.jpg");
+    house->transform.setScale(1);
+    house->addComponent<Renderable>(houseRenderData);
 
-    scene->makeActiveScene();
-    scene->addRootObject(box);
+    SceneObject* sky = new SceneObject("skybox");
+    RenderData* skyRenderData = MeshLoader::loadMesh("assets/skycube.obj", "assets/bluesunset_skybox.png");
+    sky->transform.setScale(1000);
+    sky->addComponent<Renderable>(skyRenderData);
+
+    scene->addRootObject(house);
+    scene->addRootObject(sky);
     scene->addRootObject(mainCam);
-
-    mainCam->transform.translation = {0, 0, 10};
-
     return scene;
 }
 
@@ -42,14 +51,12 @@ int main() {
     Window* window = new Window();
 
     Scene* scene = setupScene();
-
     glm::vec3 backgroundColor = Color::CYAN;
-
     window->show();
 
     scene->start();
     while (!window->shouldClose()) {
-        Window::pollEvents();
+        window->pollEvents();
         Window::clearBuffers();
         Window::setColor(backgroundColor);
 
