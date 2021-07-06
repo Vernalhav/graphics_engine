@@ -30,12 +30,12 @@ Scene* setupScene() {
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");
-    RenderData* houseRenderData = MeshLoader::loadMesh("assets/casa.obj", "assets/casa.jpg");
+    RenderData* houseRenderData = MeshLoader::loadMesh("assets/casa.obj");
     house->transform.setScale(1);
     house->addComponent<Renderable>(houseRenderData);
 
     SceneObject* sky = new SceneObject("skybox");
-    RenderData* skyRenderData = MeshLoader::loadMesh("assets/skycube.obj", "assets/bluesunset_skybox.png");
+    RenderData* skyRenderData = MeshLoader::loadMesh("assets/skycube.obj");
     sky->transform.setScale(1000);
     sky->addComponent<Renderable>(skyRenderData);
 

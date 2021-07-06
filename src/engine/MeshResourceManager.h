@@ -11,7 +11,7 @@ namespace MeshResourceManager {
 	/// Loads a new resource if it isn't loaded already,
 	/// or returns if it is.
 	/// </summary>
-	static void addResource(const MeshResourceId& id, const std::string& texturePath);
+	static void addResource(const MeshResourceId& id);
 
 	/// <summary>
 	/// Returns a pointer to a resource's data, or returns

@@ -28,9 +28,9 @@ namespace {
     static std::unordered_map<MeshResourceId, ResourceData> resources;
 }
 
-static void MeshResourceManager::addResource(const MeshResourceId& id, const std::string& texturePath) {
+static void MeshResourceManager::addResource(const MeshResourceId& id) {
     if (!resources.count(id)) {
-        resources[id] = MeshLoader::loadMesh(id, texturePath);
+        resources[id] = MeshLoader::loadMesh(id);
     }
     resources[id].referenceCount++;
 }
