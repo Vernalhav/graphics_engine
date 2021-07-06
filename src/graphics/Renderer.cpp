@@ -1,6 +1,6 @@
-#include <iostream>
-
 #include "Renderer.h"
+
+#include <iostream>
 
 enum class PolygonMode {
 	Fill, Wireframe
@@ -13,7 +13,6 @@ void Renderer::uploadMesh(RenderData* mesh) {
 	// FIXME: use single VAO?
 	glGenVertexArrays(1, (GLuint*)&(mesh->vaoId));
 	glGenBuffers(1, (GLuint*)&(mesh->vboId));
-	glGenBuffers(1, (GLuint*)&(mesh->eboId));
 
 	// Stores all vertex attributes in a contiguous array
 	std::vector<float> vboData(5 * mesh->vertices.size());
@@ -37,20 +36,26 @@ void Renderer::uploadMesh(RenderData* mesh) {
 	shader.enableAttributes();
 	shader.setAttributeLayout();
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->eboId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(int), mesh->indices.data(), GL_STATIC_DRAW);
+	for (auto& elem : mesh->subMeshes) {
+		SubMesh& currentMesh = elem.second;
+
+		glGenBuffers(1, (GLuint*)&currentMesh.eboId);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentMesh.eboId);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, currentMesh.indices.size() * sizeof(int), currentMesh.indices.data(), GL_STATIC_DRAW);
+	}
 }
 
 void Renderer::drawObject(RenderData* object, const glm::mat4& mvp) {
 	glBindVertexArray(object->vaoId);
 	glBindBuffer(GL_ARRAY_BUFFER, object->vboId);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object->eboId);
-
-	object->texture.bind(Shader::MAIN_TEXTURE_SLOT);
-
 	shader.setMVPMatrix(mvp);
 
-	glDrawElements(GL_TRIANGLES, object->indices.size(), GL_UNSIGNED_INT, nullptr);
+	for (auto& elem : object->subMeshes) {
+		SubMesh& currentMesh = elem.second;
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentMesh.eboId);
+		currentMesh.material.texture->bind(Shader::MAIN_TEXTURE_SLOT);
+		glDrawElements(GL_TRIANGLES, currentMesh.indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
 }
 
 void Renderer::toggleDrawMode() {

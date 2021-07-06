@@ -14,12 +14,15 @@
 #include "engine/Renderable.h"
 #include "engine/Window.h"
 #include "engine/FirstPersonController.h"
+#include "engine/Camera.h"
 
-#include "graphics/MeshLoader.h"
 #include "misc/utils.h"
 #include "engine/Input.h"
 #include "application/Controls.h"
 
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 Scene* setupScene() {
     Scene* scene = new Scene();
@@ -32,16 +35,22 @@ Scene* setupScene() {
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");
-    RenderData* houseRenderData = MeshLoader::loadMesh("assets/casa.obj", "assets/casa.jpg");
+    RenderData* houseRenderData = new RenderData("assets/models/house/casa.obj");
     house->transform.setScale(1);
     house->addComponent<Renderable>(houseRenderData);
 
+    SceneObject* plant = new SceneObject("plant");
+    RenderData* plantRenderData = new RenderData("assets/models/plant/potted_plant_obj.obj");
+    plant->transform.setScale(1);
+    plant->addComponent<Renderable>(plantRenderData);
+
     SceneObject* sky = new SceneObject("skybox");
-    RenderData* skyRenderData = MeshLoader::loadMesh("assets/skycube.obj", "assets/bluesunset_skybox.png");
+    RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");
     sky->transform.setScale(1000);
     sky->addComponent<Renderable>(skyRenderData);
 
     scene->addRootObject(house);
+    scene->addRootObject(plant);
     scene->addRootObject(sky);
     scene->addRootObject(mainCam);
     return scene;

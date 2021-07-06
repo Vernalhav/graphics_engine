@@ -8,13 +8,24 @@ Texture::Texture()
 	: image(nullptr), wrapMode(GL_REPEAT), rescaleFilter(GL_LINEAR),
 	  width(0), height(0), channelMode(STBI_rgb_alpha), textureId(0) { }
 
-Texture::Texture(const std::string& texPath, GLenum wrapMode, GLenum rescaleFilter, int channelMode)
+Texture::Texture(const Texture& other)
+	: rescaleFilter(other.rescaleFilter), wrapMode(other.wrapMode),
+	textureId(other.textureId), channelMode(other.channelMode), width(other.width), height(other.height) {
+
+	this->image = (unsigned char *)memcpy(this->image, other.image, width * height * channelMode);
+}
+
+Texture::Texture(Texture&& other) noexcept
+	: image(other.image), rescaleFilter(other.rescaleFilter), wrapMode(other.wrapMode),
+	textureId(other.textureId), channelMode(other.channelMode), width(other.width), height(other.height) { }
+
+Texture::Texture(const fs::path& texPath, GLenum wrapMode, GLenum rescaleFilter, int channelMode)
 	: wrapMode(wrapMode), rescaleFilter(rescaleFilter), channelMode(channelMode), textureId(0) {
 	
 	stbi_set_flip_vertically_on_load(1);
 
 	int channels;
-	image = (unsigned char *)stbi_load(texPath.c_str(), &width, &height, &channels, channelMode);
+	image = (unsigned char *)stbi_load(texPath.string().c_str(), &width, &height, &channels, channelMode);
 	if (image == nullptr) {
 		std::cout << "Texture: WARNING: Could not load image " << texPath << std::endl;
 		return;
@@ -37,6 +48,19 @@ Texture::Texture(const std::string& texPath, GLenum wrapMode, GLenum rescaleFilt
 	
 	const int LOD = 0;
 	glTexImage2D(GL_TEXTURE_2D, LOD, imageChannelMode, width, height, 0, imageChannelMode, GL_UNSIGNED_BYTE, image);
+}
+
+Texture& Texture::operator=(Texture&& other) noexcept {
+	image = other.image;
+	rescaleFilter = other.rescaleFilter;
+	wrapMode = other.wrapMode;
+
+	textureId = other.textureId;
+	channelMode = other.channelMode;
+	width = other.width;
+	height = other.height;
+
+	return *this;
 }
 
 Texture::~Texture() {

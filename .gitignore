@@ -2,3 +2,5 @@ Debug/
 Build/
 Release/
 .vs/
+packages.config
+packages/
