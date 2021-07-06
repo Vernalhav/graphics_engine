@@ -40,7 +40,7 @@ Scene* setupScene() {
     house->addComponent<Renderable>(houseRenderData);
 
     SceneObject* plant = new SceneObject("plant");
-    RenderData* plantRenderData = new RenderData("assets/models/plant/potted_plant_obj.obj");
+    RenderData* plantRenderData = new RenderData("assets/models/plant/plant.obj");
     plant->transform.setScale(1);
     plant->addComponent<Renderable>(plantRenderData);
 
