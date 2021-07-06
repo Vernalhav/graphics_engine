@@ -18,6 +18,7 @@ public:
 	void update();
 
 	glm::mat4 getViewMatrix();
+	glm::mat4 getOrtoghraphicMatrix();
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getViewProjectionMatrix();	// Returns projection * view
 };

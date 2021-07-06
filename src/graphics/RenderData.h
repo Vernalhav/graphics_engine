@@ -15,10 +15,10 @@ struct RenderData {
 
 	RenderData();
 	RenderData(const std::string& texturePath);
-
-	friend class Renderer;
+	~RenderData();
 
 private:
+	friend class Renderer;
 	int vaoId;	// Id of the Mesh's OpenGL vertex array object
 	int vboId;	// Id of the Mesh's OpenGL vertex buffer object
 	int eboId;	// Id of the Mesh's OpenGL index buffer object

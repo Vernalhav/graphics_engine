@@ -6,7 +6,7 @@
 
 Texture::Texture()
 	: image(nullptr), wrapMode(GL_REPEAT), rescaleFilter(GL_LINEAR),
-	  width(0), height(0), channelMode(STBI_rgb), textureId(0) { }
+	  width(0), height(0), channelMode(STBI_rgb_alpha), textureId(0) { }
 
 Texture::Texture(const std::string& texPath, GLenum wrapMode, GLenum rescaleFilter, int channelMode)
 	: wrapMode(wrapMode), rescaleFilter(rescaleFilter), channelMode(channelMode), textureId(0) {

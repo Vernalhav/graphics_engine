@@ -62,7 +62,7 @@ void Scene::render() {
 	glm::mat4 viewProjectionMatrix = mainCamera->getViewProjectionMatrix();
 	
 	std::stack<std::pair<const SceneObject*, glm::mat4>> objects;
-	objects.push({ root, glm::mat4(1) });
+	objects.push({ root, root->transform.getTransformMatrix() });
 
 	glm::mat4 matrixMVP;
 	while (!objects.empty()) {
@@ -92,6 +92,10 @@ void Scene::start() {
 
 void Scene::update() {
 	root->update();
+}
+
+void Scene::toggleDrawMode() {
+	renderer->toggleDrawMode();
 }
 
 Scene* Scene::getActiveScene() {
