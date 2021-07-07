@@ -13,7 +13,6 @@ private:
 
 public:
 	Camera(SceneObject* obj);
-	~Camera();
 
 	void update();
 	

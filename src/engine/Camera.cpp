@@ -7,8 +7,6 @@
 Camera::Camera(SceneObject* obj)
 	: Component(obj), screenWidth(0), screenHeight(0), zNear(0.5f), zFar(4000), fov(45) { }
 
-Camera::~Camera() { }
-
 void Camera::update() {
 	Window::getActiveWindowSize(screenWidth, screenHeight);
 }

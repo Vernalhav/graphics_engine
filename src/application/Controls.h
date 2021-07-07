@@ -11,7 +11,6 @@ private:
 
 public:
 	Controls(SceneObject* obj, Camera* cam = nullptr);
-	~Controls() = default;
 
 	// Inherited via KeyPressListener
 	virtual void onKeyPressed(KeyCode key, ActionState state) override;

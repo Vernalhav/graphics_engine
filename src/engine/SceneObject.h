@@ -33,7 +33,7 @@ public:
 	/// </summary>
 	virtual void start();
 
-	virtual ~Component() = default;
+	virtual ~Component();
 
 	template<typename Target>
 	bool instanceof();
@@ -62,10 +62,7 @@ public:
 
 	SceneObject(const std::string& name) : name(name), transform(), parent(nullptr) { }
 	SceneObject() : name("unnamed object"), transform(), parent(nullptr) { }
-	~SceneObject() {
-		for (auto& child : children) delete child.second;
-		components.clear();
-	}
+	~SceneObject();
 
 	// Adds child as a child of the current SceneObject.
 	void appendChild(SceneObject* child);

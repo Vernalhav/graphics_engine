@@ -11,7 +11,6 @@ private:
 
 public:	
 	FirstPersonController(SceneObject* obj);
-	~FirstPersonController();
 
 	void start();
 	void update();

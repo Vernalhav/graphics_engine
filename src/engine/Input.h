@@ -7,7 +7,7 @@ class MouseButtonListener;
 class MouseScrollListener;
 
 enum class KeyCode {
-	W, A, S, D, P, None
+	W, A, S, D, P, Shift, Up, Down, Left, Right, Space, Ctrl, None
 };
 
 enum class MouseButton {

@@ -21,6 +21,7 @@
 #include "application/Controls.h"
 
 #include <filesystem>
+#include "application/TransformFinder.h"
 
 namespace fs = std::filesystem;
 
@@ -35,22 +36,25 @@ Scene* setupScene() {
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");
-    RenderData* houseRenderData = new RenderData("assets/models/house/casa.obj");
+    RenderData* houseRenderData = new RenderData("assets/models/minecraft_house/House_0.obj");
     house->transform.setScale(1);
     house->addComponent<Renderable>(houseRenderData);
+    house->transform.setTranslation({ -1.04, -8.27, 58.8 });
+    house->transform.setRotation({ 0, glm::half_pi<float>(), 0 });
 
-    SceneObject* plant = new SceneObject("plant");
-    RenderData* plantRenderData = new RenderData("assets/models/plant/potted_plant_obj.obj");
-    plant->transform.setScale(1);
-    plant->addComponent<Renderable>(plantRenderData);
+    SceneObject* terrain = new SceneObject("terrain");
+    RenderData* terrainRenderData = new RenderData("assets/models/minecraft_terrain/Mineways2Skfb.obj");
+    terrain->transform.setScale(100);
+    terrain->transform.translate({0, -50, 0});
+    terrain->addComponent<Renderable>(terrainRenderData);
 
     SceneObject* sky = new SceneObject("skybox");
     RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");
     sky->transform.setScale(1000);
     sky->addComponent<Renderable>(skyRenderData);
 
+    scene->addRootObject(terrain);
     scene->addRootObject(house);
-    scene->addRootObject(plant);
     scene->addRootObject(sky);
     scene->addRootObject(mainCam);
     return scene;
@@ -78,6 +82,9 @@ int main() {
 
     window->close();
     Window::terminate();
+
+    delete scene;
+    delete window;
 
     std::cout << "Terminating..." << std::endl;
     return EXIT_SUCCESS;

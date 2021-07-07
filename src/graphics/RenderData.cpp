@@ -152,7 +152,7 @@ namespace {
 			return textures;
 		}
 		else {
-			std::cout << "ERROR: loadMesh: could not open mtl file " << filePath << std::endl;
+			std::cout << "ERROR: loadMTL: could not open mtl file " << filePath << std::endl;
 			return std::map<std::string, Material>();
 		}
 	}
@@ -165,6 +165,7 @@ RenderData::RenderData(const fs::path& filePath)
 	objFile.open(filePath);
 
 	if (objFile.is_open()) {
+		std::cout << std::endl << "Loading object file " << filePath << "..." << std::endl;
 
 		std::vector<glm::vec3> positions;
 		std::vector<glm::vec2> textureCoords;
@@ -185,7 +186,7 @@ RenderData::RenderData(const fs::path& filePath)
 
 				std::cout << "Loading material lib " << mtlLibPath.generic_string() << "... " << std::endl;
 				materials = loadMTL(mtlLibPath);
-				std::cout << "done loading " << mtlLibPath.generic_string() << std::endl;
+				std::cout << "Done loading " << mtlLibPath.generic_string() << std::endl;
 			}
 
 			if (lineTokens[0] == "v") positions.push_back(parseVertexPosition(lineTokens));
@@ -198,6 +199,8 @@ RenderData::RenderData(const fs::path& filePath)
 			}
 		}
 
+		objFile.close();
+
 		// As an optimization, we'll try to reuse as many vertices as possible by
 		// indexing; therefore we must know which vertices have already been used.
 
@@ -206,6 +209,8 @@ RenderData::RenderData(const fs::path& filePath)
 			return (a.normalIdx << 16) ^ (a.textureCoordsIdx << 8) ^ (a.positionIdx)
 				+ std::hash<std::string>{}(a.textureName);
 		};
+
+		std::cout << "Processing vertices from " << filePath << "..." << std::endl;
 
 		// Mapping between unique vertex attribute indices and the vertex index in the vertex array
 		std::unordered_map<VertexIndexInfo, int, decltype(hash)> vertexIndexInBuffer(2048, hash);
@@ -238,7 +243,7 @@ RenderData::RenderData(const fs::path& filePath)
 			}
 		}
 
-		objFile.close();
+		std::cout << "Done loading object file " << filePath << std::endl;
 	}
 	else {
 		std::cout << "RenderData: ERROR: could not open object file " << filePath << std::endl;

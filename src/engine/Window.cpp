@@ -185,9 +185,6 @@ void Window::show() {
 }
 
 void Window::close() {
-    mouseButtonListeners.clear();
-    scrollListeners.clear();
-    keyPressListeners.clear();
     glfwDestroyWindow(window);
 }
 
@@ -246,4 +243,8 @@ void Window::terminate() {
     glfwTerminate();
 }
 
-Window::~Window() { }
+Window::~Window() {
+    if (activeWindow == this) {
+        activeWindow = nullptr;
+    }
+}
