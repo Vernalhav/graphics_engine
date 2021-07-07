@@ -26,7 +26,10 @@ const std::string fragment_code =
 	"layout(location = 1) uniform sampler2D mainTexture;"
 
 	"void main() {"
-	"    fragColor = texture(mainTexture, fragTexCoord);"
+	"   vec4 texel = texture(mainTexture, fragTexCoord);"
+	"   if (texel.a < 0.1)"
+	"		discard;"
+	"	fragColor = texel;"
 	"}";
 
 
@@ -37,6 +40,7 @@ Scene::Scene() : mainCamera(nullptr) {
 }
 
 Scene::~Scene() {
+	mainCamera = nullptr;
 	delete root;
 	delete renderer;
 }
