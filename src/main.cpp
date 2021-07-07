@@ -35,7 +35,7 @@ Scene* setupScene() {
     scene->addRootObject(mainCam);
 
     SceneObject* house = new SceneObject("house");
-    RenderData* houseRenderData = new RenderData("assets/models/minecraft_house/House_0.obj");
+    RenderData* houseRenderData = new RenderData("assets/models/house/House_0.obj");
     house->addComponent<Renderable>(houseRenderData);
     house->transform.setTranslation({ -1.04, -8.27, 58.8 });
     house->transform.setRotation({ 0, glm::half_pi<float>(), 0 });
@@ -47,11 +47,19 @@ Scene* setupScene() {
     villager->transform.setTranslation({-4, -8.5, 0});
     villager->transform.setRotation({0, glm::radians(120.0f), 0});
     villager->addComponent<Renderable>(villagerRenderData);
-    villager->addComponent<TransformFinder>();
     house->appendChild(villager);
 
+    SceneObject* controller = new SceneObject("controller");
+    RenderData* controllerRenderData = new RenderData("assets/models/controller/controller.obj");
+    controller->addComponent<Renderable>(controllerRenderData);
+    controller->addComponent<TransformFinder>();
+    controller->transform.setScale(0.005f);
+    controller->transform.setTranslation({ -1.33f, -10.65f, 4.6f });
+    controller->transform.setRotation({ glm::pi<float>(), -glm::half_pi<float>(), 0 });
+    house->appendChild(controller);
+
     SceneObject* terrain = new SceneObject("terrain");
-    RenderData* terrainRenderData = new RenderData("assets/models/minecraft_terrain/Mineways2Skfb.obj");
+    RenderData* terrainRenderData = new RenderData("assets/models/terrain/Mineways2Skfb.obj");
     terrain->transform.setScale(100);
     terrain->transform.translate({0, -50, 0});
     terrain->addComponent<Renderable>(terrainRenderData);
