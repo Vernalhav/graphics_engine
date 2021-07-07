@@ -1,12 +1,13 @@
 #include "FirstPersonController.h"
 #include "Input.h"
+#include "../misc/utils.h"
 
 #include <glm/gtc/constants.hpp>
 
 
 FirstPersonController::FirstPersonController(SceneObject* obj)
 	: Component(obj), parentTransform(nullptr), mouseSensitivity(.001f),
-	moveSpeed(20), maxVerticalAngle(glm::radians(60.0f)) { }
+	moveSpeed(20), maxVerticalAngle(glm::radians(80.0f)) { }
 
 void FirstPersonController::start() {
 	parentTransform = &(sceneObject->transform);
@@ -34,13 +35,19 @@ void FirstPersonController::update() {
 	parentTransform->setRotation(rotation);
 	
 	glm::vec3 direction(0);
-	glm::vec3 forward = parentTransform->getLocalDirection(Transform::forward);
-	glm::vec3 right= parentTransform->getLocalDirection(Transform::right);
+	glm::vec3 forward = utils::projectToPlane(parentTransform->getLocalDirection(Transform::forward), Transform::up);
+	glm::vec3 right= utils::projectToPlane(parentTransform->getLocalDirection(Transform::right), Transform::up);
+	glm::vec3 up = Transform::up;
 
 	if (Input::isKeyPressed(KeyCode::W)) direction += forward;
 	if (Input::isKeyPressed(KeyCode::A)) direction -= right;
 	if (Input::isKeyPressed(KeyCode::S)) direction -= forward;
 	if (Input::isKeyPressed(KeyCode::D)) direction += right;
+	if (Input::isKeyPressed(KeyCode::Space)) direction += up;
+	if (Input::isKeyPressed(KeyCode::Shift)) direction -= up;
 
-	parentTransform->translate((float)Component::deltaTime * moveSpeed * direction);
+	float speedModifier = 1;
+	if (Input::isKeyPressed(KeyCode::Ctrl)) speedModifier *= 2;
+
+	parentTransform->translate((float)Component::deltaTime * speedModifier * moveSpeed * direction);
 }

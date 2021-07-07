@@ -71,4 +71,5 @@ The main program structure is as follows
 
 # Improvements:  
 - Split Component and SceneObject files  
-- Use smart pointers instead of standard ones
+- Use smart pointers instead of standard ones  
+- Add override tag to all engine Components' update methods

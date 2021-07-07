@@ -11,12 +11,15 @@
 class SceneObject;
 
 class Component {
+protected:
+	SceneObject* sceneObject;
+	// A component should only ever be created through the
+	// addComponent method
+	friend class SceneObject;
+	Component(SceneObject* obj) : sceneObject(obj) { }
+
 public:
 	static double deltaTime;	// Populated by the main loop to indicate time between frames
-
-	SceneObject* sceneObject;
-
-	Component(SceneObject* obj) : sceneObject(obj) { }
 
 	/// <summary>
 	/// This function will be called every frame.
@@ -70,7 +73,7 @@ public:
 
 	std::string getName() const { return name; }
 	
-	Transform getTransform() { return transform; }
+	Transform getTransform() const { return transform; }
 
 	/// <summary>
 	/// Returns 4x4 transformation matrix that

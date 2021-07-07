@@ -22,6 +22,7 @@
 
 #include <filesystem>
 #include "application/TransformFinder.h"
+#include "application/Confiner.h"
 
 namespace fs = std::filesystem;
 
@@ -32,7 +33,7 @@ Scene* setupScene() {
     mainCam->addComponent<Camera>();
     mainCam->addComponent<FirstPersonController>();
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
-    mainCam->transform.setTranslation({ 0, 0, 0 });
+    mainCam->addComponent<Confiner>(glm::vec2({-95, 95}), glm::vec2({-17, 40}), glm::vec2({-95, 95}));
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");

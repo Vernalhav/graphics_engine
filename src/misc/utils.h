@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <glm/glm.hpp>
 
 constexpr float PI = 3.14159265359f;
 constexpr float DEG2RAD = (PI / 180);
@@ -12,6 +13,8 @@ namespace utils {
 	int randRangeInt(int a, int b);
 
 	float interpolate(float t, float a, float b);
+
+	glm::vec3 projectToPlane(const glm::vec3& v, const glm::vec3& planeNormal);
 
 	/// <summary>
 	/// Splits string s into an array of stirngs
