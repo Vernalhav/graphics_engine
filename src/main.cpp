@@ -21,6 +21,7 @@
 #include "application/Controls.h"
 
 #include <filesystem>
+#include "application/TransformFinder.h"
 
 namespace fs = std::filesystem;
 
@@ -38,10 +39,13 @@ Scene* setupScene() {
     RenderData* houseRenderData = new RenderData("assets/models/minecraft_house/House_0.obj");
     house->transform.setScale(1);
     house->addComponent<Renderable>(houseRenderData);
+    house->transform.setTranslation({ -1.04, -8.27, 58.8 });
+    house->transform.setRotation({ 0, glm::half_pi<float>(), 0 });
 
     SceneObject* terrain = new SceneObject("terrain");
-    RenderData* terrainRenderData = new RenderData("/assets/models/minecraft_terrain/Mineways2Skfb.obj");
-    terrain->transform.setScale(1);
+    RenderData* terrainRenderData = new RenderData("assets/models/minecraft_terrain/Mineways2Skfb.obj");
+    terrain->transform.setScale(100);
+    terrain->transform.translate({0, -50, 0});
     terrain->addComponent<Renderable>(terrainRenderData);
 
     SceneObject* sky = new SceneObject("skybox");
@@ -49,8 +53,8 @@ Scene* setupScene() {
     sky->transform.setScale(1000);
     sky->addComponent<Renderable>(skyRenderData);
 
-    scene->addRootObject(house);
     scene->addRootObject(terrain);
+    scene->addRootObject(house);
     scene->addRootObject(sky);
     scene->addRootObject(mainCam);
     return scene;

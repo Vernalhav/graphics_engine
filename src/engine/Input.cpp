@@ -19,7 +19,14 @@ const std::map<KeyCode, int> keyCodes = {
 	{ KeyCode::A, GLFW_KEY_A },
 	{ KeyCode::S, GLFW_KEY_S },
 	{ KeyCode::D, GLFW_KEY_D },
-	{ KeyCode::P, GLFW_KEY_P }
+	{ KeyCode::P, GLFW_KEY_P },
+	{ KeyCode::Up, GLFW_KEY_UP },
+	{ KeyCode::Down, GLFW_KEY_DOWN },
+	{ KeyCode::Left, GLFW_KEY_LEFT },
+	{ KeyCode::Right, GLFW_KEY_RIGHT },
+	{ KeyCode::Space, GLFW_KEY_SPACE },
+	{ KeyCode::Ctrl, GLFW_KEY_LEFT_CONTROL },
+	{ KeyCode::Shift, GLFW_KEY_LEFT_SHIFT }
 };
 
 const std::map<MouseButton, int> mouseButtonCodes = {

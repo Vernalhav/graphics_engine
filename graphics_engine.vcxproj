@@ -49,6 +49,7 @@
     <ClInclude Include="src\external\stb_image.h" />
     <ClInclude Include="src\graphics\Texture.h" />
     <ClInclude Include="src\engine\Window.h" />
+    <ClInclude Include="src\application\TransformFinder.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application\Controls.cpp" />
@@ -74,6 +75,7 @@
     <ClCompile Include="src\external\stb_image.cpp" />
     <ClCompile Include="src\graphics\Texture.cpp" />
     <ClCompile Include="src\engine\Window.cpp" />
+    <ClCompile Include="src\application\TransformFinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="src\NatvisFile.natvis" />
