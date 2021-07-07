@@ -1,5 +1,5 @@
 #pragma once
-#include "SceneObject.h"
+#include "../engine/SceneObject.h"
 
 class FirstPersonController : public Component {
 private:
@@ -8,9 +8,10 @@ private:
 	float moveSpeed;			// Units per second
 	float mouseSensitivity;		// Radians per frame
 	float maxVerticalAngle;		// In radians
+	bool isFreeCam;
 
 public:	
-	FirstPersonController(SceneObject* obj);
+	FirstPersonController(SceneObject* obj, bool isFreeCam = false);
 
 	void start();
 	void update();
