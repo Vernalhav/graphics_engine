@@ -39,15 +39,22 @@ Texture::Texture(const fs::path& texPath, GLenum wrapMode, GLenum rescaleFilter,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 
-	GLenum imageChannelMode = -1;
-	if (channelMode == STBI_rgb) imageChannelMode = GL_RGB;
-	else if (channelMode == STBI_rgb_alpha) imageChannelMode = GL_RGBA;
+	GLenum internalFormat = -1;
+	GLenum format = -1;
+	if (channelMode == STBI_rgb) {
+		internalFormat = GL_RGB8;
+		format = GL_RGB;
+	}
+	else if (channelMode == STBI_rgb_alpha) {
+		internalFormat = GL_RGBA8;
+		format = GL_RGBA;
+	}
 	else {
 		std::cout << "Texture: WARNING: Invalid channel mode " << channelMode << std::endl;
 	}
 	
 	const int LOD = 0;
-	glTexImage2D(GL_TEXTURE_2D, LOD, imageChannelMode, width, height, 0, imageChannelMode, GL_UNSIGNED_BYTE, image);
+	glTexImage2D(GL_TEXTURE_2D, LOD, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, image);
 }
 
 Texture& Texture::operator=(Texture&& other) noexcept {

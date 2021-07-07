@@ -8,7 +8,7 @@ private:
 
 public:
 	Renderable(SceneObject* parent, RenderData* data);
-	~Renderable();
+	~Renderable() override;
 
 	RenderData* getRenderData();
 };

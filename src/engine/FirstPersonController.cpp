@@ -8,8 +8,6 @@ FirstPersonController::FirstPersonController(SceneObject* obj)
 	: Component(obj), parentTransform(nullptr), mouseSensitivity(.001f),
 	moveSpeed(20), maxVerticalAngle(glm::radians(60.0f)) { }
 
-FirstPersonController::~FirstPersonController() { }
-
 void FirstPersonController::start() {
 	parentTransform = &(sceneObject->transform);
 }

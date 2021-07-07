@@ -198,6 +198,9 @@ RenderData::RenderData(const fs::path& filePath)
 			}
 		}
 
+		objFile.close();
+
+
 		// As an optimization, we'll try to reuse as many vertices as possible by
 		// indexing; therefore we must know which vertices have already been used.
 
@@ -237,8 +240,6 @@ RenderData::RenderData(const fs::path& filePath)
 				}
 			}
 		}
-
-		objFile.close();
 	}
 	else {
 		std::cout << "RenderData: ERROR: could not open object file " << filePath << std::endl;

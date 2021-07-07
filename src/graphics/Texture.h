@@ -25,7 +25,7 @@ struct Texture {
 	Texture(Texture&& other) noexcept;
 
 	Texture(const fs::path& texPath, GLenum wrapMode = GL_REPEAT,
-		GLenum rescaleFilter = GL_NEAREST, int channelMode = STBI_rgb);
+		GLenum rescaleFilter = GL_NEAREST, int channelMode = STBI_rgb_alpha);
 	~Texture();
 	
 	Texture& operator=(Texture&& other) noexcept;

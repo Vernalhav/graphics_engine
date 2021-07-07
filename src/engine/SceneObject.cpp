@@ -9,6 +9,19 @@ void Component::update() { }
 
 void Component::start() { }
 
+Component::~Component() {
+	sceneObject = nullptr;
+}
+
+SceneObject::~SceneObject() {
+	for (auto& child : children) delete child.second;
+
+	for (unsigned int i = 0; i < components.size(); i++) {
+		delete components[i];
+		components[i] = nullptr;
+	}
+}
+
 void SceneObject::appendChild(SceneObject* child) {
 	if (children.count(child->name) != 0) {
 		std::cout << "appendChild: WARNING: SceneObject " << name << " already has child " << child->name << std::endl;

@@ -35,14 +35,14 @@ Scene* setupScene() {
     scene->setMainCamera(mainCam->getComponent<Camera>());
 
     SceneObject* house = new SceneObject("house");
-    RenderData* houseRenderData = new RenderData("assets/models/house/casa.obj");
+    RenderData* houseRenderData = new RenderData("assets/models/minecraft_house/House_0.obj");
     house->transform.setScale(1);
     house->addComponent<Renderable>(houseRenderData);
 
-    SceneObject* plant = new SceneObject("plant");
-    RenderData* plantRenderData = new RenderData("assets/models/plant/plant.obj");
-    plant->transform.setScale(1);
-    plant->addComponent<Renderable>(plantRenderData);
+    SceneObject* terrain = new SceneObject("terrain");
+    RenderData* terrainRenderData = new RenderData("/assets/models/minecraft_terrain/Mineways2Skfb.obj");
+    terrain->transform.setScale(1);
+    terrain->addComponent<Renderable>(terrainRenderData);
 
     SceneObject* sky = new SceneObject("skybox");
     RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");
@@ -50,7 +50,7 @@ Scene* setupScene() {
     sky->addComponent<Renderable>(skyRenderData);
 
     scene->addRootObject(house);
-    scene->addRootObject(plant);
+    scene->addRootObject(terrain);
     scene->addRootObject(sky);
     scene->addRootObject(mainCam);
     return scene;
@@ -78,6 +78,9 @@ int main() {
 
     window->close();
     Window::terminate();
+
+    delete scene;
+    delete window;
 
     std::cout << "Terminating..." << std::endl;
     return EXIT_SUCCESS;
