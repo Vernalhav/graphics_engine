@@ -31,9 +31,10 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
-    mainCam->addComponent<FirstPersonController>(false);
+    mainCam->addComponent<FirstPersonController>(false, 0.15f);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
     mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 40}), glm::vec2({-100, 100}));
+    mainCam->transform.setTranslation({0, -17, 0});
     scene->setMainCamera(mainCam->getComponent<Camera>());
     scene->addRootObject(mainCam);
 
@@ -105,10 +106,11 @@ Scene* setupScene() {
     SceneObject* ghast = new SceneObject("ghast");
     RenderData* ghastRenderData = new RenderData("assets/models/ghast/ghast.obj");
     ghast->transform.setScale(8);
-    ghast->transform.translate({ 20, 0, -10 });
+    ghast->transform.translate({ 20, 0, 10 });
     ghast->addComponent<Renderable>(ghastRenderData);
     ghast->addComponent<Ghast>();
-    ghast->addComponent<Confiner>(glm::vec2(-90, 90), glm::vec2(-90, 90), glm::vec2(-10, 40));
+    ghast->addComponent<Confiner>(glm::vec2(-90, 90), glm::vec2(-10, 90), glm::vec2(-90, 90));
+    ghast->addComponent<SinMovement>(0.002f, 0.8f);
     scene->addRootObject(ghast);
 
     SceneObject* plant = new SceneObject("plant");

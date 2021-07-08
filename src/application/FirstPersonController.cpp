@@ -5,9 +5,10 @@
 #include <glm/gtc/constants.hpp>
 
 
-FirstPersonController::FirstPersonController(SceneObject* obj, bool isFreeCam)
+FirstPersonController::FirstPersonController(SceneObject* obj, bool isFreeCam, float ctrlSpeedModifier)
 	: Component(obj), parentTransform(nullptr), mouseSensitivity(.001f),
-	moveSpeed(20), maxVerticalAngle(glm::radians(80.0f)), isFreeCam(isFreeCam) { }
+	moveSpeed(20), maxVerticalAngle(glm::radians(80.0f)), isFreeCam(isFreeCam),
+	ctrlSpeedModifier(ctrlSpeedModifier) { }
 
 void FirstPersonController::start() {
 	parentTransform = &(sceneObject->transform);
@@ -52,10 +53,11 @@ void FirstPersonController::update() {
 	if (Input::isKeyPressed(KeyCode::S)) direction -= forward;
 	if (Input::isKeyPressed(KeyCode::D)) direction += right;
 
+	float ctrlSpeedModifier = 0.4f;
 	float speedModifier = 1;
 	if (!isFreeCam && Input::isKeyPressed(KeyCode::Space)) direction += up;
 	if (!isFreeCam && Input::isKeyPressed(KeyCode::Shift)) direction -= up;
-	if (!isFreeCam && Input::isKeyPressed(KeyCode::Ctrl)) speedModifier *= 2;
+	if (!isFreeCam && Input::isKeyPressed(KeyCode::Ctrl)) speedModifier *= ctrlSpeedModifier;
 
 	parentTransform->translate((float)Component::deltaTime * speedModifier * moveSpeed * direction);
 }
