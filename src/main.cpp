@@ -28,9 +28,9 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
-    mainCam->addComponent<FirstPersonController>(true);
+    mainCam->addComponent<FirstPersonController>(false);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
-    mainCam->addComponent<Confiner>(glm::vec2({-95, 95}), glm::vec2({-17, 40}), glm::vec2({-95, 95}));
+    mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 40}), glm::vec2({-100, 100}));
     scene->setMainCamera(mainCam->getComponent<Camera>());
     scene->addRootObject(mainCam);
 
@@ -52,18 +52,31 @@ Scene* setupScene() {
     SceneObject* controller = new SceneObject("controller");
     RenderData* controllerRenderData = new RenderData("assets/models/controller/controller.obj");
     controller->addComponent<Renderable>(controllerRenderData);
-    controller->addComponent<TransformFinder>();
     controller->transform.setScale(0.005f);
     controller->transform.setTranslation({ -1.33f, -10.65f, 4.6f });
     controller->transform.setRotation({ glm::pi<float>(), -glm::half_pi<float>(), 0 });
     house->appendChild(controller);
 
     SceneObject* terrain = new SceneObject("terrain");
-    RenderData* terrainRenderData = new RenderData("assets/models/terrain/Mineways2Skfb.obj");
+    RenderData* terrainRenderData = new RenderData("assets/models/terrain/terrain.obj");
     terrain->transform.setScale(100);
     terrain->transform.translate({0, -50, 0});
     terrain->addComponent<Renderable>(terrainRenderData);
     scene->addRootObject(terrain);
+
+    SceneObject* pond = new SceneObject("pond");
+    RenderData* pondRenderData = new RenderData("assets/models/pond/pond.obj");
+    pond->transform.setScale(20);
+    pond->transform.translate({-34.53, -23.81f, 78.79f});
+    pond->addComponent<Renderable>(pondRenderData);
+    scene->addRootObject(pond);
+
+    SceneObject* plant = new SceneObject("plant");
+    RenderData* plantRenderData = new RenderData("assets/models/plant/plant.obj");
+    plant->transform.setScale(0.05f);
+    plant->transform.setTranslation({ 6.73f, -10, 5.7f });
+    plant->addComponent<Renderable>(plantRenderData);
+    house->appendChild(plant);
 
     SceneObject* sky = new SceneObject("skybox");
     RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");
