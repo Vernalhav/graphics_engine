@@ -10,6 +10,10 @@
 #include "application/FirstPersonController.h"
 #include "application/TransformFinder.h"
 #include "application/Confiner.h"
+#include "application/Controls.h"
+#include "application/SinMovement.h"
+#include "application/Ghast.h"
+#include "application/RotationFinder.h"
 
 #include "engine/SceneObject.h"
 #include "engine/PhysicsBody.h"
@@ -17,12 +21,9 @@
 #include "engine/Renderable.h"
 #include "engine/Window.h"
 #include "engine/Camera.h"
+#include "engine/Input.h"
 
 #include "misc/utils.h"
-#include "engine/Input.h"
-#include "application/Controls.h"
-#include "application/SinMovement.h"
-#include "application/Ghast.h"
 
 
 Scene* setupScene() {
@@ -87,15 +88,24 @@ Scene* setupScene() {
 
     SceneObject* steve = new SceneObject("steve");
     RenderData* steveRenderData = new RenderData("assets/models/steve/steve.obj");
+    steve->addComponent<Renderable>(steveRenderData);
     steve->transform.setScale(0.25f);
     steve->transform.setTranslation({0.4f, 0.20f, -0.81f});
     steve->transform.setRotation({0, glm::radians(200.0f), 0});
-    steve->addComponent<Renderable>(steveRenderData);
     pond->appendChild(steve);
+
+    SceneObject* guitar = new SceneObject("guitar");
+    RenderData* guitarRenderData = new RenderData("assets/models/guitar/guitar.obj");
+    guitar->addComponent<Renderable>(guitarRenderData);
+    guitar->transform.setScale(0.1f);
+    guitar->transform.setTranslation({0.24f, 0.22f, -0.68f});
+    guitar->transform.setRotation({ 1.33f, 4.64f, 1.16f });
+    pond->appendChild(guitar);
 
     SceneObject* ghast = new SceneObject("ghast");
     RenderData* ghastRenderData = new RenderData("assets/models/ghast/ghast.obj");
     ghast->transform.setScale(8);
+    ghast->transform.translate({ 20, 0, -10 });
     ghast->addComponent<Renderable>(ghastRenderData);
     ghast->addComponent<Ghast>();
     ghast->addComponent<Confiner>(glm::vec2(-90, 90), glm::vec2(-90, 90), glm::vec2(-10, 40));
