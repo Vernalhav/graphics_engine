@@ -60,6 +60,10 @@ void Transform::setScale(float scale) {
 	_scale = glm::vec3(scale);
 }
 
+void Transform::setRotationX(float theta) { _rotation[0] = glm::mod(theta, glm::two_pi<float>()); };
+void Transform::setRotationY(float theta) { _rotation[1] = glm::mod(theta, glm::two_pi<float>()); };
+void Transform::setRotationZ(float theta) { _rotation[2] = glm::mod(theta, glm::two_pi<float>()); };
+
 glm::vec3 Transform::getTranslation() const {
 	return _translation;
 }

@@ -1,14 +1,14 @@
 ﻿# Graphics Engine:
-This project is an application of a few 2D Computer Graphics concepts in an attempt to create a small game engine-like 
-API. To test this API, we've created an application in which you control a helicopter that needs to leave the screens's 
-boundaries.  
+This project is an application of a few 3D Computer Graphics concepts in an attempt to create a small game engine-like 
+API. To test this API, we've created an application in which you navigate a Minecraft-inspired 3D environment.  
 This repository is a Visual Studio project that requires the installation of `glew`, `glfw` and `glm`, but it can also be 
 compiled without VS by linking the appropriate libraries.
 
 # Project Structure:  
 All relevant `.cpp` and `.h` files are in the `src/` directory.
 ```
-└─── src
+├─── assets/            # 3D models, materials and textures 
+└─── src/
     ├─── application/   # Application-specific code and Components
     ├─── engine/        # Scene objects, input reading and kinematic-related code
     ├─── graphics/      # OpenGL and transformation-related code
@@ -17,10 +17,13 @@ All relevant `.cpp` and `.h` files are in the `src/` directory.
     └─── main.cpp       # Main application
 ```
 ## engine/
-- **SceneObject:** Class that unifies a collection of primitives with a single transformation matrix. Can have children which are transformed in relation to the parent.
+- **SceneObject:** Class that unifies a collection of Components with a single transformation matrix. Can have children which are transformed in relation to the parent.
 - **Component (in SceneObject.h):** Base class of all Components. Extend this class to add custom behaviour to SceneObjects. Has static member deltaTime.
 - **Transform:** Struct containing geometric transformation info like translation, scale and rotation. Can be converted into a Transform matrix using a glm::mat3 constructor.
 - **PhysicsBody:** Component containing simple kinematic properties like linear and angular velocity.
+- **Scene:** Scene object that contains the main camera, renderer and all SceneObjects.  
+- **Window:** Window system abstraction.  
+- **Input:** Helper Input-related functions for the current window.
 
 ## graphics/
 - **Primitive:** Struct containing basic information about an OpenGL primitive. Includes vertices, type of primitive and color.
@@ -71,4 +74,5 @@ The main program structure is as follows
 
 # Improvements:  
 - Split Component and SceneObject files  
-- Use smart pointers instead of standard ones
+- Use smart pointers instead of standard ones  
+- Add override tag to all engine Components' update methods

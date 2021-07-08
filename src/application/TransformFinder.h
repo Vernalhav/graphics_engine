@@ -9,6 +9,6 @@ private:
 public:
 	TransformFinder(SceneObject* obj);
 
-	void update();
+	void update() override;
 };
 

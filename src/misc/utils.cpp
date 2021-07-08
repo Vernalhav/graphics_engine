@@ -15,6 +15,11 @@ float utils::interpolate(float t, float a, float b) {
     return (1 - t) * a + t * b;
 }
 
+glm::vec3 utils::projectToPlane(const glm::vec3& v, const glm::vec3& planeNormal) {
+    float normalLen = glm::length(planeNormal);
+    return glm::normalize(v - planeNormal * glm::dot(v, planeNormal)/(normalLen * normalLen));
+}
+
 std::vector<std::string> utils::split(const std::string& s, char delimiter, bool skipConsecutives) {
     std::vector<std::string> splits;
 

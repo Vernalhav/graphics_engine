@@ -42,6 +42,10 @@ public:
 	void setRotation(glm::vec3 rotation);
 	void setScale(float scale);
 
+	void setRotationX(float theta);
+	void setRotationY(float theta);
+	void setRotationZ(float theta);
+
 	glm::vec3 getTranslation() const;
 	glm::vec3 getRotation() const;
 	glm::vec3 getScale() const;
