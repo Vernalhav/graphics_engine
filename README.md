@@ -4,6 +4,13 @@ API. To test this API, we've created an application in which you navigate a Mine
 This repository is a Visual Studio project that requires the installation of `glew`, `glfw` and `glm`, but it can also be 
 compiled without VS by linking the appropriate libraries.
 
+## Application Controls:
+- WASD: move camera along the XZ plane  
+- Space/Ctrl: fly upwards or downwards  
+- Shift: change movement speed  
+- P: toggle polygon mode between fill and wireframe  
+- Mouse Scroll: change camera's field of view  
+
 # Project Structure:  
 All relevant `.cpp` and `.h` files are in the `src/` directory.
 ```
@@ -61,23 +68,6 @@ The SceneObject's reference will be passed automatically by the `addComponent` f
 
 You can get a pointer to a component attatched to a SceneObject by using  
 ```object->getComponent<ComponentType>()```
-
-
-# Main loop and Scene:
-The main program structure is as follows
-```
-- Initialize GLFW window and OpenGL context
-- Creates a SceneObject called scene to which all root-level SceneObjects will be appended
-- Calls the appropriate functions to generate each object in the scene and appends them to the scene
-- Creates a Renderer object passing the vertex and fragment shader code
-- Uploads the scene object to the GPU (through the Renderer instance)
-- Calls scene->start to initialize all Components
-- In the main loop:
-    - Calls GLFW-related functions
-    - Calls scene->update to update all SceneObjects that have Components
-    - Calls renderer->drawObject(scene) to calculate the objects' global transforms and make all OpenGL draw calls
-- Frees memory and terminates GLFW
-```
 
 
 # Improvements:  
