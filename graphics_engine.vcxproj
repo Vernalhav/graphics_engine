@@ -23,6 +23,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\application\SinMovement.h" />
     <ClInclude Include="src\application\Confiner.h" />
     <ClInclude Include="src\application\Controls.h" />
     <ClInclude Include="src\engine\MouseScrollListener.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="src\application\TransformFinder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\application\SinMovement.cpp" />
     <ClCompile Include="src\application\Confiner.cpp" />
     <ClCompile Include="src\application\Controls.cpp" />
     <ClCompile Include="src\engine\MouseScrollListener.cpp" />
