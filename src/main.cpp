@@ -22,6 +22,7 @@
 #include "engine/Input.h"
 #include "application/Controls.h"
 #include "application/SinMovement.h"
+#include "application/Ghast.h"
 
 
 Scene* setupScene() {
@@ -29,7 +30,7 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
-    mainCam->addComponent<FirstPersonController>(true);
+    mainCam->addComponent<FirstPersonController>(false);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
     mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 40}), glm::vec2({-100, 100}));
     scene->setMainCamera(mainCam->getComponent<Camera>());
@@ -50,20 +51,20 @@ Scene* setupScene() {
     villager->addComponent<Renderable>(villagerRenderData);
     house->appendChild(villager);
 
-    //SceneObject* controller = new SceneObject("controller");
-    //RenderData* controllerRenderData = new RenderData("assets/models/controller/controller.obj");
-    //controller->addComponent<Renderable>(controllerRenderData);
-    //controller->transform.setScale(0.005f);
-    //controller->transform.setTranslation({ -1.33f, -10.65f, 4.6f });
-    //controller->transform.setRotation({ glm::pi<float>(), -glm::half_pi<float>(), 0 });
-    //house->appendChild(controller);
+    SceneObject* controller = new SceneObject("controller");
+    RenderData* controllerRenderData = new RenderData("assets/models/controller/controller.obj");
+    controller->addComponent<Renderable>(controllerRenderData);
+    controller->transform.setScale(0.005f);
+    controller->transform.setTranslation({ -1.33f, -10.65f, 4.6f });
+    controller->transform.setRotation({ glm::pi<float>(), -glm::half_pi<float>(), 0 });
+    house->appendChild(controller);
 
-    //SceneObject* terrain = new SceneObject("terrain");
-    //RenderData* terrainRenderData = new RenderData("assets/models/terrain/terrain.obj");
-    //terrain->transform.setScale(100);
-    //terrain->transform.translate({0, -50, 0});
-    //terrain->addComponent<Renderable>(terrainRenderData);
-    //scene->addRootObject(terrain);
+    SceneObject* terrain = new SceneObject("terrain");
+    RenderData* terrainRenderData = new RenderData("assets/models/terrain/terrain.obj");
+    terrain->transform.setScale(100);
+    terrain->transform.translate({0, -50, 0});
+    terrain->addComponent<Renderable>(terrainRenderData);
+    scene->addRootObject(terrain);
 
     SceneObject* pond = new SceneObject("pond");
     RenderData* pondRenderData = new RenderData("assets/models/pond/pond.obj");
@@ -91,6 +92,14 @@ Scene* setupScene() {
     steve->transform.setRotation({0, glm::radians(200.0f), 0});
     steve->addComponent<Renderable>(steveRenderData);
     pond->appendChild(steve);
+
+    SceneObject* ghast = new SceneObject("ghast");
+    RenderData* ghastRenderData = new RenderData("assets/models/ghast/ghast.obj");
+    ghast->transform.setScale(8);
+    ghast->addComponent<Renderable>(ghastRenderData);
+    ghast->addComponent<Ghast>();
+    ghast->addComponent<Confiner>(glm::vec2(-90, 90), glm::vec2(-90, 90), glm::vec2(-10, 40));
+    scene->addRootObject(ghast);
 
     SceneObject* plant = new SceneObject("plant");
     RenderData* plantRenderData = new RenderData("assets/models/plant/plant.obj");
