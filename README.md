@@ -16,30 +16,38 @@ All relevant `.cpp` and `.h` files are in the `src/` directory.
     ├─── external/      # Source code from external libs (like stb_image)
     └─── main.cpp       # Main application
 ```
-## engine/
+## Engine
 - **SceneObject:** Class that unifies a collection of Components with a single transformation matrix. Can have children which are transformed in relation to the parent.
 - **Component (in SceneObject.h):** Base class of all Components. Extend this class to add custom behaviour to SceneObjects. Has static member deltaTime.
 - **Transform:** Struct containing geometric transformation info like translation, scale and rotation. Can be converted into a Transform matrix using a glm::mat3 constructor.
-- **PhysicsBody:** Component containing simple kinematic properties like linear and angular velocity.
 - **Scene:** Scene object that contains the main camera, renderer and all SceneObjects.  
 - **Window:** Window system abstraction.  
 - **Input:** Helper Input-related functions for the current window.
+- **\*Listener:** Interfaces that allow subscription to input events like mouse clicks and key presses.
 
-## graphics/
-- **Primitive:** Struct containing basic information about an OpenGL primitive. Includes vertices, type of primitive and color.
-- **Shader:** Class abstraction of a GLSL shader. Construct it with vertex and fragment shader code string, and optionally name it.
-- **Renderer:** Class abstraction of OpenGL's VAOs, VBOs and `draw` calls. It is responsible for drawing the scene objects relative to their hierarchical parents.
+## Engine Components
+- **Camera:** Component that implements a perspective camera abstraction.  
+- **Renderable:** Component that makes an object be used by the Renderer during Scene draw.
+- **PhysicsBody:** Component containing simple kinematic properties like linear and angular velocity.
+
+
+## Graphics
+- **Vertex:** Struct containing vertex attributes.
+- **Texture:** Struct containing texture image and rendering properties.
+- **Material:** Struct containing a material's texture and other properties.
+- **RenderData:** Struct containing all data and OpenGL buffers required to render a Renderable object.
+- **Shader:** Class abstraction of a GLSL fragment and vertex shader.
+- **Renderer:** Class abstraction of OpenGL's VAOs, VBOs and `draw` calls.
 
 # Hierarchical structure:
 SceneObjects can be nested within each other, creating a hierarchical structure.
 The main implication of this decision is that child objects are transformed in relation to their parents: this means that an object's vertices will first
 be transformed by their transform matrix, then by their parent's, then by their grandparent's and so on. This allows for the creation of more complex objects
-that can have semantic behavior like a helicopter's propeller rotating along its own axis as well
-as following the helicopter around (the same applies for scale and rotation).
+that can have semantic behavior like a helicopter's propeller rotating along its own axis as well as following the helicopter around (the same applies for scale and rotation).
 
 # Components:
 Components are a way to add custom behaviour to a SceneObject. To create a new Component, create a class that inherits from Component and
-add a constructor that receives at least the parent SceneObject pointer (which should be delegated to the Component constructor).
+add a constructor that receives at least the parent SceneObject pointer (which should always be delegated to the Component constructor).
 Component subclasses can implement the following functions:
 - `start():` Will be called once before the first frame;  
 - `update():` Will be called once every frame;
@@ -75,4 +83,10 @@ The main program structure is as follows
 # Improvements:  
 - Split Component and SceneObject files  
 - Use smart pointers instead of standard ones  
-- Add override tag to all engine Components' update methods
+- Add override tag to all engine Components' update methods  
+- Create Components directory in `engine/` and move all engine-side Components to it  
+- Use same OpenGL Element buffer for all submesh indices  
+- Add camera adjust on window resize (maybe create WindowResizeListener interface?)  
+- Implement ResourceManager  
+- Delegate RenderData creation to Renderable/ResourceManager  
+- Update vertex shader to allow for textureless objects (such as sold colors)
