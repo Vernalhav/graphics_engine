@@ -1,42 +1,17 @@
 #include "Scene.h"
+#include "Renderable.h"
 
 #include <string.h>
 #include <iostream>
 #include <stack>
-#include "Renderable.h"
 
 Scene* Scene::activeScene = nullptr;
-
-const std::string vertex_code =
-	"#version 430 core\n"
-	"layout(location = 0) in vec3 position;"
-	"layout(location = 1) in vec2 texCoord;"
-	"out vec2 fragTexCoord;"
-	"layout(location = 0) uniform mat4 matrixMVP;"
-
-	"void main() {"
-	"   fragTexCoord = texCoord;"
-	"   gl_Position = matrixMVP * vec4(position, 1);"
-	"}";
-
-const std::string fragment_code =
-	"#version 430 core\n"
-	"in vec2 fragTexCoord;"
-	"out vec4 fragColor;"
-	"layout(location = 1) uniform sampler2D mainTexture;"
-
-	"void main() {"
-	"   vec4 texel = texture(mainTexture, fragTexCoord);"
-	"   if (texel.a < 0.1)"
-	"		discard;"
-	"	fragColor = texel;"
-	"}";
 
 
 Scene::Scene() : mainCamera(nullptr) {
 	if (activeScene == nullptr) activeScene = this;
 	root = new SceneObject("root");
-	renderer = new Renderer(Shader(vertex_code, fragment_code, "Standard Shader"));
+	renderer = new Renderer(Shader(fs::path("src/engine/shaders/unlit"), "Standard Shader"));
 }
 
 Scene::~Scene() {

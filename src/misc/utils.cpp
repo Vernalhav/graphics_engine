@@ -1,6 +1,8 @@
 #include "utils.h"
 
 #include <cstdlib>
+#include <iostream>
+#include <fstream>
 
 
 float utils::randRange(float a, float b) {
@@ -18,6 +20,16 @@ float utils::interpolate(float t, float a, float b) {
 glm::vec3 utils::projectToPlane(const glm::vec3& v, const glm::vec3& planeNormal) {
     float normalLen = glm::length(planeNormal);
     return glm::normalize(v - planeNormal * glm::dot(v, planeNormal)/(normalLen * normalLen));
+}
+
+std::string utils::readFileAsString(const fs::path& path) {
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        std::cout << "readFileAsString: WARNING: could not open file " << path << std::endl;
+        return "";
+    }
+
+    return std::string(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
 }
 
 std::vector<std::string> utils::split(const std::string& s, char delimiter, bool skipConsecutives) {

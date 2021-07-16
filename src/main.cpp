@@ -1,10 +1,10 @@
-﻿#include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
-
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
+
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 #include "application/Color.h"
 #include "application/FirstPersonController.h"
@@ -130,10 +130,12 @@ Scene* setupScene() {
 }
 
 int main() {
-    Window* window = new Window();
 
-    Scene* scene = setupScene();
+    std::ios_base::sync_with_stdio(false);
     glm::vec3 backgroundColor = Color::CYAN;
+
+    Window* window = new Window();
+    Scene* scene = setupScene();
     window->show();
 
     scene->start();

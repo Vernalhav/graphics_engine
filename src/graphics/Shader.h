@@ -3,7 +3,10 @@
 #include <gl/glew.h>
 
 #include <glm/glm.hpp>
+#include <filesystem>
 
+
+namespace fs = std::filesystem;
 
 class Shader
 {
@@ -12,6 +15,7 @@ private:
 	GLuint id;
 
 	static GLuint compileShader(const std::string& code, GLuint type, const std::string& name);
+	void initShader(const std::string& vertexCode, const std::string& fragmentCode);
 	GLint getUniformLocation(const std::string& name);
 	GLint getAttribLocation(const std::string& name);
 
@@ -22,9 +26,8 @@ public:
 	static constexpr int MAIN_TEXTURE_LAYOUT_LOC = 1;
 	static constexpr int MAIN_TEXTURE_SLOT = 0;
 
-	Shader() : name("Unnamed Shader"), id(0) { }
-	Shader(const std::string& vertexCode, const std::string& fragmentCode);
-	Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name);
+	Shader(const fs::path& directoryPath, const std::string& name = "Unnamed shader");
+	Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name = "Unnamed shader");
 	~Shader();
 
 	void use();

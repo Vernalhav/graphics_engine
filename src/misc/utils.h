@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 #include <glm/glm.hpp>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 constexpr float PI = 3.14159265359f;
 constexpr float DEG2RAD = (PI / 180);
@@ -15,6 +18,8 @@ namespace utils {
 	float interpolate(float t, float a, float b);
 
 	glm::vec3 projectToPlane(const glm::vec3& v, const glm::vec3& planeNormal);
+
+	std::string readFileAsString(const fs::path& path);
 
 	/// <summary>
 	/// Splits string s into an array of stirngs

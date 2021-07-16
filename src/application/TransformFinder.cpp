@@ -4,7 +4,7 @@
 #include <iomanip>
 
 TransformFinder::TransformFinder(SceneObject* obj)
-	: Component(obj), sensitivity(0.1), sensitivityModifier(100) { }
+	: Component(obj), sensitivity(0.1f), sensitivityModifier(100) { }
 
 void TransformFinder::update() {
 	glm::vec3 dir(0);
