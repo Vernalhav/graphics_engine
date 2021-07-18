@@ -79,4 +79,4 @@ You can get a pointer to a component attatched to a SceneObject by using
 - Add camera adjust on window resize (maybe create WindowResizeListener interface?)  
 - Implement ResourceManager  
 - Delegate RenderData creation to Renderable/ResourceManager  
-- Update vertex shader to allow for textureless objects (such as sold colors)
+- Update vertex shader to allow for textureless objects (such as solid colors)
