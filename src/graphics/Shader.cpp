@@ -40,7 +40,7 @@ void Shader::initShader(const std::string& vertexCode, const std::string& fragme
 
     // Sets the main texture sampler to read the texture
     // that is assigned to the main texture slot.
-    setInt(MAIN_TEXTURE_LAYOUT_LOC, MAIN_TEXTURE_SLOT);
+    setInt(getMainTextureUniformLoc(), MAIN_TEXTURE_SLOT);
 }
 
 Shader::~Shader() {
@@ -51,18 +51,9 @@ void Shader::use() {
     glUseProgram(id);
 }
 
-void Shader::setMVPMatrix(const glm::mat4 & mvp) {
-    setMatrix4(MVP_MATRIX_LAYOUT_LOC, mvp);
-}
-
-void Shader::setAttributeLayout() {
-    glVertexAttribPointer(POSITION_LAYOUT_LOC, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)0);
-    glVertexAttribPointer(TEX_COORD_LAYOUT_LOC, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)(3*sizeof(float)));
-}
-
-void Shader::enableAttributes() {
-    enableAttrib(POSITION_LAYOUT_LOC);
-    enableAttrib(TEX_COORD_LAYOUT_LOC);
+void Shader::setMVPMatrix(const glm::mat4& model, const glm::mat4& viewProjection) {
+    setMatrix4(getModelMatrixUniformLoc(), model);
+    setMatrix4(getViewProjectionUniformLoc(), viewProjection);
 }
 
 void Shader::enableAttrib(const std::string& name) {

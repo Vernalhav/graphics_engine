@@ -27,9 +27,9 @@ in vec2 fragTexCoord;				// Fragment's UV texture coordinates
 out vec4 fragColor;
 
 layout(location = 3) uniform sampler2D mainTexture;
-layout(location = 4) uniform AmbientLight ambient;
-layout(location = 5) uniform PointLight light;
-layout(location = 6) uniform Material material;
+uniform AmbientLight ambient;
+uniform PointLight light;
+uniform Material material;
 
 
 vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 viewDirection) {

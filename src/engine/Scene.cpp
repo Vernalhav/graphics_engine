@@ -30,7 +30,7 @@ void Scene::setMainCamera(Camera* camera) {
 	mainCamera = camera;
 }
 
-void Scene::makeActiveScene(){
+void Scene::makeActiveScene() {
 	activeScene = this;
 }
 
@@ -45,7 +45,6 @@ void Scene::render() {
 	std::stack<std::pair<const SceneObject*, glm::mat4>> objects;
 	objects.push({ root, root->transform.getTransformMatrix() });
 
-	glm::mat4 matrixMVP;
 	while (!objects.empty()) {
 		const auto& top = objects.top();
 
@@ -54,10 +53,9 @@ void Scene::render() {
 
 		objects.pop();
 
-		matrixMVP = viewProjectionMatrix * globalTransform;
 		std::vector<Renderable*> renderables = curObj->getComponents<Renderable>();
 		for (Renderable* renderable : renderables) {
-			renderer->drawObject(renderable->getRenderData(), matrixMVP);
+			renderer->drawObject(renderable->getRenderData(), globalTransform, viewProjectionMatrix);
 		}
 
 		// Simulate recursion propagating current global transform

@@ -45,10 +45,10 @@ void Renderer::uploadMesh(RenderData* mesh) {
 	}
 }
 
-void Renderer::drawObject(RenderData* object, const glm::mat4& mvp) {
+void Renderer::drawObject(RenderData* object, const glm::mat4& model, const glm::mat4& viewProjection) {
 	glBindVertexArray(object->vaoId);
 	glBindBuffer(GL_ARRAY_BUFFER, object->vboId);
-	shader->setMVPMatrix(mvp);
+	shader->setMVPMatrix(model, viewProjection);
 
 	for (auto& elem : object->subMeshes) {
 		SubMesh& currentMesh = elem.second;
