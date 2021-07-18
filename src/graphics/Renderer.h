@@ -13,10 +13,10 @@ class Renderer {
 private:
 	PolygonMode polygonMode;
 	GLuint VAO;
-	Shader shader;
+	Shader* shader;
 
 public:
-	Renderer(Shader s);
+	Renderer(Shader* s);
 	~Renderer();
 
 	void uploadMesh(RenderData* mesh);

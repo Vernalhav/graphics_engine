@@ -1,6 +1,8 @@
 #include "Scene.h"
 #include "Renderable.h"
 
+#include "shaders/lit/LitShader.h"
+
 #include <string.h>
 #include <iostream>
 #include <stack>
@@ -11,7 +13,7 @@ Scene* Scene::activeScene = nullptr;
 Scene::Scene() : mainCamera(nullptr) {
 	if (activeScene == nullptr) activeScene = this;
 	root = new SceneObject("root");
-	renderer = new Renderer(Shader(fs::path("src/engine/shaders/unlit"), "Standard Shader"));
+	renderer = new Renderer(new LitShader("Standard Shader"));
 }
 
 Scene::~Scene() {

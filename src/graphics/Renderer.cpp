@@ -33,8 +33,8 @@ void Renderer::uploadMesh(RenderData* mesh) {
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vboId);
 	glBufferData(GL_ARRAY_BUFFER, vboData.size() * sizeof(float), vboData.data(), GL_STATIC_DRAW);
 
-	shader.enableAttributes();
-	shader.setAttributeLayout();
+	shader->enableAttributes();
+	shader->setAttributeLayout();
 
 	for (auto& elem : mesh->subMeshes) {
 		SubMesh& currentMesh = elem.second;
@@ -48,7 +48,7 @@ void Renderer::uploadMesh(RenderData* mesh) {
 void Renderer::drawObject(RenderData* object, const glm::mat4& mvp) {
 	glBindVertexArray(object->vaoId);
 	glBindBuffer(GL_ARRAY_BUFFER, object->vboId);
-	shader.setMVPMatrix(mvp);
+	shader->setMVPMatrix(mvp);
 
 	for (auto& elem : object->subMeshes) {
 		SubMesh& currentMesh = elem.second;
@@ -64,9 +64,10 @@ void Renderer::toggleDrawMode() {
 	glPolygonMode(GL_FRONT_AND_BACK, mode);
 }
 
-Renderer::Renderer(Shader s) : shader(s), polygonMode(PolygonMode::Fill), VAO(0) {
+Renderer::Renderer(Shader* s) : shader(s), polygonMode(PolygonMode::Fill), VAO(0) {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 Renderer::~Renderer() {
+	delete shader;
 }

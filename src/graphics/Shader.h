@@ -35,8 +35,8 @@ public:
 	// Hardcoded: Sets the MVP matrix in the shader to the specified values.
 	void setMVPMatrix(const glm::mat4 & mvp);
 
-	void setAttributeLayout();	// Hardcoded: Configures the VAO's input attribute layout
-	void enableAttributes();	// Hardcoded
+	virtual void setAttributeLayout() = 0;	// Hardcoded: Configures the VAO's input attribute layout
+	virtual void enableAttributes() = 0;	// Hardcoded
 	void enableAttrib(const std::string& name);
 	void enableAttrib(int location);
 

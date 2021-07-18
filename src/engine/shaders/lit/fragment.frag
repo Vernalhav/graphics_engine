@@ -31,6 +31,7 @@ layout(location = 4) uniform AmbientLight ambient;
 layout(location = 5) uniform PointLight light;
 layout(location = 6) uniform Material material;
 
+
 vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 viewDirection) {
     vec3 intensity = vec3(0);
     vec3 lightDirection = normalize(lightSource.position - fragPositionWorld);
@@ -51,12 +52,10 @@ vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 view
     float dist = distance(fragPositionWorld, lightSource.position);
     vec3 distVec = {1, dist, dist * dist};
     float attenuationFactor = 1 / dot(distVec, lightSource.attenuationCoefficients);
-
     intensity *= attenuationFactor;
 
     return intensity;
 }
-
 
 void main() {
     vec4 texel = texture(mainTexture, fragTexCoord);

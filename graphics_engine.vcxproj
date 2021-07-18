@@ -23,6 +23,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\shaders\lit\LitShader.h" />
     <ClInclude Include="src\application\Ghast.h" />
     <ClInclude Include="src\application\RotationFinder.h" />
     <ClInclude Include="src\application\SinMovement.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="src\application\TransformFinder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\shaders\lit\LitShader.cpp" />
     <ClCompile Include="src\application\Ghast.cpp" />
     <ClCompile Include="src\application\RotationFinder.cpp" />
     <ClCompile Include="src\application\SinMovement.cpp" />

@@ -9,15 +9,15 @@ out vec3 viewPositionWorld;			// Position of the viewer in world space
 out vec3 fragNormalWorld;			// Fragment normal in world space (not normalized)
 out vec2 fragTexCoord;				// Fragment's UV texture coordinates
 
-layout(location = 0) uniform mat4 model;
-layout(location = 1) uniform mat4 viewProjection;
+layout(location = 0) uniform mat4 modelMatrix;
+layout(location = 1) uniform mat4 viewProjectionMatrix;
 layout(location = 2) uniform vec3 viewPosition;
 
 void main() {
-    fragPositionWorld = vec3(model * vec4(position, 1));
+    fragPositionWorld = vec3(modelMatrix * vec4(position, 1));
     viewPositionWorld = viewPosition;
-    fragNormalWorld = vec3(model * vec4(vertexNormal, 0));
+    fragNormalWorld = vec3(modelMatrix * vec4(vertexNormal, 0));
     fragTexCoord = texCoord;
 
-    gl_Position = viewProjection * model * vec4(position, 1);
+    gl_Position = viewProjectionMatrix * modelMatrix * vec4(position, 1);
 };
