@@ -7,6 +7,6 @@ out vec2 fragTexCoord;
 layout(location = 0) uniform mat4 matrixMVP;
 
 void main() {
-   fragTexCoord = texCoord;
-   gl_Position = matrixMVP * vec4(position, 1);
+    fragTexCoord = texCoord;
+    gl_Position = matrixMVP * vec4(position, 1);
 };
