@@ -11,6 +11,7 @@ void LitShader::setAttributeLayout() {
 
 void LitShader::enableAttributes() {
     enableAttrib(POSITION_LAYOUT_LOC);
+    enableAttrib(TEX_COORD_LAYOUT_LOC);
     enableAttrib(NORMAL_LAYOUT_LOC);
 }
 
