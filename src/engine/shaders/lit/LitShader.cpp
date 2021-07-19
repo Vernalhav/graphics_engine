@@ -1,7 +1,7 @@
 #include "LitShader.h"
 
-LitShader::LitShader(const std::string& name) : Shader(fs::path("."), name) {
-}
+LitShader::LitShader(const std::string& name)
+    : Shader(fs::path("."), name) { }
 
 void LitShader::setAttributeLayout() {
     glVertexAttribPointer(POSITION_LAYOUT_LOC, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (const void*)0);
