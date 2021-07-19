@@ -8,6 +8,8 @@
 
 namespace fs = std::filesystem;
 
+// TODO: query program uniforms/attributes' layout location and cache them in a dict
+
 class Shader
 {
 protected:

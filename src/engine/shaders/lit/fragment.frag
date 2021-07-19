@@ -1,7 +1,5 @@
 #version 430 core
 
-#define MAX_LIGHTS 32
-
 /*
     IMPORTANT NOTE:
     In order to explicitly align the following structs properly in memory
@@ -23,16 +21,16 @@ struct Material {
 };
 
 struct AmbientLight {
-    float intensity;
     vec4 color_3;
+    float intensity;
 };
 
 struct PointLight {
     vec4 position_3;
-    vec4 color_3;                     
+    vec4 color_3;
 
     // Constant, linear and quadratic attenuation coefficients (in that order)
-    vec4 attenuationCoefficients_3;   
+    vec4 attenuationCoefficients_3;
 };
 
 in vec3 fragPositionWorld;			// Position of the fragment in world space
@@ -45,11 +43,14 @@ out vec4 fragColor;
 layout(location = 3) uniform sampler2D mainTexture;
 uniform Material material;
 
-uniform AmbientLight ambient;
-uniform layout(std140) PointLightsBlock {
-    int nLights;
-    PointLight lights[MAX_LIGHTS];
-} PointLights;
+#define MAX_LIGHTS 32
+
+uniform layout(std140, binding = 0) LightUniformBlock {
+                                            //  Alignment  | Byte Offset | Size
+    AmbientLight ambient;                   //  16         | 0           | sizeof(AmbientLight)[20]
+    int nPointLights;                       //  4          | 20          | 4
+    PointLight pointLights[MAX_LIGHTS];     //  16         | 32          | MAX_LIGHTS * sizeof(PointLight)[48]
+} Lights;
 
 
 vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 viewDirection) {
@@ -82,10 +83,10 @@ void main() {
     vec3 viewDirection = normalize(viewPositionWorld - fragPositionWorld);
 
     vec3 lightIntensity = vec3(0);
-    lightIntensity += ambient.intensity * ambient.color_3.xyz;
+    lightIntensity += Lights.ambient.intensity * Lights.ambient.color_3.xyz;
 
-    for (int i = 0; i < PointLights.nLights; i++) {
-        lightIntensity += calculatePointLight(PointLights.lights[i], normal, viewDirection);
+    for (int i = 0; i < Lights.nPointLights; i++) {
+        lightIntensity += calculatePointLight(Lights.pointLights[i], normal, viewDirection);
     }
 
     fragColor = clamp(texel * vec4(lightIntensity, 1), 0, 1);
