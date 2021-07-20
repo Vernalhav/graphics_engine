@@ -1,5 +1,8 @@
 #pragma once
 #include "Camera.h"
+#include "PointLight.h"
+#include "AmbientLight.h"
+
 #include "../graphics/Renderer.h"
 
 class Scene {
@@ -11,6 +14,9 @@ private:
 	SceneObject* root;
 	Renderer* renderer;
 
+	AmbientLight* ambientLight;
+	std::vector<PointLight*> pointLights;	// TODO: call clear on destructor?
+
 public:
 	Scene();
 	~Scene();
@@ -19,6 +25,9 @@ public:
 	void setMainCamera(Camera* camera);
 	void makeActiveScene();
 	
+	void addPointLight(PointLight* light);
+	void setAmbientLight(AmbientLight* light);
+
 	void render();
 	void start();
 	void update();

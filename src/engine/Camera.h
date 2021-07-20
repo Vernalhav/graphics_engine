@@ -16,6 +16,8 @@ public:
 
 	void update();
 	
+	glm::vec3 getViewPosition();
+
 	float getFov();
 	float getNear();
 	float getFar();

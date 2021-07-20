@@ -12,7 +12,7 @@
 */
 
 struct Material {
-    float ambient;
+    vec4 ambient_3;
     vec4 diffuse_3;
 
     // Exponent of the specular light component calculation
@@ -45,11 +45,11 @@ uniform Material material;
 
 #define MAX_LIGHTS 32
 
-uniform layout(std140, binding = 0) LightUniformBlock {
-                                            //  Alignment  | Byte Offset | Size
-    AmbientLight ambient;                   //  16         | 0           | sizeof(AmbientLight)[20]
-    int nPointLights;                       //  4          | 20          | 4
-    PointLight pointLights[MAX_LIGHTS];     //  16         | 32          | MAX_LIGHTS * sizeof(PointLight)[48]
+layout(std140, binding = 0) uniform LightUniformBlock {
+                                            //  Alignment  | Byte Offset | Padded Size
+    AmbientLight ambient;                   //  16         | 0           | 32
+    int nPointLights;                       //  4          | 32          | 4
+    PointLight pointLights[MAX_LIGHTS];     //  16         | 48          | MAX_LIGHTS * 48
 } Lights;
 
 
@@ -83,7 +83,7 @@ void main() {
     vec3 viewDirection = normalize(viewPositionWorld - fragPositionWorld);
 
     vec3 lightIntensity = vec3(0);
-    lightIntensity += Lights.ambient.intensity * Lights.ambient.color_3.xyz;
+    lightIntensity += Lights.ambient.intensity * material.ambient_3.xyz * Lights.ambient.color_3.xyz;
 
     for (int i = 0; i < Lights.nPointLights; i++) {
         lightIntensity += calculatePointLight(Lights.pointLights[i], normal, viewDirection);

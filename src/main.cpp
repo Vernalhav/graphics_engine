@@ -24,6 +24,8 @@
 #include "engine/Input.h"
 
 #include "misc/utils.h"
+#include "engine/AmbientLight.h"
+#include "engine/PointLight.h"
 
 
 Scene* setupScene() {
@@ -31,12 +33,17 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
+    mainCam->addComponent<PointLight>(20.0f);
     mainCam->addComponent<FirstPersonController>(false, 0.15f);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
     mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 40}), glm::vec2({-100, 100}));
     mainCam->transform.setTranslation({0, -17, 0});
     scene->setMainCamera(mainCam->getComponent<Camera>());
     scene->addRootObject(mainCam);
+
+    SceneObject* ambientLight = new SceneObject("ambient");
+    ambientLight->addComponent<AmbientLight>(0.06f);
+    scene->addRootObject(ambientLight);
 
     SceneObject* house = new SceneObject("house");
     RenderData* houseRenderData = new RenderData("assets/models/house/House_0.obj");
@@ -78,6 +85,7 @@ Scene* setupScene() {
     SceneObject* balloon = new SceneObject("balloon");
     SceneObject* balloonPivot = new SceneObject("balloonPivot");
     RenderData* balloonRenderData = new RenderData("assets/models/balloon/balloon.obj");
+    balloon->addComponent<PointLight>(50.0f);
     balloon->addComponent<Renderable>(balloonRenderData);
     balloon->addComponent<SinMovement>(0.02f, 1.0f);
     balloon->transform.setTranslation({0, 0, 40});  // rotation radius
@@ -125,6 +133,36 @@ Scene* setupScene() {
     sky->transform.setScale(1000);
     sky->addComponent<Renderable>(skyRenderData);
     scene->addRootObject(sky);
+
+    return scene;
+}
+
+Scene* setupTestScene() {
+    Scene* scene = new Scene();
+
+    SceneObject* mainCam = new SceneObject("mainCam");
+    mainCam->addComponent<Camera>();
+    mainCam->addComponent<PointLight>(20.0f);
+    mainCam->addComponent<FirstPersonController>(false, 2.0f);
+    mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
+    scene->setMainCamera(mainCam->getComponent<Camera>());
+    scene->addRootObject(mainCam);
+
+    SceneObject* sky = new SceneObject("skybox");
+    RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");
+    sky->transform.setScale(1000);
+    sky->addComponent<Renderable>(skyRenderData);
+    scene->addRootObject(sky);
+
+    SceneObject* pond = new SceneObject("pond");
+    RenderData* pondRenderData = new RenderData("assets/models/pond/pond.obj");
+    pond->transform.setScale(20);
+    pond->addComponent<Renderable>(pondRenderData);
+    scene->addRootObject(pond);
+
+    SceneObject* ambientLight = new SceneObject("ambient");
+    ambientLight->addComponent<AmbientLight>(0.2f);
+    scene->addRootObject(ambientLight);
 
     return scene;
 }

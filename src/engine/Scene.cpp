@@ -10,7 +10,7 @@
 Scene* Scene::activeScene = nullptr;
 
 
-Scene::Scene() : mainCamera(nullptr) {
+Scene::Scene() : mainCamera(nullptr), ambientLight(nullptr) {
 	if (activeScene == nullptr) activeScene = this;
 	root = new SceneObject("root");
 	renderer = new Renderer(new LitShader("Standard Shader"));
@@ -18,6 +18,9 @@ Scene::Scene() : mainCamera(nullptr) {
 
 Scene::~Scene() {
 	mainCamera = nullptr;
+	ambientLight = nullptr;
+	LitShader::freeLightBuffers();
+
 	delete root;
 	delete renderer;
 }
@@ -34,6 +37,14 @@ void Scene::makeActiveScene() {
 	activeScene = this;
 }
 
+void Scene::addPointLight(PointLight* light) {
+	pointLights.push_back(light);
+}
+
+void Scene::setAmbientLight(AmbientLight* light) {
+	ambientLight = light;
+}
+
 void Scene::render() {
 	if (mainCamera == nullptr) {
 		std::cout << "render: WARNING: No main camera assigned!" << std::endl;
@@ -41,6 +52,10 @@ void Scene::render() {
 	}
 
 	glm::mat4 viewProjectionMatrix = mainCamera->getViewProjectionMatrix();
+
+	glm::vec3 viewPosition = mainCamera->getViewPosition();
+	renderer->setViewPosition(viewPosition);
+	LitShader::updateLights(ambientLight, pointLights);
 	
 	std::stack<std::pair<const SceneObject*, glm::mat4>> objects;
 	objects.push({ root, root->transform.getTransformMatrix() });
@@ -58,7 +73,7 @@ void Scene::render() {
 			renderer->drawObject(renderable->getRenderData(), globalTransform, viewProjectionMatrix);
 		}
 
-		// Simulate recursion propagating current global transform
+		// Simulate recursion by propagating current global transform
 		for (const SceneObject* child : curObj->getChildren()) {
 			objects.push({ child, globalTransform });
 		}

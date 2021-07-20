@@ -1,30 +1,80 @@
 #include "LitShader.h"
 
 // TODO: improve buffer handling (probably by creating a GameRenderer class that stores this state)
-int LitShader::pointLightUboId = -1;
+int LitShader::lightsUboId = -1;
 
 void LitShader::generateLightBuffers() {
-    glGenBuffers(1, (GLuint *)&pointLightUboId);
-    glBindBuffer(GL_UNIFORM_BUFFER, pointLightUboId);
-    glBufferData(GL_UNIFORM_BUFFER, POINT_LIGHT_BUFFER_LEN, nullptr, GL_DYNAMIC_DRAW);
-    glBindBufferBase(GL_UNIFORM_BUFFER, LIGHT_BLOCK_BINDING, pointLightUboId);
+    glGenBuffers(1, (GLuint *)&lightsUboId);
+    glBindBuffer(GL_UNIFORM_BUFFER, lightsUboId);
+    glBufferData(GL_UNIFORM_BUFFER, LIGHT_BUFFER_LEN, nullptr, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, LIGHT_BLOCK_BINDING, lightsUboId);
+}
+
+int LitShader::writeAmbientLightToBuffer(void* buffer, AmbientLight* light, int offset) {
+    glm::vec4 diffuse = glm::vec4(light->getDiffuseColor(), 1);
+    float intensity = light->getIntensity();
+
+    memcpy((char *)buffer + offset, &diffuse, sizeof(glm::vec4));
+    offset += sizeof(glm::vec4);
+    memcpy((char *)buffer + offset, &intensity, sizeof(float));
+    offset += sizeof(float);
+
+    return offset;
+}
+
+int LitShader::writePointLightToBuffer(void* buffer, PointLight* light, int offset) {
+    glm::vec4 position = glm::vec4(light->getPosition(), 1);
+    glm::vec4 diffuse = glm::vec4(light->getDiffuseColor(), 1);
+    glm::vec4 coefficients = glm::vec4(light->getAttenuationCoefficients(), 1);
+    
+    memcpy((char*)buffer + offset, &position, sizeof(glm::vec4));
+    offset += sizeof(glm::vec4);
+    memcpy((char*)buffer + offset, &diffuse, sizeof(glm::vec4));
+    offset += sizeof(glm::vec4);
+    memcpy((char*)buffer + offset, &coefficients, sizeof(glm::vec4));
+    offset += sizeof(glm::vec4);
+
+    return offset;
 }
 
 LitShader::LitShader(const std::string& name)
-    : Shader(fs::path("."), name) {
-    
-    if (pointLightUboId == -1) {
+    : Shader(fs::path("src/engine/shaders/lit/"), name) {
+
+    setMainTextureLocation(MAIN_TEX_UNIFORM_LOC);
+    if (lightsUboId == -1) {
         LitShader::generateLightBuffers();
     }
 }
 
-void LitShader::updateLights(AmbientLight* ambient, std::vector<PointLight*> pointLights) {
-    // TODO
+void LitShader::setMaterial(const Material& material) {
+    setFloat4("material.ambient_3", glm::vec4(material.ambient, 1));
+    setFloat4("material.diffuse_3", glm::vec4(material.diffuse, 1));
+    setFloat4("material.specular_3", glm::vec4(material.specular, 1));
+    setFloat("material.shinyness", material.shinyness);
+}
+
+void LitShader::updateLights(AmbientLight* ambient, const std::vector<PointLight*>& pointLights) {
+    char lightBuffer[LIGHT_BUFFER_LEN];
+    int nLights = pointLights.size();
+
+    int offset = 0;
+    writeAmbientLightToBuffer(lightBuffer, ambient, offset);
+    offset = 32;
+    memcpy((char *)lightBuffer + offset, &nLights, sizeof(int));
+    offset = 48;
+
+    for (int i = 0; i < nLights; i++) {
+        writePointLightToBuffer(lightBuffer, pointLights[i], offset);
+        offset += 48;
+    }
+
+    glBindBuffer(GL_UNIFORM_BUFFER, lightsUboId);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, offset, (void *)lightBuffer);
 }
 
 void LitShader::freeLightBuffers() {
-    glDeleteBuffers(1, (GLuint *)&pointLightUboId);
-    pointLightUboId = -1;
+    glDeleteBuffers(1, (GLuint *)&lightsUboId);
+    lightsUboId = -1;
 }
 
 void LitShader::setAttributeLayout() {
@@ -49,4 +99,8 @@ int LitShader::getViewProjectionUniformLoc() {
 
 int LitShader::getMainTextureUniformLoc() {
     return MAIN_TEX_UNIFORM_LOC;
+}
+
+void LitShader::setViewPosition(const glm::vec3& position) {
+    setFloat3(VIEW_POS_UNIFORM_LOC, position);
 }

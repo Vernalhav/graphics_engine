@@ -124,7 +124,7 @@ namespace {
 				if (lineTokens[0] == "newmtl") {
 					if (!textureName.empty()) {
 						std::cout << "Loading texture " << textureName << " (" << texturePath.generic_string() << ")... ";
-						textures[textureName] = Material(textureName, textureColor, texturePath);
+						textures[textureName] = Material(texturePath, textureName);
 						std::cout << "done!" << std::endl;
 						texturePath = "";
 					}
@@ -143,7 +143,7 @@ namespace {
 
 			if (!textureName.empty()) {
 				std::cout << "Loading texture " << textureName << " (" << texturePath.generic_string() << ")... ";
-				textures[textureName] = Material(textureName, textureColor, texturePath);
+				textures[textureName] = Material(texturePath, textureName);
 				std::cout << "done!" << std::endl;
 				texturePath = "";
 			}

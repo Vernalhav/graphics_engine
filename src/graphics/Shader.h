@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <filesystem>
 
+#include "Material.h"
 
 namespace fs = std::filesystem;
 
@@ -21,6 +22,7 @@ protected:
 
 	GLint getUniformLocation(const std::string& name);
 	GLint getAttribLocation(const std::string& name);
+	void setMainTextureLocation(int textureSlot);
 
 public:
 	static constexpr int MAIN_TEXTURE_SLOT = 0;
@@ -41,6 +43,9 @@ public:
 	virtual int getModelMatrixUniformLoc() = 0;
 	virtual int getViewProjectionUniformLoc() = 0;
 	virtual int getMainTextureUniformLoc() = 0;
+
+	virtual void setMaterial(const Material& m) = 0;
+	virtual void setViewPosition(const glm::vec3& position) = 0;
 
 	void setInt(const std::string& name, int value);
 	void setInt(int location, int value);

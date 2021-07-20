@@ -21,6 +21,8 @@ public:
 
 	void uploadMesh(RenderData* mesh);
 
+	void setViewPosition(const glm::vec3& position);
+
 	void drawObject(RenderData* object, const glm::mat4& model, const glm::mat4& viewProjection);
 
 	void toggleDrawMode();

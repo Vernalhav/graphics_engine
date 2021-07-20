@@ -2,10 +2,8 @@
 #include "../../../graphics/Shader.h"
 #include "../../PointLight.h"
 #include "../../AmbientLight.h"
+#include "../../../graphics/Material.h"
 
-struct PointLightShaderData {
-	glm::vec4 pos_3, color_3, attenuationCoefficients_3;
-};
 
 class LitShader : public Shader {
 private:
@@ -19,24 +17,30 @@ private:
 
 	static constexpr int VIEW_POS_UNIFORM_LOC = 2;
 	static constexpr int LIGHT_BLOCK_BINDING = 0;
-	static constexpr int MAX_POINT_LIGHTS = 32;	// Should be the same as the one defined in the frag shader
-	static constexpr int POINT_LIGHT_BUFFER_LEN = 4 * sizeof(int) + MAX_POINT_LIGHTS * sizeof(PointLightShaderData);
+	static constexpr int MAX_POINT_LIGHTS = 32;		// Should be the same as the one defined in the frag shader
+	static constexpr int LIGHT_BUFFER_LEN = 48 + MAX_POINT_LIGHTS * 3 * 4 * sizeof(float);
 
-	static int pointLightUboId;
+	static int lightsUboId;
 
 	static void generateLightBuffers();
+
+	static int writeAmbientLightToBuffer(void* buffer, AmbientLight* light, int offset);
+	static int writePointLightToBuffer(void* buffer, PointLight* light, int offset);
 
 public:
 	LitShader(const std::string& name);
 
-	static void updateLights(AmbientLight* ambient, std::vector<PointLight*> pointLights);
+	void setMaterial(const Material& material) override;
+
+	static void updateLights(AmbientLight* ambient, const std::vector<PointLight*>& pointLights);
 	static void freeLightBuffers();
 
-	// Inherited via Shader
 	virtual void setAttributeLayout() override;
 	virtual void enableAttributes() override;
 
 	// Inherited via Shader
+	virtual void setViewPosition(const glm::vec3& position) override;
+
 	virtual int getModelMatrixUniformLoc() override;
 	virtual int getViewProjectionUniformLoc() override;
 	virtual int getMainTextureUniformLoc() override;

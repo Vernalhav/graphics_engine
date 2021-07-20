@@ -22,4 +22,8 @@ public:
 
 	void setRadius(float radius);
 	void setAttenuationAtRadius(int attenuation);
+
+	glm::vec3 getDiffuseColor();
+	glm::vec3 getAttenuationCoefficients();
+	glm::vec3 getPosition();
 };

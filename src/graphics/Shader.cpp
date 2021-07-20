@@ -37,10 +37,6 @@ void Shader::initShader(const std::string& vertexCode, const std::string& fragme
     // TODO: Add error checking here
     glLinkProgram(id);
     use();
-
-    // Sets the main texture sampler to read the texture
-    // that is assigned to the main texture slot.
-    setInt(getMainTextureUniformLoc(), MAIN_TEXTURE_SLOT);
 }
 
 Shader::~Shader() {
@@ -86,6 +82,12 @@ GLint Shader::getAttribLocation(const std::string& name) {
     if (status == -1)
         std::cout << "ERROR FINDING ATTRIBUTE " << name << std::endl;
     return status;
+}
+
+void Shader::setMainTextureLocation(int mainTextureLoc) {
+    // Sets the main texture sampler to read the texture
+    // that is assigned to the main texture slot.
+    setInt(mainTextureLoc, MAIN_TEXTURE_SLOT);
 }
 
 void Shader::setFloat(const std::string& name, float value) {

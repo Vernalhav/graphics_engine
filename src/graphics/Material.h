@@ -16,9 +16,17 @@ struct Material {
 	glm::vec3 color;
 	Texture *texture;
 
-	Material() : name(""), color(glm::vec3(0)), texture(nullptr) { };
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	float shinyness;
 	
-	Material(const std::string& name, const glm::vec3& color, const fs::path& texturePath);
+	Material(const fs::path& texturePath = "", const std::string& name = "",
+		const glm::vec3& ambient = glm::vec3(1),
+		const glm::vec3& diffuse = glm::vec3(1),
+		const glm::vec3& specular = glm::vec3(1),
+		float shinyness = 1,
+		const glm::vec3& color = glm::vec3(0));
 
 	void freeTexture() { delete texture; }
 };
