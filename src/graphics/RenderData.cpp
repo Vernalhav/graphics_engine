@@ -109,7 +109,7 @@ namespace {
 	}
 
 	std::map<std::string, Material> loadMTL(const fs::path& filePath) {
-
+		// Full specification: http://paulbourke.net/dataformats/mtl/
 		std::ifstream mtlFile;
 		mtlFile.open(filePath);
 
@@ -149,7 +149,7 @@ namespace {
 					current.shinyness = stof(lineTokens[1]);
 				}
 
-				if (lineTokens[0] == "map_Kd" || lineTokens[0] == "map_d") {
+				if (lineTokens[0] == "map_Kd") {
 					fs::path basePath = filePath;
 					current.texture = new Texture(basePath.replace_filename(lineTokens[1]));
 				}

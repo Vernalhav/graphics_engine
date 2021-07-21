@@ -3,7 +3,7 @@ Wavefront OBJ material file
 
 newmtl Stone
 Ns 0
-Ka 0.2 0.2 0.2
+Ka 1 1 1
 Kd 1 1 1
 Ks 0 0 0
 map_Ka Mineways2Skfb-RGBA.png
@@ -16,7 +16,7 @@ illum 2
 
 newmtl Grass_Block
 Ns 0
-Ka 0.2 0.2 0.2
+Ka 1 1 1
 Kd 1 1 1
 Ks 0 0 0
 map_Ka Mineways2Skfb-RGBA.png
@@ -29,7 +29,7 @@ illum 2
 
 newmtl Dirt
 Ns 0
-Ka 0.2 0.2 0.2
+Ka 1 1 1
 Kd 1 1 1
 Ks 0 0 0
 map_Ka Mineways2Skfb-RGBA.png
@@ -42,7 +42,7 @@ illum 2
 
 newmtl Stationary_Water
 Ns 0
-Ka 0.2 0.2 0.2
+Ka 1 1 1
 Kd 1 1 1
 Ks 0.03 0.03 0.03
 map_Ka Mineways2Skfb-RGBA.png
@@ -57,7 +57,7 @@ Tf 0.465 0.465 0.465
 
 newmtl Coal_Ore
 Ns 0
-Ka 0.2 0.2 0.2
+Ka 1 1 1
 Kd 1 1 1
 Ks 0 0 0
 map_Ka Mineways2Skfb-RGBA.png
@@ -70,7 +70,7 @@ illum 2
 
 newmtl Stained_Glass
 Ns 0
-Ka 0.2 0.2 0.2
+Ka 1 1 1
 Kd 1 1 1
 Ks 0.03 0.03 0.03
 map_Ka Mineways2Skfb-RGBA.png
@@ -85,7 +85,7 @@ Tf 0.5 0.5 0.5
 
 newmtl Colored_Terracotta
 Ns 0
-Ka 0.2 0.2 0.2
+Ka 1 1 1
 Kd 1 1 1
 Ks 0 0 0
 map_Ka Mineways2Skfb-RGBA.png
@@ -98,7 +98,7 @@ illum 2
 
 newmtl Stained_Glass_Pane
 Ns 0
-Ka 0.2 0.2 0.2
+Ka 1 1 1
 Kd 1 1 1
 Ks 0.03 0.03 0.03
 map_Ka Mineways2Skfb-RGBA.png
