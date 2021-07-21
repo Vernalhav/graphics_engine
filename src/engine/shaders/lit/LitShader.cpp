@@ -1,4 +1,5 @@
 #include "LitShader.h"
+#include <iostream>
 
 // TODO: improve buffer handling (probably by creating a GameRenderer class that stores this state)
 int LitShader::lightsUboId = -1;
@@ -41,6 +42,8 @@ LitShader::LitShader(const std::string& name)
     : Shader(fs::path("src/engine/shaders/lit/"), name) {
 
     setMainTextureLocation(MAIN_TEX_UNIFORM_LOC);
+    setLightingEnabled(true);
+
     if (lightsUboId == -1) {
         LitShader::generateLightBuffers();
     }
@@ -53,17 +56,25 @@ void LitShader::setMaterial(const Material& material) {
     setFloat("material.shinyness", material.shinyness);
 }
 
+void LitShader::setLightingEnabled(bool enabled) {
+    setInt(LIGHTING_ENABLED_UNIFORM_LOC, enabled ? 1 : 0);
+}
+
 void LitShader::updateLights(AmbientLight* ambient, const std::vector<PointLight*>& pointLights) {
+    if (pointLights.size() > MAX_POINT_LIGHTS) {
+        std::cout << "LitShader: WARNING: number of point lights exceeded maximum of " << MAX_POINT_LIGHTS << std::endl;
+    }
+
     char lightBuffer[LIGHT_BUFFER_LEN];
-    int nLights = pointLights.size();
+    int nPointLights = std::min((int)pointLights.size(), MAX_POINT_LIGHTS);
 
     int offset = 0;
     writeAmbientLightToBuffer(lightBuffer, ambient, offset);
     offset = 32;
-    memcpy((char *)lightBuffer + offset, &nLights, sizeof(int));
+    memcpy((char *)lightBuffer + offset, &nPointLights, sizeof(int));
     offset = 48;
 
-    for (int i = 0; i < nLights; i++) {
+    for (int i = 0; i < nPointLights; i++) {
         writePointLightToBuffer(lightBuffer, pointLights[i], offset);
         offset += 48;
     }

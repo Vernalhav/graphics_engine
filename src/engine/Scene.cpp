@@ -92,6 +92,13 @@ void Scene::toggleDrawMode() {
 	renderer->toggleDrawMode();
 }
 
+void Scene::setLightingEnabled(bool value) {
+	LitShader* shader = dynamic_cast<LitShader*>(renderer->getShader());
+	if (shader != nullptr) {
+		shader->setLightingEnabled(value);
+	}
+}
+
 Scene* Scene::getActiveScene() {
 	return activeScene;
 }

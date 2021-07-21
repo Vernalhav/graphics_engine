@@ -11,4 +11,7 @@ public:
 
 	glm::vec3 getDiffuseColor();
 	float getIntensity();
+
+	void setDiffuseColor(const glm::vec3& diffuse);
+	void setIntensity(float intensity);
 };

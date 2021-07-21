@@ -75,6 +75,10 @@ void Renderer::toggleDrawMode() {
 	glPolygonMode(GL_FRONT_AND_BACK, mode);
 }
 
+Shader* Renderer::getShader() {
+	return shader;
+}
+
 Renderer::Renderer(Shader* s) : shader(s), polygonMode(PolygonMode::Fill), VAO(0) {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

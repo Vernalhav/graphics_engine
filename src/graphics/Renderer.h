@@ -26,4 +26,6 @@ public:
 	void drawObject(RenderData* object, const glm::mat4& model, const glm::mat4& viewProjection);
 
 	void toggleDrawMode();
+
+	Shader* getShader();
 };

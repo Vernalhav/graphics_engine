@@ -16,8 +16,9 @@ private:
 	static constexpr int MAIN_TEX_UNIFORM_LOC = 3;
 
 	static constexpr int VIEW_POS_UNIFORM_LOC = 2;
+	static constexpr int LIGHTING_ENABLED_UNIFORM_LOC = 4;
 	static constexpr int LIGHT_BLOCK_BINDING = 0;
-	static constexpr int MAX_POINT_LIGHTS = 32;		// Should be the same as the one defined in the frag shader
+	static constexpr int MAX_POINT_LIGHTS = 128;		// Should be the same as the one defined in the frag shader
 	static constexpr int LIGHT_BUFFER_LEN = 48 + MAX_POINT_LIGHTS * 3 * 4 * sizeof(float);
 
 	static int lightsUboId;
@@ -31,6 +32,7 @@ public:
 	LitShader(const std::string& name);
 
 	void setMaterial(const Material& material) override;
+	void setLightingEnabled(bool enabled);
 
 	static void updateLights(AmbientLight* ambient, const std::vector<PointLight*>& pointLights);
 	static void freeLightBuffers();

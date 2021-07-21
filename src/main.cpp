@@ -28,22 +28,58 @@
 #include "engine/PointLight.h"
 
 
+SceneObject* getTorchLight(const std::string& name, float subLightRadius = 1.0f) {
+    SceneObject* torchLight = new SceneObject(name);
+    const glm::vec3 torchLightColor = { 1, 0.65f, 0 };
+
+    constexpr float angleStep = glm::half_pi<float>();
+
+    for (int i = 0; i < 4; i++) {
+        SceneObject* subLight = new SceneObject(name + "_subLight_" + std::to_string(i));
+        subLight->addComponent<PointLight>(12.0f, 20, torchLightColor);
+        torchLight->appendChild(subLight);
+        subLight->transform.translate(glm::vec3(glm::cos(i * angleStep), 0, glm::sin(i * angleStep)) * subLightRadius);
+    }
+
+    return torchLight;
+}
+
 Scene* setupScene() {
     Scene* scene = new Scene();
 
+    SceneObject* ambientLight = new SceneObject("ambient");
+    ambientLight->addComponent<AmbientLight>(0.2f);
+    scene->addRootObject(ambientLight);
+
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
-    mainCam->addComponent<PointLight>(20.0f);
+    mainCam->addComponent<PointLight>(5.0f);
     mainCam->addComponent<FirstPersonController>(false, 0.15f);
-    mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
+    mainCam->addComponent<Controls>(mainCam->getComponent<Camera>(), ambientLight->getComponent<AmbientLight>());
     mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 40}), glm::vec2({-100, 100}));
     mainCam->transform.setTranslation({0, -17, 0});
     scene->setMainCamera(mainCam->getComponent<Camera>());
     scene->addRootObject(mainCam);
 
-    SceneObject* ambientLight = new SceneObject("ambient");
-    ambientLight->addComponent<AmbientLight>(0.06f);
-    scene->addRootObject(ambientLight);
+    SceneObject* torchLight1 = getTorchLight("torchLight1");
+    torchLight1->transform.translate({ -3.6f, -17, 58.2f });
+    scene->addRootObject(torchLight1);
+
+    SceneObject* torchLight2 = getTorchLight("torchLight2");
+    torchLight2->transform.translate({ -2.8f, -8.9f, 53.7f });
+    scene->addRootObject(torchLight2);
+
+    SceneObject* torchLight3 = getTorchLight("torchLight3");
+    torchLight3->transform.translate({ -0.5f, -8.9f, 67.7f });
+    scene->addRootObject(torchLight3);
+
+    SceneObject* externalTorchLight1 = getTorchLight("externalTorchLight1");
+    externalTorchLight1->transform.translate({ -13.1f, -8.9f, 71.6f });
+    scene->addRootObject(externalTorchLight1);
+
+    SceneObject* externalTorchLight2 = getTorchLight("externalTorchLight2");
+    externalTorchLight2->transform.translate({ -13.1f, -8.9f, 52.0f });
+    scene->addRootObject(externalTorchLight2);
 
     SceneObject* house = new SceneObject("house");
     RenderData* houseRenderData = new RenderData("assets/models/house/House_0.obj");
@@ -170,7 +206,7 @@ Scene* setupTestScene() {
 int main() {
 
     std::ios_base::sync_with_stdio(false);
-    glm::vec3 backgroundColor = Color::CYAN;
+    glm::vec3 backgroundColor = Color::BLACK;
 
     Window* window = new Window();
     Scene* scene = setupScene();

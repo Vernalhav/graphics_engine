@@ -25,7 +25,7 @@ struct Material {
 		const glm::vec3& ambient = glm::vec3(1),
 		const glm::vec3& diffuse = glm::vec3(1),
 		const glm::vec3& specular = glm::vec3(1),
-		float shinyness = 1,
+		float shinyness = 16.0f,
 		const glm::vec3& color = glm::vec3(0));
 
 	void freeTexture() { delete texture; }

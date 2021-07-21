@@ -14,6 +14,7 @@ private:
 	SceneObject* root;
 	Renderer* renderer;
 
+	bool isLightingEnabled;
 	AmbientLight* ambientLight;
 	std::vector<PointLight*> pointLights;	// TODO: call clear on destructor?
 
@@ -31,7 +32,9 @@ public:
 	void render();
 	void start();
 	void update();
+
 	void toggleDrawMode();
+	void setLightingEnabled(bool value);
 
 	static Scene* getActiveScene();
 };

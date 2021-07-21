@@ -13,3 +13,11 @@ glm::vec3 AmbientLight::getDiffuseColor() {
 float AmbientLight::getIntensity() {
 	return intensity;
 }
+
+void AmbientLight::setDiffuseColor(const glm::vec3& diffuse) {
+	this->diffuse = diffuse;
+}
+
+void AmbientLight::setIntensity(float intensity) {
+	this->intensity = intensity;
+}

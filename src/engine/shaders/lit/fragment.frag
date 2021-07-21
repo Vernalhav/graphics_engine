@@ -34,7 +34,6 @@ struct PointLight {
 };
 
 in vec3 fragPositionWorld;			// Position of the fragment in world space
-in vec3 viewPositionWorld;			// Position of the viewer in world space
 in vec3 fragNormalWorld;			// Fragment normal in world space (not normalized)
 in vec2 fragTexCoord;				// Fragment's UV texture coordinates
 
@@ -43,7 +42,7 @@ out vec4 fragColor;
 layout(location = 3) uniform sampler2D mainTexture;
 uniform Material material;
 
-#define MAX_LIGHTS 32
+#define MAX_LIGHTS 128
 
 layout(std140, binding = 0) uniform LightUniformBlock {
                                             //  Alignment  | Byte Offset | Padded Size
@@ -51,6 +50,9 @@ layout(std140, binding = 0) uniform LightUniformBlock {
     int nPointLights;                       //  4          | 32          | 4
     PointLight pointLights[MAX_LIGHTS];     //  16         | 48          | MAX_LIGHTS * 48
 } Lights;
+
+layout(location = 2) uniform vec3 viewPositionWorld;
+layout(location = 4) uniform bool lightingEnabled;
 
 
 vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 viewDirection) {
@@ -78,6 +80,11 @@ vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 view
 void main() {
     vec4 texel = texture(mainTexture, fragTexCoord);
     if (texel.a < 0.1) discard;
+
+    if (!lightingEnabled) {
+        fragColor = texel;
+        return;
+    }
 
     vec3 normal = normalize(fragNormalWorld);
     vec3 viewDirection = normalize(viewPositionWorld - fragPositionWorld);
