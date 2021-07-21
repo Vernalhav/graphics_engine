@@ -178,7 +178,7 @@ Scene* setupTestScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
-    mainCam->addComponent<PointLight>(20.0f);
+    //mainCam->addComponent<PointLight>(20.0f);
     mainCam->addComponent<FirstPersonController>(false, 2.0f);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
     scene->setMainCamera(mainCam->getComponent<Camera>());
@@ -190,11 +190,15 @@ Scene* setupTestScene() {
     sky->addComponent<Renderable>(skyRenderData);
     scene->addRootObject(sky);
 
-    SceneObject* pond = new SceneObject("pond");
-    RenderData* pondRenderData = new RenderData("assets/models/pond/pond.obj");
-    pond->transform.setScale(20);
-    pond->addComponent<Renderable>(pondRenderData);
-    scene->addRootObject(pond);
+    SceneObject* plant = new SceneObject("plant");
+    RenderData* plantRenderData = new RenderData("assets/models/plant/plant.obj");
+    plant->addComponent<Renderable>(plantRenderData);
+    scene->addRootObject(plant);
+
+    SceneObject* light = new SceneObject("light");
+    light->addComponent<PointLight>(40.0f);
+    light->transform.translate({3.2f, 4.5f, 14.4f});
+    scene->addRootObject(light);
 
     SceneObject* ambientLight = new SceneObject("ambient");
     ambientLight->addComponent<AmbientLight>(0.2f);

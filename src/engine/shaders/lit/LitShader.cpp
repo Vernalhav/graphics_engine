@@ -54,6 +54,7 @@ void LitShader::setMaterial(const Material& material) {
     setFloat4("material.diffuse_3", glm::vec4(material.diffuse, 1));
     setFloat4("material.specular_3", glm::vec4(material.specular, 1));
     setFloat("material.shinyness", material.shinyness);
+    setInt("material.illumMode", (int)material.illumMode);
 }
 
 void LitShader::setLightingEnabled(bool enabled) {

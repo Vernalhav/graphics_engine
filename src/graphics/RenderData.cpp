@@ -38,6 +38,12 @@ namespace {
 		}
 	};
 
+	const IlluminationMode illuminationModes[] = {
+		IlluminationMode::Flat, 
+		IlluminationMode::Diffuse, 
+		IlluminationMode::Specular
+	};
+
 	// Aliasing type std::vector<VertexIndexInfo> to refer to a mesh Face
 	using Face = std::vector<VertexIndexInfo>;
 
@@ -112,9 +118,7 @@ namespace {
 		if (mtlFile.is_open()) {
 
 			int lineNum = 1;
-			std::string textureName;
-			glm::vec3 textureColor;
-			fs::path texturePath;
+			Material current;
 
 			for (std::string line; std::getline(mtlFile, line); lineNum++) {
 				std::vector<std::string> lineTokens = utils::split(line);
@@ -122,30 +126,43 @@ namespace {
 				if (lineTokens.size() == 0 || lineTokens[0][0] == '#') continue;
 
 				if (lineTokens[0] == "newmtl") {
-					if (!textureName.empty()) {
-						std::cout << "Loading texture " << textureName << " (" << texturePath.generic_string() << ")... ";
-						textures[textureName] = Material(texturePath, textureName);
-						std::cout << "done!" << std::endl;
-						texturePath = "";
-					}
-					
-					textureName = lineTokens[1];
+					if (current.name != "")
+						textures[current.name] = current;
+
+					current = Material();
+					current.name = lineTokens[1];
 				}
-				if (lineTokens[0] == "Kd") textureColor = { std::stod(lineTokens[1]),
-															std::stod(lineTokens[2]),
-															std::stod(lineTokens[3]) };
-				
+
+				if (lineTokens[0] == "Kd") {
+					current.diffuse = { std::stof(lineTokens[1]), std::stof(lineTokens[2]), std::stof(lineTokens[3]) };
+				}
+
+				if (lineTokens[0] == "Ka") {
+					current.ambient = { std::stof(lineTokens[1]), std::stof(lineTokens[2]), std::stof(lineTokens[3]) };
+				}
+
+				if (lineTokens[0] == "Ks") {
+					current.specular = { std::stof(lineTokens[1]), std::stof(lineTokens[2]), std::stof(lineTokens[3]) };
+				}
+
+				if (lineTokens[0] == "Ns") {
+					current.shinyness = stof(lineTokens[1]);
+				}
+
 				if (lineTokens[0] == "map_Kd" || lineTokens[0] == "map_d") {
 					fs::path basePath = filePath;
-					texturePath = basePath.replace_filename(lineTokens[1]);
+					current.texture = new Texture(basePath.replace_filename(lineTokens[1]));
+				}
+
+				if (lineTokens[0] == "illum") {
+					int illumMode = stoi(lineTokens[1]);
+					if (0 <= illumMode && illumMode < 3)
+						current.illumMode = illuminationModes[illumMode];
 				}
 			}
 
-			if (!textureName.empty()) {
-				std::cout << "Loading texture " << textureName << " (" << texturePath.generic_string() << ")... ";
-				textures[textureName] = Material(texturePath, textureName);
-				std::cout << "done!" << std::endl;
-				texturePath = "";
+			if (current.name != "") {
+				textures[current.name] = current;
 			}
 
 			mtlFile.close();

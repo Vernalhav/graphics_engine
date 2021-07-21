@@ -18,6 +18,7 @@ struct Material {
     // Exponent of the specular light component calculation
     float shinyness;
     vec4 specular_3;
+    int illumMode;
 };
 
 struct AmbientLight {
@@ -63,10 +64,12 @@ vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 view
     float diffuseIntensity = max(dot(lightDirection, normalDirection), 0);
     intensity += diffuseIntensity * material.diffuse_3.xyz * lightSource.color_3.xyz;
 
-    // Calculate specular light contribution
-    vec3 halfVector = normalize(lightDirection + viewDirection);
-    float specularIntensity = max(pow(dot(viewDirection, halfVector), material.shinyness), 0);
-    intensity += specularIntensity * material.specular_3.xyz * lightSource.color_3.xyz;
+    if (material.illumMode == 2) {
+        // Calculate specular light contribution
+        vec3 reflectionDirection = reflect(-lightDirection, normalDirection);
+        float specularIntensity = max(pow(dot(viewDirection, reflectionDirection), material.shinyness), 0);
+        intensity += specularIntensity * material.specular_3.xyz * lightSource.color_3.xyz;
+    }
 
     // Calculate distance attenuation
     float dist = distance(fragPositionWorld, lightSource.position_3.xyz);
@@ -78,6 +81,12 @@ vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 view
 }
 
 void main() {
+
+    if (material.illumMode == 0) {
+        fragColor = material.diffuse_3;
+        return;
+    }
+
     vec4 texel = texture(mainTexture, fragTexCoord);
     if (texel.a < 0.1) discard;
 
