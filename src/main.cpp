@@ -28,20 +28,20 @@
 #include "engine/PointLight.h"
 
 
-SceneObject* getTorchLight(const std::string& name, float subLightRadius = 1.0f) {
-    SceneObject* torchLight = new SceneObject(name);
-    const glm::vec3 torchLightColor = { 1, 0.65f, 0 };
+SceneObject* getQuadLight(const std::string& name, const glm::vec3& lightColor = Color::WHITE, float subLightRadius = 1.0f) {
+    SceneObject* quadLight = new SceneObject(name);
+    const glm::vec3 lightIntensity = lightColor / 255.0f;
 
     constexpr float angleStep = glm::half_pi<float>();
 
     for (int i = 0; i < 4; i++) {
         SceneObject* subLight = new SceneObject(name + "_subLight_" + std::to_string(i));
-        subLight->addComponent<PointLight>(12.0f, 20, torchLightColor);
-        torchLight->appendChild(subLight);
+        subLight->addComponent<PointLight>(12.0f, 20, lightIntensity);
+        quadLight->appendChild(subLight);
         subLight->transform.translate(glm::vec3(glm::cos(i * angleStep), 0, glm::sin(i * angleStep)) * subLightRadius);
     }
 
-    return torchLight;
+    return quadLight;
 }
 
 Scene* setupScene() {
@@ -53,7 +53,7 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
-    mainCam->addComponent<PointLight>(5.0f);
+    mainCam->addComponent<PointLight>(20.0f);
     mainCam->addComponent<FirstPersonController>(false, 0.15f);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>(), ambientLight->getComponent<AmbientLight>());
     mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 40}), glm::vec2({-100, 100}));
@@ -61,23 +61,23 @@ Scene* setupScene() {
     scene->setMainCamera(mainCam->getComponent<Camera>());
     scene->addRootObject(mainCam);
 
-    SceneObject* torchLight1 = getTorchLight("torchLight1");
+    SceneObject* torchLight1 = getQuadLight("torchLight1", Color::FIRE_ORANGE);
     torchLight1->transform.translate({ -3.6f, -17, 58.2f });
     scene->addRootObject(torchLight1);
 
-    SceneObject* torchLight2 = getTorchLight("torchLight2");
+    SceneObject* torchLight2 = getQuadLight("torchLight2", Color::FIRE_ORANGE);
     torchLight2->transform.translate({ -2.8f, -8.9f, 53.7f });
     scene->addRootObject(torchLight2);
 
-    SceneObject* torchLight3 = getTorchLight("torchLight3");
+    SceneObject* torchLight3 = getQuadLight("torchLight3", Color::FIRE_ORANGE);
     torchLight3->transform.translate({ -0.5f, -8.9f, 67.7f });
     scene->addRootObject(torchLight3);
 
-    SceneObject* externalTorchLight1 = getTorchLight("externalTorchLight1");
+    SceneObject* externalTorchLight1 = getQuadLight("externalTorchLight1", Color::FIRE_ORANGE);
     externalTorchLight1->transform.translate({ -13.1f, -8.9f, 71.6f });
     scene->addRootObject(externalTorchLight1);
 
-    SceneObject* externalTorchLight2 = getTorchLight("externalTorchLight2");
+    SceneObject* externalTorchLight2 = getQuadLight("externalTorchLight2", Color::FIRE_ORANGE);
     externalTorchLight2->transform.translate({ -13.1f, -8.9f, 52.0f });
     scene->addRootObject(externalTorchLight2);
 
@@ -163,6 +163,26 @@ Scene* setupScene() {
     plant->transform.setTranslation({ 6.73f, -10, 5.7f });
     plant->addComponent<Renderable>(plantRenderData);
     house->appendChild(plant);
+
+    RenderData* lampRenderData = new RenderData("assets/models/lamp/lamp.obj");
+
+    SceneObject* lamp1 = new SceneObject("lamp1");
+    SceneObject* lamp1Light = getQuadLight("lamp1Light", Color::ICE_BLUE, 4.0f);
+    lamp1Light->transform.translate({ 0, 26.0f, 0.0f });
+    lamp1->addComponent<Renderable>(lampRenderData);
+    lamp1->transform.setScale(0.015f);
+    lamp1->transform.translate({ -0.32f, 0, -0.7f });
+    lamp1->appendChild(lamp1Light);
+    pond->appendChild(lamp1);
+
+    SceneObject* lamp2 = new SceneObject("lamp2");
+    SceneObject* lamp2Light = getQuadLight("lamp2Light", Color::ICE_BLUE, 4.0f);
+    lamp2Light->transform.translate({ 0, 26.0f, 0.0f });
+    lamp2->addComponent<Renderable>(lampRenderData);
+    lamp2->transform.setScale(0.015f);
+    lamp2->transform.translate({ 0.52f, 0, -0.7f });
+    lamp2->appendChild(lamp2Light);
+    pond->appendChild(lamp2);
 
     SceneObject* sky = new SceneObject("skybox");
     RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");

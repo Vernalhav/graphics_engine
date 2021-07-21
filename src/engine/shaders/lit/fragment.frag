@@ -44,6 +44,7 @@ layout(location = 3) uniform sampler2D mainTexture;
 uniform Material material;
 
 #define MAX_LIGHTS 128
+#define EPSILON 0.00001
 
 layout(std140, binding = 0) uniform LightUniformBlock {
                                             //  Alignment  | Byte Offset | Padded Size
@@ -67,7 +68,7 @@ vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 view
     if (material.illumMode == 2) {
         // Calculate specular light contribution
         vec3 reflectionDirection = reflect(-lightDirection, normalDirection);
-        float specularIntensity = max(pow(dot(viewDirection, reflectionDirection), material.shinyness), 0);
+        float specularIntensity = max(pow(dot(viewDirection, reflectionDirection), material.shinyness + EPSILON), 0);
         intensity += specularIntensity * material.specular_3.xyz * lightSource.color_3.xyz;
     }
 
