@@ -10,15 +10,30 @@
 
 namespace fs = std::filesystem;
 
+enum class IlluminationMode {
+	Flat = 0,
+	Diffuse = 1,
+	Specular = 2
+};
+
 struct Material {
 
 	std::string name;
-	glm::vec3 color;
 	Texture *texture;
 
-	Material() : name(""), color(glm::vec3(0)), texture(nullptr) { };
+	IlluminationMode illumMode;
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	float shinyness;
 	
-	Material(const std::string& name, const glm::vec3& color, const fs::path& texturePath);
+	Material(const std::string& name = "",
+			const fs::path& texturePath = "",
+			const glm::vec3& ambient = glm::vec3(1),
+			const glm::vec3& diffuse = glm::vec3(1),
+			const glm::vec3& specular = glm::vec3(0),
+			float shinyness = 0.0f,
+			IlluminationMode illumMode = IlluminationMode::Diffuse);
 
 	void freeTexture() { delete texture; }
 };

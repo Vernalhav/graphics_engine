@@ -1,46 +1,26 @@
 #include "Scene.h"
+#include "Renderable.h"
+
+#include "shaders/lit/LitShader.h"
 
 #include <string.h>
 #include <iostream>
 #include <stack>
-#include "Renderable.h"
 
 Scene* Scene::activeScene = nullptr;
 
-const std::string vertex_code =
-	"#version 430 core\n"
-	"layout(location = 0) in vec3 position;"
-	"layout(location = 1) in vec2 texCoord;"
-	"out vec2 fragTexCoord;"
-	"layout(location = 0) uniform mat4 matrixMVP;"
 
-	"void main() {"
-	"   fragTexCoord = texCoord;"
-	"   gl_Position = matrixMVP * vec4(position, 1);"
-	"}";
-
-const std::string fragment_code =
-	"#version 430 core\n"
-	"in vec2 fragTexCoord;"
-	"out vec4 fragColor;"
-	"layout(location = 1) uniform sampler2D mainTexture;"
-
-	"void main() {"
-	"   vec4 texel = texture(mainTexture, fragTexCoord);"
-	"   if (texel.a < 0.1)"
-	"		discard;"
-	"	fragColor = texel;"
-	"}";
-
-
-Scene::Scene() : mainCamera(nullptr) {
+Scene::Scene() : mainCamera(nullptr), ambientLight(nullptr), isLightingEnabled(true) {
 	if (activeScene == nullptr) activeScene = this;
 	root = new SceneObject("root");
-	renderer = new Renderer(Shader(vertex_code, fragment_code, "Standard Shader"));
+	renderer = new Renderer(new LitShader("Standard Shader"));
 }
 
 Scene::~Scene() {
 	mainCamera = nullptr;
+	ambientLight = nullptr;
+	LitShader::freeLightBuffers();
+
 	delete root;
 	delete renderer;
 }
@@ -53,8 +33,20 @@ void Scene::setMainCamera(Camera* camera) {
 	mainCamera = camera;
 }
 
-void Scene::makeActiveScene(){
+void Scene::makeActiveScene() {
 	activeScene = this;
+}
+
+void Scene::addPointLight(PointLight* light) {
+	pointLights.push_back(light);
+}
+
+void Scene::addSpotLight(SpotLight* light) {
+	spotLights.push_back(light);
+}
+
+void Scene::setAmbientLight(AmbientLight* light) {
+	ambientLight = light;
 }
 
 void Scene::render() {
@@ -64,11 +56,14 @@ void Scene::render() {
 	}
 
 	glm::mat4 viewProjectionMatrix = mainCamera->getViewProjectionMatrix();
+
+	glm::vec3 viewPosition = mainCamera->getViewPosition();
+	renderer->setViewPosition(viewPosition);
+	LitShader::updateLights(ambientLight, pointLights, spotLights);
 	
 	std::stack<std::pair<const SceneObject*, glm::mat4>> objects;
 	objects.push({ root, root->transform.getTransformMatrix() });
 
-	glm::mat4 matrixMVP;
 	while (!objects.empty()) {
 		const auto& top = objects.top();
 
@@ -77,13 +72,12 @@ void Scene::render() {
 
 		objects.pop();
 
-		matrixMVP = viewProjectionMatrix * globalTransform;
 		std::vector<Renderable*> renderables = curObj->getComponents<Renderable>();
 		for (Renderable* renderable : renderables) {
-			renderer->drawObject(renderable->getRenderData(), matrixMVP);
+			renderer->drawObject(renderable->getRenderData(), globalTransform, viewProjectionMatrix);
 		}
 
-		// Simulate recursion propagating current global transform
+		// Simulate recursion by propagating current global transform
 		for (const SceneObject* child : curObj->getChildren()) {
 			objects.push({ child, globalTransform });
 		}
@@ -100,6 +94,13 @@ void Scene::update() {
 
 void Scene::toggleDrawMode() {
 	renderer->toggleDrawMode();
+}
+
+void Scene::setLightingEnabled(bool value) {
+	LitShader* shader = dynamic_cast<LitShader*>(renderer->getShader());
+	if (shader != nullptr) {
+		shader->setLightingEnabled(value);
+	}
 }
 
 Scene* Scene::getActiveScene() {

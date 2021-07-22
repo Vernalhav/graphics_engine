@@ -11,6 +11,10 @@ void Camera::update() {
 	Window::getActiveWindowSize(screenWidth, screenHeight);
 }
 
+glm::vec3 Camera::getViewPosition() {
+	return sceneObject->getGlobalTransform() * glm::vec4(0, 0, 0, 1);
+}
+
 float Camera::getFov() { return fov; }
 float Camera::getNear() { return zNear; }
 float Camera::getFar() { return zFar; }

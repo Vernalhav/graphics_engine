@@ -145,12 +145,10 @@ inline void SceneObject::addComponent(Args ...args) {
 	components.push_back(new ComponentType(this, std::forward<Args>(args)...));
 }
 
-
 template<typename Target>
 inline bool Component::instanceof() {
 	return dynamic_cast<Target*>(this) != nullptr;
 }
-
 
 template<typename ComponentType>
 inline ComponentType* SceneObject::getComponent() {

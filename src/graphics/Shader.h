@@ -3,39 +3,49 @@
 #include <gl/glew.h>
 
 #include <glm/glm.hpp>
+#include <filesystem>
 
+#include "Material.h"
+
+namespace fs = std::filesystem;
+
+// TODO: query program uniforms/attributes' layout location and cache them in a dict
 
 class Shader
 {
-private:
+protected:
 	std::string name;
 	GLuint id;
 
+	void initShader(const std::string& vertexCode, const std::string& fragmentCode);
 	static GLuint compileShader(const std::string& code, GLuint type, const std::string& name);
+
 	GLint getUniformLocation(const std::string& name);
 	GLint getAttribLocation(const std::string& name);
+	void setMainTextureLocation(int textureSlot);
 
 public:
-	static constexpr int POSITION_LAYOUT_LOC = 0;
-	static constexpr int TEX_COORD_LAYOUT_LOC = 1;
-	static constexpr int MVP_MATRIX_LAYOUT_LOC = 0;
-	static constexpr int MAIN_TEXTURE_LAYOUT_LOC = 1;
 	static constexpr int MAIN_TEXTURE_SLOT = 0;
 
-	Shader() : name("Unnamed Shader"), id(0) { }
-	Shader(const std::string& vertexCode, const std::string& fragmentCode);
-	Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name);
+	Shader(const fs::path& directoryPath, const std::string& name = "Unnamed shader");
+	Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name = "Unnamed shader");
 	~Shader();
 
 	void use();
 
-	// Hardcoded: Sets the MVP matrix in the shader to the specified values.
-	void setMVPMatrix(const glm::mat4 & mvp);
+	void setMVPMatrix(const glm::mat4& model, const glm::mat4& viewProjection);
 
-	void setAttributeLayout();	// Hardcoded: Configures the VAO's input attribute layout
-	void enableAttributes();	// Hardcoded
+	virtual void setAttributeLayout() = 0;
+	virtual void enableAttributes() = 0;
 	void enableAttrib(const std::string& name);
 	void enableAttrib(int location);
+
+	virtual int getModelMatrixUniformLoc() = 0;
+	virtual int getViewProjectionUniformLoc() = 0;
+	virtual int getMainTextureUniformLoc() = 0;
+
+	virtual void setMaterial(const Material& m) = 0;
+	virtual void setViewPosition(const glm::vec3& position) = 0;
 
 	void setInt(const std::string& name, int value);
 	void setInt(int location, int value);

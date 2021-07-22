@@ -10,4 +10,7 @@ namespace Color {
 	constexpr glm::vec3 GREEN = { 0, 255, 0 };
 	constexpr glm::vec3 BLUE = { 0, 0, 255 };
 	constexpr glm::vec3 CYAN = { 18, 135, 181 };
+	constexpr glm::vec3 FIRE_ORANGE = { 255, 166, 0 };
+	constexpr glm::vec3 ICE_BLUE = { 194, 239, 255 };
+	constexpr glm::vec3 MELLOW_YELLOW = { 252, 255, 191 };
 }

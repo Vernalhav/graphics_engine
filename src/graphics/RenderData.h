@@ -17,7 +17,7 @@ struct SubMesh {
 	Material material;
 	std::vector<int> indices;
 
-	SubMesh() : eboId(-1) { }
+	SubMesh() : material(), eboId(-1) { };
 	SubMesh(Material m) : material(m), eboId(-1) { };
 	~SubMesh() { glDeleteBuffers(1, (const GLuint *)&eboId); };
 

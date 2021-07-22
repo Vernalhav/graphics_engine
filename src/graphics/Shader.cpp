@@ -1,18 +1,35 @@
 #include "Shader.h"
+#include "../misc/utils.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 
-Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode)
-    : Shader(vertexCode, fragmentCode, "Unnamed Shader") { }
+Shader::Shader(const fs::path& directoryPath, const std::string& name)
+    : name(name), id(0) {
+    
+    std::string vertexCode, fragmentCode;
+    for (auto& path : fs::directory_iterator(directoryPath)) {
+        if (path.path().extension() == ".vert")
+            vertexCode = utils::readFileAsString(path);
+
+        if (path.path().extension() == ".frag")
+            fragmentCode = utils::readFileAsString(path);
+    }
+
+    initShader(vertexCode, fragmentCode);
+}
 
 Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& name)
-    : name(name) {
-	id = glCreateProgram();
+    : name(name), id(0) {
+    initShader(vertexCode, fragmentCode);
+}
 
-	GLuint vertex = Shader::compileShader(vertexCode, GL_VERTEX_SHADER, name + ": Vertex shader");
-	GLuint fragment = Shader::compileShader(fragmentCode, GL_FRAGMENT_SHADER, name + ": Fragment shader");
+void Shader::initShader(const std::string& vertexCode, const std::string& fragmentCode) {
+    id = glCreateProgram();
+
+    GLuint vertex = Shader::compileShader(vertexCode, GL_VERTEX_SHADER, name + ": Vertex shader");
+    GLuint fragment = Shader::compileShader(fragmentCode, GL_FRAGMENT_SHADER, name + ": Fragment shader");
 
     glAttachShader(id, vertex);
     glAttachShader(id, fragment);
@@ -20,10 +37,6 @@ Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode, c
     // TODO: Add error checking here
     glLinkProgram(id);
     use();
-
-    // Sets the main texture sampler to read the texture
-    // that is assigned to the main texture slot.
-    setInt(MAIN_TEXTURE_LAYOUT_LOC, MAIN_TEXTURE_SLOT);
 }
 
 Shader::~Shader() {
@@ -34,18 +47,9 @@ void Shader::use() {
     glUseProgram(id);
 }
 
-void Shader::setMVPMatrix(const glm::mat4 & mvp) {
-    setMatrix4(MVP_MATRIX_LAYOUT_LOC, mvp);
-}
-
-void Shader::setAttributeLayout() {
-    glVertexAttribPointer(POSITION_LAYOUT_LOC, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)0);
-    glVertexAttribPointer(TEX_COORD_LAYOUT_LOC, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (const void*)(3*sizeof(float)));
-}
-
-void Shader::enableAttributes() {
-    enableAttrib(POSITION_LAYOUT_LOC);
-    enableAttrib(TEX_COORD_LAYOUT_LOC);
+void Shader::setMVPMatrix(const glm::mat4& model, const glm::mat4& viewProjection) {
+    setMatrix4(getModelMatrixUniformLoc(), model);
+    setMatrix4(getViewProjectionUniformLoc(), viewProjection);
 }
 
 void Shader::enableAttrib(const std::string& name) {
@@ -78,6 +82,12 @@ GLint Shader::getAttribLocation(const std::string& name) {
     if (status == -1)
         std::cout << "ERROR FINDING ATTRIBUTE " << name << std::endl;
     return status;
+}
+
+void Shader::setMainTextureLocation(int mainTextureLoc) {
+    // Sets the main texture sampler to read the texture
+    // that is assigned to the main texture slot.
+    setInt(mainTextureLoc, MAIN_TEXTURE_SLOT);
 }
 
 void Shader::setFloat(const std::string& name, float value) {

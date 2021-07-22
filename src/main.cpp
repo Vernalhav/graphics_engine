@@ -1,10 +1,10 @@
-﻿#include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
-
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
+
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 #include "application/Color.h"
 #include "application/FirstPersonController.h"
@@ -24,19 +24,63 @@
 #include "engine/Input.h"
 
 #include "misc/utils.h"
+#include "engine/AmbientLight.h"
+#include "engine/PointLight.h"
+#include "application/Flashlight.h"
 
+
+SceneObject* getQuadLight(const std::string& name, const glm::vec3& lightColor = Color::WHITE, float subLightRadius = 1.0f) {
+    SceneObject* quadLight = new SceneObject(name);
+    const glm::vec3 lightIntensity = lightColor / 255.0f;
+
+    constexpr float angleStep = glm::half_pi<float>();
+
+    for (int i = 0; i < 4; i++) {
+        SceneObject* subLight = new SceneObject(name + "_subLight_" + std::to_string(i));
+        subLight->addComponent<PointLight>(12.0f, 20, lightIntensity);
+        quadLight->appendChild(subLight);
+        subLight->transform.translate(glm::vec3(glm::cos(i * angleStep), 0, glm::sin(i * angleStep)) * subLightRadius);
+    }
+
+    return quadLight;
+}
 
 Scene* setupScene() {
     Scene* scene = new Scene();
 
+    SceneObject* ambientLight = new SceneObject("ambient");
+    ambientLight->addComponent<AmbientLight>(glm::vec3(1), 0.2f);
+    scene->addRootObject(ambientLight);
+
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
+    mainCam->addComponent<PointLight>(20.0f);
     mainCam->addComponent<FirstPersonController>(false, 0.15f);
-    mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
-    mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 40}), glm::vec2({-100, 100}));
-    mainCam->transform.setTranslation({0, -17, 0});
+    mainCam->addComponent<Controls>(mainCam->getComponent<Camera>(), ambientLight->getComponent<AmbientLight>());
+    mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 60}), glm::vec2({-100, 100}));
+    mainCam->transform.setTranslation({ 0, -17, 0 });
     scene->setMainCamera(mainCam->getComponent<Camera>());
     scene->addRootObject(mainCam);
+
+    SceneObject* torchLight1 = getQuadLight("torchLight1", Color::FIRE_ORANGE);
+    torchLight1->transform.translate({ -3.6f, -17, 58.2f });
+    scene->addRootObject(torchLight1);
+
+    SceneObject* torchLight2 = getQuadLight("torchLight2", Color::FIRE_ORANGE);
+    torchLight2->transform.translate({ -2.8f, -8.9f, 53.7f });
+    scene->addRootObject(torchLight2);
+
+    SceneObject* torchLight3 = getQuadLight("torchLight3", Color::FIRE_ORANGE);
+    torchLight3->transform.translate({ -0.5f, -8.9f, 67.7f });
+    scene->addRootObject(torchLight3);
+
+    SceneObject* externalTorchLight1 = getQuadLight("externalTorchLight1", Color::FIRE_ORANGE);
+    externalTorchLight1->transform.translate({ -13.1f, -8.9f, 71.6f });
+    scene->addRootObject(externalTorchLight1);
+
+    SceneObject* externalTorchLight2 = getQuadLight("externalTorchLight2", Color::FIRE_ORANGE);
+    externalTorchLight2->transform.translate({ -13.1f, -8.9f, 52.0f });
+    scene->addRootObject(externalTorchLight2);
 
     SceneObject* house = new SceneObject("house");
     RenderData* houseRenderData = new RenderData("assets/models/house/House_0.obj");
@@ -76,14 +120,19 @@ Scene* setupScene() {
     scene->addRootObject(pond);
 
     SceneObject* balloon = new SceneObject("balloon");
+    SceneObject* balloonButt = new SceneObject("balloonButt");
     SceneObject* balloonPivot = new SceneObject("balloonPivot");
     RenderData* balloonRenderData = new RenderData("assets/models/balloon/balloon.obj");
     balloon->addComponent<Renderable>(balloonRenderData);
     balloon->addComponent<SinMovement>(0.02f, 1.0f);
+    balloonButt->addComponent<PointLight>(50.0f);
+    balloonButt->addComponent<SpotLight>(-Transform::up, 10.0f, 10.0f);
+    balloonButt->transform.translate({0, -0.5, 0});
     balloon->transform.setTranslation({0, 0, 40});  // rotation radius
     balloon->transform.setScale(30);
     balloonPivot->addComponent<PhysicsBody>(glm::vec3(0), glm::vec3({ 0, 0.3, 0 }));
     balloonPivot->appendChild(balloon);
+    balloon->appendChild(balloonButt);
     balloonPivot->transform.setTranslation({-0.7f, 30, 62.2f});
     scene->addRootObject(balloonPivot);
 
@@ -120,6 +169,44 @@ Scene* setupScene() {
     plant->addComponent<Renderable>(plantRenderData);
     house->appendChild(plant);
 
+    // TODO: Add resource manager/smart pointers to avoid resource duplication
+    RenderData* lamp1RenderData = new RenderData("assets/models/lamp/lamp.obj");
+    RenderData* lamp2RenderData = new RenderData("assets/models/lamp/lamp.obj");
+
+    SceneObject* lamp1 = new SceneObject("lamp1");
+    SceneObject* lamp1Light = getQuadLight("lamp1Light", Color::ICE_BLUE, 4.0f);
+    lamp1Light->transform.translate({ 0, 26.0f, 0.0f });
+    lamp1->addComponent<Renderable>(lamp1RenderData);
+    lamp1->transform.setScale(0.015f);
+    lamp1->transform.translate({ -0.32f, 0, -0.7f });
+    lamp1->appendChild(lamp1Light);
+    pond->appendChild(lamp1);
+
+    SceneObject* lamp2 = new SceneObject("lamp2");
+    SceneObject* lamp2Light = getQuadLight("lamp2Light", Color::ICE_BLUE, 4.0f);
+    lamp2Light->transform.translate({ 0, 26.0f, 0.0f });
+    lamp2->addComponent<Renderable>(lamp2RenderData);
+    lamp2->transform.setScale(0.015f);
+    lamp2->transform.translate({ 0.52f, 0, -0.7f });
+    lamp2->appendChild(lamp2Light);
+    pond->appendChild(lamp2);
+
+    SceneObject* temple = new SceneObject("temple");
+    RenderData* templeRenderData = new RenderData("assets/models/temple/temple.obj");
+    temple->addComponent<Renderable>(templeRenderData);
+    temple->transform.setScale(1.5f);
+    temple->transform.setRotation({ 0, glm::pi<float>(), 0 });
+    temple->transform.setTranslation({ 40.2f, -16.9f, 84.75f });
+    scene->addRootObject(temple);
+
+    SceneObject* snake = new SceneObject("snake");
+    RenderData* snakeRenderData = new RenderData("assets/models/snake/snake.obj");
+    snake->addComponent<Renderable>(snakeRenderData);
+    snake->transform.setScale(0.25f);
+    snake->transform.setRotation({ 0, glm::pi<float>(), 0 });
+    snake->transform.translate({ 5.3f, -0.24f, 1.28f });
+    temple->appendChild(snake);
+
     SceneObject* sky = new SceneObject("skybox");
     RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");
     sky->transform.setScale(1000);
@@ -129,11 +216,47 @@ Scene* setupScene() {
     return scene;
 }
 
-int main() {
-    Window* window = new Window();
+Scene* setupTestScene() {
+    Scene* scene = new Scene();
 
+    SceneObject* mainCam = new SceneObject("mainCam");
+    mainCam->addComponent<Camera>();
+    //mainCam->addComponent<PointLight>(20.0f);
+    mainCam->addComponent<FirstPersonController>(false, 2.0f);
+    mainCam->addComponent<Controls>(mainCam->getComponent<Camera>());
+    scene->setMainCamera(mainCam->getComponent<Camera>());
+    scene->addRootObject(mainCam);
+
+    SceneObject* sky = new SceneObject("skybox");
+    RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");
+    sky->transform.setScale(1000);
+    sky->addComponent<Renderable>(skyRenderData);
+    scene->addRootObject(sky);
+
+    SceneObject* plant = new SceneObject("plant");
+    RenderData* plantRenderData = new RenderData("assets/models/plant/plant.obj");
+    plant->addComponent<Renderable>(plantRenderData);
+    scene->addRootObject(plant);
+
+    SceneObject* light = new SceneObject("light");
+    light->addComponent<PointLight>(40.0f);
+    light->transform.translate({3.2f, 4.5f, 14.4f});
+    scene->addRootObject(light);
+
+    SceneObject* ambientLight = new SceneObject("ambient");
+    ambientLight->addComponent<AmbientLight>(glm::vec3(1), 0.2f);
+    scene->addRootObject(ambientLight);
+
+    return scene;
+}
+
+int main() {
+
+    std::ios_base::sync_with_stdio(false);
+    glm::vec3 backgroundColor = Color::BLACK;
+
+    Window* window = new Window();
     Scene* scene = setupScene();
-    glm::vec3 backgroundColor = Color::CYAN;
     window->show();
 
     scene->start();
