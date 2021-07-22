@@ -1,0 +1,24 @@
+# Blender MTL File: 'snakeforsketchfab.blend'
+# Material Count: 2
+
+newmtl snake
+Ns 512.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd snake_marble.jpeg
+
+newmtl stones
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.419718 0.419718 0.419718
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd stones_marble.jpeg

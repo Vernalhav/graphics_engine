@@ -54,12 +54,11 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
-    //mainCam->addComponent<SpotLight>(Transform::forward);
-    //mainCam->addComponent<Flashlight>(mainCam->getComponent<SpotLight>());
+    mainCam->addComponent<PointLight>(20.0f);
     mainCam->addComponent<FirstPersonController>(false, 0.15f);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>(), ambientLight->getComponent<AmbientLight>());
     mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 60}), glm::vec2({-100, 100}));
-    mainCam->transform.setTranslation({0, -17, 0});
+    mainCam->transform.setTranslation({ 0, -17, 0 });
     scene->setMainCamera(mainCam->getComponent<Camera>());
     scene->addRootObject(mainCam);
 
@@ -191,6 +190,22 @@ Scene* setupScene() {
     lamp2->transform.translate({ 0.52f, 0, -0.7f });
     lamp2->appendChild(lamp2Light);
     pond->appendChild(lamp2);
+
+    SceneObject* temple = new SceneObject("temple");
+    RenderData* templeRenderData = new RenderData("assets/models/temple/temple.obj");
+    temple->addComponent<Renderable>(templeRenderData);
+    temple->transform.setScale(1.5f);
+    temple->transform.setRotation({ 0, glm::pi<float>(), 0 });
+    temple->transform.setTranslation({ 40.2f, -16.9f, 84.75f });
+    scene->addRootObject(temple);
+
+    SceneObject* snake = new SceneObject("snake");
+    RenderData* snakeRenderData = new RenderData("assets/models/snake/snake.obj");
+    snake->addComponent<Renderable>(snakeRenderData);
+    snake->transform.setScale(0.25f);
+    snake->transform.setRotation({ 0, glm::pi<float>(), 0 });
+    snake->transform.translate({ 5.3f, -0.24f, 1.28f });
+    temple->appendChild(snake);
 
     SceneObject* sky = new SceneObject("skybox");
     RenderData* skyRenderData = new RenderData("assets/models/skybox/skycube.obj");

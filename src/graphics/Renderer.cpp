@@ -63,8 +63,11 @@ void Renderer::drawObject(RenderData* object, const glm::mat4& model, const glm:
 		SubMesh& currentMesh = elem.second;
 		shader->setMaterial(currentMesh.material);
 
+		if (currentMesh.material.texture != nullptr) {
+			currentMesh.material.texture->bind(Shader::MAIN_TEXTURE_SLOT);
+		}
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentMesh.eboId);
-		currentMesh.material.texture->bind(Shader::MAIN_TEXTURE_SLOT);
 		glDrawElements(GL_TRIANGLES, currentMesh.indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 }
