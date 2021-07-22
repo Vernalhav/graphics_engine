@@ -1,17 +1,7 @@
 #pragma once
-#include "SceneObject.h"
+#include "Light.h"
 
-class AmbientLight : public Component {
-private:
-	glm::vec3 diffuse;
-	float intensity;
-
+class AmbientLight : public Light {
 public:
-	AmbientLight(SceneObject* obj, float intensity = 1, const glm::vec3& diffuse = glm::vec3(1));
-
-	glm::vec3 getDiffuseColor();
-	float getIntensity();
-
-	void setDiffuseColor(const glm::vec3& diffuse);
-	void setIntensity(float intensity);
+	AmbientLight(SceneObject* obj, const glm::vec3& diffuse = glm::vec3(1), float intensity = 1);
 };

@@ -1,9 +1,8 @@
 #pragma once
-#include "SceneObject.h"
+#include "Light.h"
 
-class PointLight : public Component {
+class PointLight : public Light {
 private:
-	glm::vec3 diffuse;
 	glm::vec3 attenuationCoefficients;
 
 	/// <summary>
@@ -23,7 +22,5 @@ public:
 	void setRadius(float radius);
 	void setAttenuationAtRadius(int attenuation);
 
-	glm::vec3 getDiffuseColor();
 	glm::vec3 getAttenuationCoefficients();
-	glm::vec3 getPosition();
 };

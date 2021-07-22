@@ -12,7 +12,7 @@ void LitShader::generateLightBuffers() {
 }
 
 int LitShader::writeAmbientLightToBuffer(void* buffer, AmbientLight* light, int offset) {
-    glm::vec4 diffuse = glm::vec4(light->getDiffuseColor(), 1);
+    glm::vec4 diffuse = glm::vec4(light->getDiffuse(), 1);
     float intensity = light->getIntensity();
 
     memcpy((char *)buffer + offset, &diffuse, sizeof(glm::vec4));
@@ -25,7 +25,7 @@ int LitShader::writeAmbientLightToBuffer(void* buffer, AmbientLight* light, int 
 
 int LitShader::writePointLightToBuffer(void* buffer, PointLight* light, int offset) {
     glm::vec4 position = glm::vec4(light->getPosition(), 1);
-    glm::vec4 diffuse = glm::vec4(light->getDiffuseColor(), 1);
+    glm::vec4 diffuse = glm::vec4(light->getDiffuse(), 1);
     glm::vec4 coefficients = glm::vec4(light->getAttenuationCoefficients(), 1);
     
     memcpy((char*)buffer + offset, &position, sizeof(glm::vec4));

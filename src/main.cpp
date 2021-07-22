@@ -49,7 +49,7 @@ Scene* setupScene() {
     Scene* scene = new Scene();
 
     SceneObject* ambientLight = new SceneObject("ambient");
-    ambientLight->addComponent<AmbientLight>(0.2f);
+    ambientLight->addComponent<AmbientLight>(glm::vec3(1), 0.2f);
     scene->addRootObject(ambientLight);
 
     SceneObject* mainCam = new SceneObject("mainCam");
@@ -229,7 +229,7 @@ Scene* setupTestScene() {
     scene->addRootObject(light);
 
     SceneObject* ambientLight = new SceneObject("ambient");
-    ambientLight->addComponent<AmbientLight>(0.2f);
+    ambientLight->addComponent<AmbientLight>(glm::vec3(1), 0.2f);
     scene->addRootObject(ambientLight);
 
     return scene;

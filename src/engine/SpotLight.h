@@ -1,10 +1,9 @@
 #pragma once
-#include "SceneObject.h"
+#include "Light.h"
 
-class SpotLight : public Component {
+class SpotLight : public Light {
 private:
 	glm::vec3 direction;
-	glm::vec3 diffuse;
 
 	float innerAngle;
 	float outerAngleDiff;		// Outer angle will be innerAngle + outerAngleDiff
@@ -17,8 +16,6 @@ public:
 				const glm::vec3& diffuse = glm::vec3(1));
 
 	glm::vec3 getDirection();
-	glm::vec3 getPosition();
-	glm::vec3 getDiffuse();
 	float getInnerAngle();
 	float getOuterAngle();
 

@@ -6,7 +6,7 @@ void PointLight::updateAttenuationCoefficients() {
 }
 
 PointLight::PointLight(SceneObject* obj, float radius, int attenuationAtRadius, const glm::vec3& diffuse)
-	: Component(obj), radius(radius), attenuationAtRadius(attenuationAtRadius), diffuse(diffuse), attenuationCoefficients(1) {
+	: Light(obj, diffuse, 1), radius(radius), attenuationAtRadius(attenuationAtRadius), attenuationCoefficients(1) {
 	updateAttenuationCoefficients();
 	
 	Scene::getActiveScene()->addPointLight(this);
@@ -22,14 +22,6 @@ void PointLight::setAttenuationAtRadius(int attenuation) {
 	updateAttenuationCoefficients();
 }
 
-glm::vec3 PointLight::getDiffuseColor() {
-	return diffuse;
-}
-
 glm::vec3 PointLight::getAttenuationCoefficients() {
 	return attenuationCoefficients;
-}
-
-glm::vec3 PointLight::getPosition() {
-	return sceneObject->getGlobalTransform()* glm::vec4(0, 0, 0, 1);
 }
