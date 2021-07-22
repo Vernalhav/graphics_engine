@@ -103,8 +103,9 @@ vec3 calculateSpotLight(SpotLight lightSource, vec3 normalDirection, vec3 viewDi
     vec3 intensity = calculatePhongIntensity(lightDirection, normalDirection, viewDirection, lightSource.color_3.xyz);
 
     // Calculate cosine attenuation
-    float cosTheta = max(dot(lightDirection, lightSource.direction_3.xyz), 0);
+    float cosTheta = dot(lightDirection, -lightSource.direction_3.xyz);
     float attenuationFactor = (cosTheta - lightSource.outerAngleCos) / (lightSource.innerAngleCos - lightSource.outerAngleCos);
+    attenuationFactor = clamp(attenuationFactor, 0.0f, 1.0f);
 
     intensity *= attenuationFactor;
     return intensity;

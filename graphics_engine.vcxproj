@@ -23,6 +23,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\application\Flashlight.h" />
     <ClInclude Include="src\engine\SpotLight.h" />
     <ClInclude Include="src\engine\AmbientLight.h" />
     <ClInclude Include="src\engine\PointLight.h" />
@@ -60,6 +61,7 @@
     <ClInclude Include="src\application\TransformFinder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\application\Flashlight.cpp" />
     <ClCompile Include="src\engine\SpotLight.cpp" />
     <ClCompile Include="src\engine\AmbientLight.cpp" />
     <ClCompile Include="src\engine\PointLight.cpp" />

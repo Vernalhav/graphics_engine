@@ -26,6 +26,7 @@
 #include "misc/utils.h"
 #include "engine/AmbientLight.h"
 #include "engine/PointLight.h"
+#include "application/Flashlight.h"
 
 
 SceneObject* getQuadLight(const std::string& name, const glm::vec3& lightColor = Color::WHITE, float subLightRadius = 1.0f) {
@@ -53,7 +54,8 @@ Scene* setupScene() {
 
     SceneObject* mainCam = new SceneObject("mainCam");
     mainCam->addComponent<Camera>();
-    mainCam->addComponent<PointLight>(20.0f);
+    //mainCam->addComponent<SpotLight>(Transform::forward);
+    //mainCam->addComponent<Flashlight>(mainCam->getComponent<SpotLight>());
     mainCam->addComponent<FirstPersonController>(false, 0.15f);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>(), ambientLight->getComponent<AmbientLight>());
     mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 60}), glm::vec2({-100, 100}));
@@ -119,15 +121,19 @@ Scene* setupScene() {
     scene->addRootObject(pond);
 
     SceneObject* balloon = new SceneObject("balloon");
+    SceneObject* balloonButt = new SceneObject("balloonButt");
     SceneObject* balloonPivot = new SceneObject("balloonPivot");
     RenderData* balloonRenderData = new RenderData("assets/models/balloon/balloon.obj");
-    balloon->addComponent<PointLight>(50.0f);
     balloon->addComponent<Renderable>(balloonRenderData);
     balloon->addComponent<SinMovement>(0.02f, 1.0f);
+    balloonButt->addComponent<PointLight>(50.0f);
+    balloonButt->addComponent<SpotLight>(-Transform::up, 10.0f, 10.0f);
+    balloonButt->transform.translate({0, -0.5, 0});
     balloon->transform.setTranslation({0, 0, 40});  // rotation radius
     balloon->transform.setScale(30);
     balloonPivot->addComponent<PhysicsBody>(glm::vec3(0), glm::vec3({ 0, 0.3, 0 }));
     balloonPivot->appendChild(balloon);
+    balloon->appendChild(balloonButt);
     balloonPivot->transform.setTranslation({-0.7f, 30, 62.2f});
     scene->addRootObject(balloonPivot);
 
@@ -164,12 +170,14 @@ Scene* setupScene() {
     plant->addComponent<Renderable>(plantRenderData);
     house->appendChild(plant);
 
-    RenderData* lampRenderData = new RenderData("assets/models/lamp/lamp.obj");
+    // TODO: Add resource manager/smart pointers to avoid resource duplication
+    RenderData* lamp1RenderData = new RenderData("assets/models/lamp/lamp.obj");
+    RenderData* lamp2RenderData = new RenderData("assets/models/lamp/lamp.obj");
 
     SceneObject* lamp1 = new SceneObject("lamp1");
     SceneObject* lamp1Light = getQuadLight("lamp1Light", Color::ICE_BLUE, 4.0f);
     lamp1Light->transform.translate({ 0, 26.0f, 0.0f });
-    lamp1->addComponent<Renderable>(lampRenderData);
+    lamp1->addComponent<Renderable>(lamp1RenderData);
     lamp1->transform.setScale(0.015f);
     lamp1->transform.translate({ -0.32f, 0, -0.7f });
     lamp1->appendChild(lamp1Light);
@@ -178,7 +186,7 @@ Scene* setupScene() {
     SceneObject* lamp2 = new SceneObject("lamp2");
     SceneObject* lamp2Light = getQuadLight("lamp2Light", Color::ICE_BLUE, 4.0f);
     lamp2Light->transform.translate({ 0, 26.0f, 0.0f });
-    lamp2->addComponent<Renderable>(lampRenderData);
+    lamp2->addComponent<Renderable>(lamp2RenderData);
     lamp2->transform.setScale(0.015f);
     lamp2->transform.translate({ 0.52f, 0, -0.7f });
     lamp2->appendChild(lamp2Light);

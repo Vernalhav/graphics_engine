@@ -12,8 +12,8 @@ private:
 public:
 	SpotLight(SceneObject* obj,
 				const glm::vec3& direction,
-				float innerAngle = 30.0f,
-				float outerAngleDiff = 5.0f,
+				float innerAngle = 10.0f,
+				float outerAngleDiff = 3.0f,
 				const glm::vec3& diffuse = glm::vec3(1));
 
 	glm::vec3 getDirection();
@@ -21,5 +21,7 @@ public:
 	glm::vec3 getDiffuse();
 	float getInnerAngle();
 	float getOuterAngle();
+
+	void setDirection(const glm::vec3& direction);
 };
 

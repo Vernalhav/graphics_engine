@@ -30,3 +30,7 @@ float SpotLight::getInnerAngle() {
 float SpotLight::getOuterAngle() {
 	return glm::radians(innerAngle + outerAngleDiff);
 }
+
+void SpotLight::setDirection(const glm::vec3& direction) {
+	this->direction = direction;
+}

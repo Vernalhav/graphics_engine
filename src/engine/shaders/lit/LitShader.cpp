@@ -102,13 +102,14 @@ void LitShader::updateLights(AmbientLight* ambient,
 
     offset = 16;
     writeAmbientLightToBuffer(lightBuffer, ambient, offset);
-    offset = 48;
 
+    offset = 48;
     for (int i = 0; i < nPointLights; i++) {
         writePointLightToBuffer(lightBuffer, pointLights[i], offset);
         offset += 48;
     }
 
+    offset = 48 + MAX_LIGHTS * 48;
     for (int i = 0; i < nSpotLights; i++) {
         writeSpotLightToBuffer(lightBuffer, spotLights[i], offset);
         offset += 64;
