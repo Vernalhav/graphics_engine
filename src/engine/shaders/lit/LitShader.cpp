@@ -38,6 +38,27 @@ int LitShader::writePointLightToBuffer(void* buffer, PointLight* light, int offs
     return offset;
 }
 
+int LitShader::writeSpotLightToBuffer(void* buffer, SpotLight* light, int offset) {
+    glm::vec4 position = glm::vec4(light->getPosition(), 1);
+    glm::vec4 direction = glm::vec4(light->getDirection(), 1);
+    glm::vec4 diffuse = glm::vec4(light->getDiffuse(), 1);
+    float innerAngleCos = glm::cos(light->getInnerAngle());
+    float outerAngleCos = glm::cos(light->getOuterAngle());
+    
+    memcpy((char*)buffer + offset, &position, sizeof(glm::vec4));
+    offset += sizeof(glm::vec4);
+    memcpy((char*)buffer + offset, &direction, sizeof(glm::vec4));
+    offset += sizeof(glm::vec4);
+    memcpy((char*)buffer + offset, &diffuse, sizeof(glm::vec4));
+    offset += sizeof(glm::vec4);
+    memcpy((char*)buffer + offset, &innerAngleCos, sizeof(float));
+    offset += sizeof(float);
+    memcpy((char*)buffer + offset, &outerAngleCos, sizeof(float));
+    offset += sizeof(float);
+
+    return offset;
+}
+
 LitShader::LitShader(const std::string& name)
     : Shader(fs::path("src/engine/shaders/lit/"), name) {
 
@@ -61,23 +82,36 @@ void LitShader::setLightingEnabled(bool enabled) {
     setInt(LIGHTING_ENABLED_UNIFORM_LOC, enabled ? 1 : 0);
 }
 
-void LitShader::updateLights(AmbientLight* ambient, const std::vector<PointLight*>& pointLights) {
-    if (pointLights.size() > MAX_POINT_LIGHTS) {
-        std::cout << "LitShader: WARNING: number of point lights exceeded maximum of " << MAX_POINT_LIGHTS << std::endl;
+void LitShader::updateLights(AmbientLight* ambient,
+    const std::vector<PointLight*>& pointLights,
+    const std::vector<SpotLight*>& spotLights) {
+    
+    if (pointLights.size() > MAX_LIGHTS || spotLights.size() > MAX_LIGHTS) {
+        std::cout << "updateLights: WARNING: number of lights exceeded maximum of " << MAX_LIGHTS << std::endl;
     }
 
-    char lightBuffer[LIGHT_BUFFER_LEN];
-    int nPointLights = std::min((int)pointLights.size(), MAX_POINT_LIGHTS);
-
+    static char lightBuffer[LIGHT_BUFFER_LEN];
+    int nPointLights = std::min((int)pointLights.size(), MAX_LIGHTS);
+    int nSpotLights = std::min((int)spotLights.size(), MAX_LIGHTS);
     int offset = 0;
-    writeAmbientLightToBuffer(lightBuffer, ambient, offset);
-    offset = 32;
+
     memcpy((char *)lightBuffer + offset, &nPointLights, sizeof(int));
+    offset += sizeof(int);
+    memcpy((char *)lightBuffer + offset, &nSpotLights, sizeof(int));
+    offset += sizeof(int);
+
+    offset = 16;
+    writeAmbientLightToBuffer(lightBuffer, ambient, offset);
     offset = 48;
 
     for (int i = 0; i < nPointLights; i++) {
         writePointLightToBuffer(lightBuffer, pointLights[i], offset);
         offset += 48;
+    }
+
+    for (int i = 0; i < nSpotLights; i++) {
+        writeSpotLightToBuffer(lightBuffer, spotLights[i], offset);
+        offset += 64;
     }
 
     glBindBuffer(GL_UNIFORM_BUFFER, lightsUboId);

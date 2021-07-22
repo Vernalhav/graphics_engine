@@ -1,7 +1,8 @@
 #pragma once
 #include "../../../graphics/Shader.h"
-#include "../../PointLight.h"
 #include "../../AmbientLight.h"
+#include "../../PointLight.h"
+#include "../../SpotLight.h"
 #include "../../../graphics/Material.h"
 
 
@@ -18,8 +19,8 @@ private:
 	static constexpr int VIEW_POS_UNIFORM_LOC = 2;
 	static constexpr int LIGHTING_ENABLED_UNIFORM_LOC = 4;
 	static constexpr int LIGHT_BLOCK_BINDING = 0;
-	static constexpr int MAX_POINT_LIGHTS = 128;		// Should be the same as the one defined in the frag shader
-	static constexpr int LIGHT_BUFFER_LEN = 48 + MAX_POINT_LIGHTS * 3 * 4 * sizeof(float);
+	static constexpr int MAX_LIGHTS = 128;		// Should be the same as the one defined in the frag shader
+	static constexpr int LIGHT_BUFFER_LEN = 48 + MAX_LIGHTS * 48 + MAX_LIGHTS * 64;
 
 	static int lightsUboId;
 
@@ -27,6 +28,7 @@ private:
 
 	static int writeAmbientLightToBuffer(void* buffer, AmbientLight* light, int offset);
 	static int writePointLightToBuffer(void* buffer, PointLight* light, int offset);
+	static int writeSpotLightToBuffer(void* buffer, SpotLight* light, int offset);
 
 public:
 	LitShader(const std::string& name);
@@ -34,7 +36,10 @@ public:
 	void setMaterial(const Material& material) override;
 	void setLightingEnabled(bool enabled);
 
-	static void updateLights(AmbientLight* ambient, const std::vector<PointLight*>& pointLights);
+	static void updateLights(AmbientLight* ambient,
+		const std::vector<PointLight*>& pointLights,
+		const std::vector<SpotLight*>& spotLights);
+	
 	static void freeLightBuffers();
 
 	virtual void setAttributeLayout() override;

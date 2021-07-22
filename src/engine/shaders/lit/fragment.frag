@@ -34,6 +34,15 @@ struct PointLight {
     vec4 attenuationCoefficients_3;
 };
 
+struct SpotLight {
+    vec4 position_3;
+    vec4 direction_3;
+    vec4 color_3;
+
+    float innerAngleCos;
+    float outerAngleCos;
+};
+
 in vec3 fragPositionWorld;			// Position of the fragment in world space
 in vec3 fragNormalWorld;			// Fragment normal in world space (not normalized)
 in vec2 fragTexCoord;				// Fragment's UV texture coordinates
@@ -47,30 +56,38 @@ uniform Material material;
 #define EPSILON 0.00001
 
 layout(std140, binding = 0) uniform LightUniformBlock {
-                                            //  Alignment  | Byte Offset | Padded Size
-    AmbientLight ambient;                   //  16         | 0           | 32
-    int nPointLights;                       //  4          | 32          | 4
-    PointLight pointLights[MAX_LIGHTS];     //  16         | 48          | MAX_LIGHTS * 48
+                                            //  Alignment  | Byte Offset            | Padded Size
+    int nPointLights;                       //  4          | 0                      | 4
+    int nSpotLights;                        //  4          | 4                      | 4
+    AmbientLight ambient;                   //  16         | 16                     | 32
+    PointLight pointLights[MAX_LIGHTS];     //  16         | 48                     | MAX_LIGHTS * 48
+    SpotLight spotLights[MAX_LIGHTS];       //  16         | (MAX_LIGHTS + 1) * 48  | MAX_LIGHTS * 64
 } Lights;
 
 layout(location = 2) uniform vec3 viewPositionWorld;
 layout(location = 4) uniform bool lightingEnabled;
 
 
-vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 viewDirection) {
+vec3 calculatePhongIntensity(vec3 lightDirection, vec3 normalDirection, vec3 viewDirection, vec3 color) {
     vec3 intensity = vec3(0);
-    vec3 lightDirection = normalize(lightSource.position_3.xyz - fragPositionWorld);
 
     // Calculate diffuse light contribution
     float diffuseIntensity = max(dot(lightDirection, normalDirection), 0);
-    intensity += diffuseIntensity * material.diffuse_3.xyz * lightSource.color_3.xyz;
+    intensity += diffuseIntensity * material.diffuse_3.xyz * color;
 
     if (material.illumMode == 2) {
         // Calculate specular light contribution
         vec3 reflectionDirection = reflect(-lightDirection, normalDirection);
         float specularIntensity = max(pow(dot(viewDirection, reflectionDirection), material.shinyness + EPSILON), 0);
-        intensity += specularIntensity * material.specular_3.xyz * lightSource.color_3.xyz;
+        intensity += specularIntensity * material.specular_3.xyz * color;
     }
+
+    return intensity;
+}
+
+vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 viewDirection) {
+    vec3 lightDirection = normalize(lightSource.position_3.xyz - fragPositionWorld);
+    vec3 intensity = calculatePhongIntensity(lightDirection, normalDirection, viewDirection, lightSource.color_3.xyz);
 
     // Calculate distance attenuation
     float dist = distance(fragPositionWorld, lightSource.position_3.xyz);
@@ -78,6 +95,18 @@ vec3 calculatePointLight(PointLight lightSource, vec3 normalDirection, vec3 view
     float attenuationFactor = 1 / dot(distVec, lightSource.attenuationCoefficients_3.xyz);
     intensity *= attenuationFactor;
 
+    return intensity;
+}
+
+vec3 calculateSpotLight(SpotLight lightSource, vec3 normalDirection, vec3 viewDirection) {
+    vec3 lightDirection = normalize(lightSource.position_3.xyz - fragPositionWorld);
+    vec3 intensity = calculatePhongIntensity(lightDirection, normalDirection, viewDirection, lightSource.color_3.xyz);
+
+    // Calculate cosine attenuation
+    float cosTheta = max(dot(lightDirection, lightSource.direction_3.xyz), 0);
+    float attenuationFactor = (cosTheta - lightSource.outerAngleCos) / (lightSource.innerAngleCos - lightSource.outerAngleCos);
+
+    intensity *= attenuationFactor;
     return intensity;
 }
 
@@ -104,6 +133,10 @@ void main() {
 
     for (int i = 0; i < Lights.nPointLights; i++) {
         lightIntensity += calculatePointLight(Lights.pointLights[i], normal, viewDirection);
+    }
+
+    for (int i = 0; i < Lights.nSpotLights; i++) {
+        lightIntensity += calculateSpotLight(Lights.spotLights[i], normal, viewDirection);
     }
 
     fragColor = clamp(texel * vec4(lightIntensity, 1), 0, 1);

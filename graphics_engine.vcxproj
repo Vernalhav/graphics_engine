@@ -23,6 +23,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\SpotLight.h" />
     <ClInclude Include="src\engine\AmbientLight.h" />
     <ClInclude Include="src\engine\PointLight.h" />
     <ClInclude Include="src\engine\shaders\lit\LitShader.h" />
@@ -59,6 +60,7 @@
     <ClInclude Include="src\application\TransformFinder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\SpotLight.cpp" />
     <ClCompile Include="src\engine\AmbientLight.cpp" />
     <ClCompile Include="src\engine\PointLight.cpp" />
     <ClCompile Include="src\engine\shaders\lit\LitShader.cpp" />

@@ -10,7 +10,7 @@
 Scene* Scene::activeScene = nullptr;
 
 
-Scene::Scene() : mainCamera(nullptr), ambientLight(nullptr) {
+Scene::Scene() : mainCamera(nullptr), ambientLight(nullptr), isLightingEnabled(true) {
 	if (activeScene == nullptr) activeScene = this;
 	root = new SceneObject("root");
 	renderer = new Renderer(new LitShader("Standard Shader"));
@@ -41,6 +41,10 @@ void Scene::addPointLight(PointLight* light) {
 	pointLights.push_back(light);
 }
 
+void Scene::addSpotLight(SpotLight* light) {
+	spotLights.push_back(light);
+}
+
 void Scene::setAmbientLight(AmbientLight* light) {
 	ambientLight = light;
 }
@@ -55,7 +59,7 @@ void Scene::render() {
 
 	glm::vec3 viewPosition = mainCamera->getViewPosition();
 	renderer->setViewPosition(viewPosition);
-	LitShader::updateLights(ambientLight, pointLights);
+	LitShader::updateLights(ambientLight, pointLights, spotLights);
 	
 	std::stack<std::pair<const SceneObject*, glm::mat4>> objects;
 	objects.push({ root, root->transform.getTransformMatrix() });

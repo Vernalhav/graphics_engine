@@ -56,7 +56,7 @@ Scene* setupScene() {
     mainCam->addComponent<PointLight>(20.0f);
     mainCam->addComponent<FirstPersonController>(false, 0.15f);
     mainCam->addComponent<Controls>(mainCam->getComponent<Camera>(), ambientLight->getComponent<AmbientLight>());
-    mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 40}), glm::vec2({-100, 100}));
+    mainCam->addComponent<Confiner>(glm::vec2({-100, 100}), glm::vec2({-17, 60}), glm::vec2({-100, 100}));
     mainCam->transform.setTranslation({0, -17, 0});
     scene->setMainCamera(mainCam->getComponent<Camera>());
     scene->addRootObject(mainCam);
