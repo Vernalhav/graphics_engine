@@ -4,12 +4,19 @@ API. To test this API, we've created an application in which you navigate a Mine
 This repository is a Visual Studio project that requires the installation of `glew`, `glfw` and `glm`, but it can also be 
 compiled without VS by linking the appropriate libraries.
 
+## Screenshots:
+<img src="https://cdn.discordapp.com/attachments/766101843276988416/889591317057925160/unknown.png">
+<img src="https://cdn.discordapp.com/attachments/766101843276988416/889592143415509013/unknown.png">
+<img src="https://cdn.discordapp.com/attachments/766101843276988416/889591688526463016/unknown.png">
+
+
 ## Application Controls:
 - WASD: move camera along the XZ plane  
 - Space/Ctrl: fly upwards or downwards  
 - Shift: change movement speed  
 - P: toggle polygon mode between fill and wireframe  
 - Mouse Scroll: change camera's field of view  
+
 
 # Project Structure:  
 All relevant `.cpp` and `.h` files are in the `src/` directory.
